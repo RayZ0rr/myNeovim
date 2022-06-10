@@ -7,7 +7,7 @@ local api = vim.api
 local MyReloadVIMRCGroup = api.nvim_create_augroup("MyReloadVIMRCGroup", { clear = true })
 api.nvim_create_autocmd(
   { "BufWritePost" },
-  { pattern = {"init.vim","init.lua"}, command = [[source $MYVIMRC | echom "Reloaded init.vim"]], group = MyreloadVIMRCGroup }
+  { pattern = {"init.vim","~/.config/nvim/init.lua"}, command = [[source $MYVIMRC | echom "Reloaded init.vim"]], group = MyreloadVIMRCGroup }
 )
 api.nvim_create_autocmd(
   { "BufWritePost" },
@@ -58,11 +58,6 @@ api.nvim_create_autocmd(
   }
 )
 
--- go to last loc when opening a buffer
-api.nvim_create_autocmd(
-  "BufReadPost",
-  { command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]] }
-)
 -- show cursor line only in active window
 local MyCursorLineGroup = api.nvim_create_augroup("MyCursorLineGroup", { clear = true })
 api.nvim_create_autocmd(
@@ -88,7 +83,13 @@ api.nvim_create_autocmd(
   {
     pattern = { '*.md' },
     command = 'setlocal wrap spell spelllang=en_us nonumber',
+    group = MyCustomSettingsGroup
   }
+)
+-- go to last loc when opening a buffer
+api.nvim_create_autocmd(
+  "BufReadPost",
+  { command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]], group = MyCustomSettingsGroup}
 )
 -- api.nvim_create_autocmd(
 --   { "Syntax" },
@@ -97,6 +98,23 @@ api.nvim_create_autocmd(
 --     command = [[normal zR]], group = MyCustomSettingsGroup
 --   }
 -- )
+
+local MyQuickFixGroup = api.nvim_create_augroup("MyQuickFixGroup", { clear = true })
+api.nvim_create_autocmd(
+  "QuickFixCmdPost",
+  { command = "cgetexpr cwindow", group = MyQuickFixGroup }
+)
+api.nvim_create_autocmd(
+  "QuickFixCmdPost",
+  { command = "lgetexpr lwindow", group = MyQuickFixGroup }
+)
+-- vim.cmd([[
+-- augroup myQuickfixFix
+--   autocmd!
+--   autocmd QuickFixCmdPost cgetexpr cwindow
+--   autocmd QuickFixCmdPost lgetexpr lwindow
+-- augroup END
+-- ]])
 
 local MyFiletypeDetectGroup = api.nvim_create_augroup("MyFiletypeDetectGroup", { clear = true })
 api.nvim_create_autocmd(
@@ -108,12 +126,21 @@ api.nvim_create_autocmd(
   { pattern = "Makefile*", command = [[set filetype=make]], group = MyFiletypeDetectGroup }
 )
 
-local MyTerminalEscapeMappingGroup = api.nvim_create_augroup("MyTerminalEscapeMappingGroup", { clear = true })
+local MyTerminalGroup = api.nvim_create_augroup("MyTerminalGroup", { clear = true })
 api.nvim_create_autocmd(
-  { "TermOpen" },
-  { pattern = "*", command = [[tnoremap <buffer> <Esc> <c-\><c-n>]], group = MyTerminalEscapeMappingGroup }
+   "TermOpen" ,
+  { command = [[tnoremap <buffer> <Esc> <c-\><c-n>]], group = MyTerminalGroup }
 )
 api.nvim_create_autocmd(
-  { "TermOpen" },
-  { pattern = "*", command = "set nonu", group = MyTerminalEscapeMappingGroup }
+  "TermOpen",
+  {
+  callback = function()
+    vim.cmd([[
+	    setlocal nonumber
+	    setlocal norelativenumber
+	    setlocal ft=term
+    ]])
+  end,
+  group = MyTerminalGroup
+  }
 )

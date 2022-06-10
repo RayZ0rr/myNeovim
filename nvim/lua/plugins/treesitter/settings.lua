@@ -6,11 +6,11 @@ vim.opt.foldlevel=99
 -- Parsers must be installed manually via :TSInstall
 require('nvim-treesitter.configs').setup {
   ensure_installed = {
-    "bash",
     "c",
     "cpp",
-    "lua",
     "python",
+    "bash",
+    "lua",
     "rust",
     "html",
     "css",
@@ -46,22 +46,22 @@ require('nvim-treesitter.configs').setup {
         -- You can use the capture groups defined in textobjects.scm
         ['ac'] = '@class.outer',
         ['ic'] = '@class.inner',
-        ["agc"] = "@comment.outer",
-        ["igc"] = "@comment.inner",
-
-        -- Leader mappings, dups for whichkey
-        ["ab"] = "@block.outer"      ,
-        ["ib"] = "@block.inner"      ,
         ["af"] = "@function.outer"   ,
         ["if"] = "@function.inner"   ,
+        ["agc"] = "@comment.outer",
+        -- ["igc"] = "@comment.inner",
+        ["ab"] = "@block.outer"      ,
+        ["ib"] = "@block.inner"      ,
         ["<leader>ac"] = "@call.outer"       ,
         ["<leader>ic"] = "@call.inner"       ,
         ["ao"] = "@conditional.outer",
         ["io"] = "@conditional.inner",
         ["al"] = "@loop.outer"       ,
         ["il"] = "@loop.inner"       ,
-        ["is"] = "@scopename.inner"  ,
+        -- ["an"] = "@scopename.outer"  ,
+        ["in"] = "@scopename.inner"  ,
         ["as"] = "@statement.outer"  ,
+        -- ["is"] = "@statement.inner"  ,
 
       },
     },
@@ -96,7 +96,7 @@ require('nvim-treesitter.configs').setup {
     },
     lsp_interop = {
       enable = true,
-      border = 'none',
+      border = 'rounded',
       peek_definition_code = {
         ["<leader>tsd"] = "@function.outer",
         ["<leader>tsD"] = "@class.outer",

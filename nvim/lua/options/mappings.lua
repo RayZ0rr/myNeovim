@@ -87,7 +87,7 @@ nnmap('<leader>nf',[[:e <C-R>=expand("%:p:h") . "/" <CR>]])
 ------------------------------------------------------------------------------
 -- Quickfix
 ------------------------------------------------------------------------------
-toggle_qf = function()
+local toggle_qf = function()
   local gf_open = false
   for _, win in pairs(vim.fn.getwininfo()) do
     if win["quickfix"] == 1 then
@@ -101,7 +101,7 @@ toggle_qf = function()
   end
   vim.cmd([[copen]])
 end
-nnmap(',cc',':lua toggle_qf()<cr>')
+nnmap(',cc',toggle_qf)
 nnmap(']q', '<cmd>cnext<CR>zz')
 nnmap('[q', '<cmd>cprev<CR>zz')
 nnmap(']l', '<cmd>lnext<cr>zz')

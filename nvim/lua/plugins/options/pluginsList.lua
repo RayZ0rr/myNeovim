@@ -1,38 +1,6 @@
--- vim.cmd "packadd packer.nvim"
--- local packer = require('packer')
-
 -- don't throw any error on first use by packer
 local ok, packer = pcall(require, "packer")
 if not ok then return end
-
-local PackerGroup = vim.api.nvim_create_augroup('PackerGroup', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | PackerCompile', group = PackerGroup, pattern = 'init.lua' })
-vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | PackerSync', group = PackerGroup, pattern = 'pluginsList.lua' })
-
--- packer_config = {
---   -- compile_path = vim.fn.stdpath("config") .. "/lua/plugins/options/packer_compiled.lua",
--- }
--- packer.init(packer_config)
-
-packer.init {
-  auto_clean = true,
-  compile_on_sync = true,
-  git = { clone_timeout = 6000 },
-  profile = {
-    enable = true,
-    threshold = 1 -- the amount in ms that a plugins load time must be over for it to be included in the profile
-  },
-  display = {
-    working_sym = "ﲊ",
-    error_sym = "✗",
-    done_sym = "﫟",
-    removed_sym = "",
-    moved_sym = "",
-    open_fn = function()
-      return require("packer.util").float { border = "rounded" }
-    end,
-  },
-}
 
 -- ########################################################
 -- All the used plugins
@@ -44,6 +12,8 @@ packer.startup(function(use)
 
   -- Package manager ---------------------------
   use 'wbthomason/packer.nvim'
+
+  use 'lewis6991/impatient.nvim'
 
   --------------------------------------------------
   -- GENERAL
@@ -279,7 +249,7 @@ packer.startup(function(use)
   use {
     'neovim/nvim-lspconfig',
     config = function()
-      require('plugins/LSP/settings')
+      require('plugins/LSP')
     end,
   }
   -- File Browser ------------------------------

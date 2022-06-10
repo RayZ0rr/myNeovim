@@ -2,58 +2,85 @@
 -- LSP Keybindings and completion---------------------------------------------------------------------------
 --###################################################################################################################
 
-local nvim_lsp = require('lspconfig')
-vim.lsp.set_log_level 'debug'
+vim.lsp.set_log_level 'warn'
+
+local M = {}
 
 -- Mappings.
+-----------------------------------------------------------------------------
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap=true, silent=true }
-vim.api.nvim_set_keymap('n', '<space>le', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-vim.api.nvim_set_keymap('n', '<space>lq', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+local opts = { remap=false, silent=true }
+vim.keymap.set('n', '<localleader>le', function() vim.diagnostic.open_float() end, opts)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<localleader>lq', vim.diagnostic.setloclist , opts)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
+M.custom_on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
+  if client.server_capabilities.code_lens then
+    vim.api.nvim_create_autocmd({'BufEnter', 'CursorHold', 'InsertLeave'}, {
+      buffer = bufnr,
+      callback = vim.lsp.codelens.refresh
+    })
+    vim.lsp.codelens.refresh()
+  end
+
+  if client.resolved_capabilities.document_highlight then
+    vim.cmd([[
+      hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
+      hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
+      hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
+      augroup lsp_document_highlight
+	autocmd! * <buffer>
+	autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+	autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+      augroup END
+    ]])
+  end
+
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>lwa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>lwr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>lwl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>lD', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>lrn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>lf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>lsd', '<cmd>lua vim.diagnostic.disable(0)<CR>', opts)
+
+  -- local bufopts = { remap=false, silent=true, buffer=bufnr }
+  local function buffer_map(key, result, desc)
+    vim.keymap.set('n', key, result, {silent = true, buffer=bufnr, desc=desc})
+  end
+
+  buffer_map('n', '<localleader>lD', vim.lsp.buf.declaration, 'vim.lsp.buf.declaration')
+  buffer_map('n', '<localleader>ld', vim.lsp.buf.definition, 'vim.lsp.buf.definition')
+  buffer_map('n', '<localleader>K', vim.lsp.buf.hover, 'vim.lsp.buf.hover')
+  buffer_map('n', '<localleader>li', vim.lsp.buf.implementation, 'vim.lsp.buf.implementation')
+  vim.keymap.set('n', '<localleader><C-k>', vim.lsp.buf.signature_help,{buffer=bufnr, desc='vim.lsp.buf.signature_help'})
+  buffer_map('n', '<localleader>lwa', vim.lsp.buf.add_workspace_folder, 'vim.lsp.buf.add_workspace_folder')
+  buffer_map('n', '<localleader>lwr', vim.lsp.buf.remove_workspace_folder, 'vim.lsp.buf.remove_workspace_folder')
+  buffer_map('n', '<localleader>lwl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, 'vim.lsp.buf.list_workspace_folders')
+  buffer_map('n', '<localleader>lt', vim.lsp.buf.type_definition, 'vim.lsp.buf.type_definition')
+  buffer_map('n', '<localleader>lR', vim.lsp.buf.rename, 'vim.lsp.buf.rename')
+  buffer_map('n', '<localleader>la', vim.lsp.buf.code_action, 'vim.lsp.buf.code_action')
+  buffer_map('n', '<localleader>lc', vim.lsp.codelens.run, 'vim.lsp.codelens.run')
+  buffer_map('n', '<localleader>lr', vim.lsp.buf.references, 'vim.lsp.buf.references')
+  buffer_map('n', '<localleader>lf', vim.lsp.buf.formatting, 'vim.lsp.buf.formatting')
+  buffer_map('n', '<localleader>ll', function()
+    vim.diagnostic.disable(0)
+  end, 'vim.diagnostic.disable(0)')
 
   -- require 'illuminate'.on_attach(client)
-  require'aerial'.on_attach(client, bufnr)
-  if client.resolved_capabilities.document_highlight then
-      vim.cmd [[
-        hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
-        hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
-        hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
-        augroup lsp_document_highlight
-          autocmd! * <buffer>
-          autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-          autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-        augroup END
-      ]]
+  local has_aerial, aerial = pcall(require, 'aerial')
+  if has_aerial then
+    aerial.on_attach(client, bufnr)
   end
+
 end
 
 vim.diagnostic.config({
-  virtual_text = true,
+  virtual_text = false,
+  virtual_lines = true,
   signs = true,
   underline = true,
   update_in_insert = false,
@@ -66,6 +93,30 @@ for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
+
+local orig_signs_handler = vim.diagnostic.handlers.signs
+-- Override the built-in signs handler to aggregate signs
+vim.diagnostic.handlers.signs = {
+  show = function(ns, bufnr, _, opts)
+    local diagnostics = vim.diagnostic.get(bufnr)
+
+    -- Find the "worst" diagnostic per line
+    local max_severity_per_line = {}
+    for _, d in pairs(diagnostics) do
+      local m = max_severity_per_line[d.lnum]
+      if not m or d.severity < m.severity then
+        max_severity_per_line[d.lnum] = d
+      end
+    end
+
+    -- Pass the filtered diagnostics (with our custom namespace) to
+    -- the original handler
+    local filtered_diagnostics = vim.tbl_values(max_severity_per_line)
+    orig_signs_handler.show(ns, bufnr, filtered_diagnostics, opts)
+  end,
+
+  hide = orig_signs_handler.hide
+}
 
 function PrintDiagnostics(opts, bufnr, line_nr, client_id)
   bufnr = bufnr or 0
@@ -86,132 +137,14 @@ function PrintDiagnostics(opts, bufnr, line_nr, client_id)
   vim.api.nvim_echo({{diagnostic_message, "Normal"}}, false, {})
 end
 
-vim.cmd [[ autocmd! CursorHold * lua PrintDiagnostics() ]]
 
-vim.o.updatetime = 250
--- vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 vim.cmd([[
-augroup lspFloatingDiagnostics
+augroup MyLspShowDiagnostics
   autocmd!
-  autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float()
+  autocmd! CursorHold * lua PrintDiagnostics()
+  " autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float()
   " autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})
 augroup end
 ]])
 
--- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menu,menuone,noselect'
-
--- Add additional capabilities supported by nvim-cmp
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
--- local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-
---##########################################################################################################
--- General lang server setup -----------------------------------------
---###################################################################################################################
-
-local server_config = {
-  capabilities = capabilities;
-  on_attach = on_attach;
-  flags = {
-    debounce_text_changes = 150,
-  },
-}
-
--- Use a loop to conveniently both setup defined servers
--- and map buffer local keybindings when the language server attaches
-local servers = { 'cmake','vimls'}
--- for _, lsp in ipairs(servers) do
--- 	nvim_lsp[lsp].setup {
--- 		--root_dir = vim.loop.cwd;
--- 		capabilities = capabilities;
--- 		on_attach = on_attach;
--- 		flags = {
--- 			debounce_text_changes = 150,
--- 		}
--- 	}
--- end
-
--- nvim_lsp.bashls.setup {
---     --root_dir = vim.loop.cwd;
---     filetypes = { "sh", "bash", "zsh" },
---     capabilities = capabilities,
---     on_attach = on_attach,
---     flags = {
--- 			debounce_text_changes = 150,
---     }
--- }
-
---##########################################################################################################
--- C++ config------------------------------------------
---###################################################################################################################
-
-nvim_lsp.clangd.setup {
-  capabilities = capabilities;
-  on_attach = on_attach;
-  flags = {
-    debounce_text_changes = 150,
-  },
-  cmd = {
-    "clangd",
-    "--background-index",
-  },
-  filetypes = { "c", "cpp", "objc", "objcpp" },
-  -- on_init = function to handle changing offsetEncoding
-  -- root_dir = require('lspconfig/util').root_pattern("compile_commands.json", "compile_flags.txt", ".ccls"),
-  -- root_dir = root_pattern("compile_commands.json", "compile_flags.txt", ".git") or dirname
-}
-
--- require('LSP/ccpp')
--- local cclscachepath = vim.fn.getenv("HOME").."/tmp/ccls-cache"
--- nvim_lsp.ccls.setup {
---     init_options = {
--- 	  --compilationDatabaseDirectory = "/home/ACM-Lab/Softwares/Installed/ccls/Debug" ;
--- 				index = {
--- 					threads = 0;
--- 				},
--- 				clang = {
--- 					excludeArgs = { "-frounding-math"} ;
--- 					resourceDir = "/usr/lib/llvm-7/lib/clang/7.0.1/include" ;
--- 				},
--- 				cache = {
--- 					directory = cclscachepath
--- 				},
---     },
---     cmd = {
--- 			'ccls',
--- 			'--log-file=/tmp/ccls.log',
--- 			'-v=1'
---     },
---     -- root_dir = require('lspconfig/util').root_pattern("compile_commands.json", "compile_flags.txt", ".ccls"),
---     capabilities = capabilities,
---     on_attach = on_attach,
---     flags = {
---       debounce_text_changes = 150,
---     }
---   --filetypes = { "c", "cpp", "objc", "objcpp" } ;
--- 	--capabilities = capabilities ;
--- 	--root_dir = vim.loop.cwd ;
--- 	--root_dir = root_pattern("compile_commands.json", "compile_flags.txt", ".git", ".ccls") or '/home/ACM-Lab/.Test' ;
--- 	--root_dir = {'echo', 'getcwd()'} ;
---   -- "--log-file=/tmp/ccls.log -v=1"
--- }
-
---##########################################################################################################
--- Null-ls config------------------------------------------
---###################################################################################################################
-
--- local null_ls = require("null-ls")
--- local null_sources = {
--- 		null_ls.builtins.formatting.stylua.with({
--- 			filetypes = { "lua"},
--- 		}),
---     -- null_ls.builtins.formatting.prettier,
---     -- null_ls.builtins.diagnostics.write_good,
---     -- null_ls.builtins.code_actions.gitsigns,
--- }
--- null_ls.setup({
---     -- you must define at least one source for the plugin to work
---     sources = null_sources,
--- })
-
+return M

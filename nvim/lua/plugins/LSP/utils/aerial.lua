@@ -2,7 +2,7 @@ local aerial = require'aerial'
 
 aerial_on_attach = function(bufnr)
     -- Toggle the aerial window with <leader>a
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>aa', '<cmd>AerialToggle!<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ar', '<cmd>AerialToggle!<CR>', {})
     -- Jump forwards/backwards with '{' and '}'
     -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '{', '<cmd>AerialPrev<CR>', {})
     -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '}', '<cmd>AerialNext<CR>', {})
@@ -131,7 +131,7 @@ require("aerial").setup({
   -- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
   -- min_width and max_width can be a list of mixed types.
   -- max_value = {40, 0.2} means "the lesser of 40 columns or 20% of total"
-  max_width = { 40, 0.2 },
+  max_width = { 40, 0.4 },
   width = nil,
   min_width = 10,
 

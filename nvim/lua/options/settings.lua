@@ -24,15 +24,15 @@ set.fileencoding='utf-8'                -- The encoding written to file
 set.cmdheight=2                         -- More space for displaying messages
 vim.cmd[[set iskeyword+=-]]             -- treat dash separated words as a word text object
 set.mouse='a'                           -- Enable your mouse
-vim.cmd[[set shortmess+=c]]
+set.shortmess:append('c')		-- Avoid showing message extra message when using completion
 set.splitbelow = true                   -- Horizontal splits will automatically be below
 set.splitright = true                   -- Vertical splits will automatically be to the right
--- set.t_Co=256				  -- Support 256 colors
+-- set.t_Co=256				-- Support 256 colors
 set.conceallevel=0                      -- So that I can see `` in markdown files
 set.tabstop=8
 set.shiftwidth=2                        -- number of auto-indent spaces
 set.softtabstop=2
--- set.expandtab = true			  -- Insert 2 spaces for a tab
+-- set.expandtab = true			-- Insert 2 spaces for a tab
 set.scrolloff=4                         -- Keep 4 lines below cursor before scrolling the screen vertically
 set.sidescrolloff=8                     -- Keep 4 lines below cursor before scrolling the screen horizontally
 set.smartindent = true                  -- Makes indenting smart
@@ -41,13 +41,27 @@ set.cursorline = true                   -- Enable highlighting of the current li
 set.showmatch = true                    -- " Highlight matching brace
 set.showtabline=2                       -- Always show tabs
 set.showmode = false                    -- We don't need to see things like -- INSERT -- anymore
--- set.updatetime=300			  -- " Faster completion
+set.updatetime=200			-- " Faster completion
 set.timeoutlen=500                      -- By default timeoutlen is 1000 ms
--- vim.cmd[[set formatoptions=jql]]       -- Stop newline continution of comments
-vim.cmd[[set clipboard+=unnamedplus]]   -- Copy paste between vim and everything else
+-- vim.cmd[[set formatoptions=jql]]	-- Stop newline continution of comments
+set.formatoptions:remove('o')		-- Automatically insert comment leader after 'o' or 'O' in Normal mode.
+set.formatoptions:append('r')		-- Automatically insert comment leader after <Enter> in Insert mode.
+set.formatoptions:append('l')		-- Long lines are not broken in insert mode.
+set.formatoptions:remove('t')		-- Do not auto wrap text
+set.formatoptions:append('n')		-- Recognise lists
+set.clipboard='unnamedplus'		-- Copy paste between vim and everything else
 set.autochdir = true                    -- Your working directory will always be the same as your working directory
 set.laststatus=3			-- Global statusline
 set.title = true
+set.virtualedit    = 'block'		-- allow cursor to exist where there is no character
+set.winblend       = 10
+set.lazyredraw     = true
+
+set.fillchars="fold: ,vert:│"
+
+set.grepprg="rg --vimgrep"
+set.grepformat = "%l:%c:%m"
+-- set.grepformat:prepend{"%f:%l:%c:%m"}
 
 set.undofile = true
 local undoPath = vim.fn.stdpath('config') .. '/.undoDir'
