@@ -86,6 +86,18 @@ api.nvim_create_autocmd(
     group = MyCustomSettingsGroup
   }
 )
+vim.api.nvim_create_autocmd( "BufWritePost" , {
+  group = MyCustomSettingsGroup,
+  pattern = "*",
+  callback = function()
+    if vim.fn.getline(1) == "^#!" then
+      if vim.fn.getline(1) == "/bin/" then
+	vim.cmd([[chmod a+x <afile>]])
+      end
+    end
+  end,
+  once = false,
+})
 -- go to last loc when opening a buffer
 api.nvim_create_autocmd(
   "BufReadPost",
@@ -108,6 +120,14 @@ api.nvim_create_autocmd(
   "QuickFixCmdPost",
   { command = "lgetexpr lwindow", group = MyQuickFixGroup }
 )
+vim.api.nvim_create_autocmd( "FileType" , {
+  group = MyQuickFixGroup,
+  pattern = { "qf" },
+  callback = function()
+    vim.wo.wrap = true
+  end,
+  once = false,
+})
 -- vim.cmd([[
 -- augroup myQuickfixFix
 --   autocmd!
@@ -115,6 +135,22 @@ api.nvim_create_autocmd(
 --   autocmd QuickFixCmdPost lgetexpr lwindow
 -- augroup END
 -- ]])
+-- vim.api.nvim_create_autocmd({ "QuickfixCmdPost" }, {
+--   group = MyQuickFixGroup,
+--   pattern = { "make", "grep", "grepadd", "vimgrep", "vimgrepadd" },
+--   callback = function()
+--     vim.cmd([[cwin]])
+--   end,
+--   once = false,
+-- })
+-- vim.api.nvim_create_autocmd({ "QuickfixCmdPost" }, {
+--   group = MyQuickFixGroup,
+--   pattern = { "lmake", "lgrep", "lgrepadd", "lvimgrep", "lvimgrepadd" },
+--   callback = function()
+--     vim.cmd([[lwin]])
+--   end,
+--   once = false,
+-- })
 
 local MyFiletypeDetectGroup = api.nvim_create_augroup("MyFiletypeDetectGroup", { clear = true })
 api.nvim_create_autocmd(
@@ -128,19 +164,20 @@ api.nvim_create_autocmd(
 
 local MyTerminalGroup = api.nvim_create_augroup("MyTerminalGroup", { clear = true })
 api.nvim_create_autocmd(
-   "TermOpen" ,
+  "TermOpen" ,
   { command = [[tnoremap <buffer> <Esc> <c-\><c-n>]], group = MyTerminalGroup }
 )
 api.nvim_create_autocmd(
   "TermOpen",
   {
-  callback = function()
-    vim.cmd([[
-	    setlocal nonumber
-	    setlocal norelativenumber
-	    setlocal ft=term
-    ]])
-  end,
-  group = MyTerminalGroup
+    callback = function()
+      vim.cmd([[
+	setlocal nonumber
+	setlocal norelativenumber
+	setlocal signcolumn=no
+	setlocal ft=term
+      ]])
+    end,
+    group = MyTerminalGroup
   }
 )

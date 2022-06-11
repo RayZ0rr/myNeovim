@@ -52,6 +52,16 @@ nnmap('<leader>U', 'gUiw`]')
 inmap('<C-u>', '<cmd>norm!gUiw`]a<CR>')
 
 -----------------------------------------------------------------------------//
+-- Some insert mode conveniences
+-----------------------------------------------------------------------------//
+-- Go to the begining and end of current line in insert mode quickly
+inmap('<C-A>', '<HOME>')
+inmap('<C-E>', '<END>')
+
+-- Delete the character to the right of the cursor
+inmap('<C-D>', '<DEL>')
+
+-----------------------------------------------------------------------------//
 -- Select till end of line
 -----------------------------------------------------------------------------//
 xnmap('<space>', 'g_')
@@ -59,7 +69,7 @@ xnmap('<space>', 'g_')
 -----------------------------------------------------------------------------//
 -- Open terminal buffer
 -----------------------------------------------------------------------------//
-nnmap("<leader>tr",":terminal<cr>A")
+nnmap("<leader>tr",":terminal<cr>")
 
 -----------------------------------------------------------------------------//
 -- Netrw Explorer  on the left (:h :Lexplore)

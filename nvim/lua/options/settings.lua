@@ -11,7 +11,7 @@ g.do_filetype_lua = 1
 g.mapleader = ","
 g.maplocalleader=" "
 
-set.whichwrap:append "<>[]hl"
+-- set.whichwrap:append "<>[]hl"
 set.breakindent = true
 set.termguicolors = true
 set.ignorecase = true

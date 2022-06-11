@@ -1,10 +1,6 @@
 local M = {}
 
 function M.map(mode, lhs, rhs, opts)
-    -- local options = { remap = false }
-    -- if opts then
-    --     options = vim.tbl_extend("force", options, opts)
-    -- end
     vim.keymap.set(mode, lhs, rhs, opts)
 end
 
@@ -46,6 +42,14 @@ function M.xnmap(lhs, rhs, opts)
         options = vim.tbl_extend("force", options, opts)
     end
     vim.keymap.set('x', lhs, rhs, options)
+end
+
+function M.executable(name)
+  if vim.fn.executable(name) > 0 then
+    return true
+  end
+
+  return false
 end
 
 return M
