@@ -44,11 +44,11 @@ packer.startup(function(use)
       require('plugins/general/asyncRunTasks')
     end,
   }
-  -- File Browser ----------------------------------------
+  -- Terminal conveniences plugin (filebrowser with vifm, lazygit etc)
   use {
-    'is0n/fm-nvim',
+    'akinsho/toggleterm.nvim',
     config = function()
-      require('plugins/general/fm-nvim')
+      require('plugins/general/toggleterm')
     end,
   }
   -- Autocompletion plugin ---------------------

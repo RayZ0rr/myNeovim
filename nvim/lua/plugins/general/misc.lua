@@ -63,18 +63,21 @@ end
 -- let g:Illuminate_delay = 0
 local present, _ = pcall(require, 'illuminate')
 if present then
-  vim.g.Illuminate_ftblacklist = {'nerdtree', 'fern', 'fzf','nvimtree'}
+  vim.g.Illuminate_ftblacklist = {'nerdtree', 'fern', 'fzf','nvimtree', 'term'}
+  vim.api.nvim_command [[ hi def link LspReferenceText CursorLine ]]
+  vim.api.nvim_command [[ hi def link LspReferenceWrite CursorLine ]]
+  vim.api.nvim_command [[ hi def link LspReferenceRead CursorLine ]]
   nnmap('<a-n>', '<cmd>lua require"illuminate".next_reference{wrap=true}<cr>')
   nnmap('<a-p>', '<cmd>lua require"illuminate".next_reference{reverse=true,wrap=true}<cr>')
-  nnmap('<leader>ll', [[:exe 'IlluminationToggle!' | echo "Illuminate toggled"<cr>]])
+  nnmap('<leader>il', [[:exe 'IlluminationToggle!' | echo "Illuminate toggled"<cr>]])
   -- Don't highlight word under cursor (default: 1)
   -- vim.g.Illuminate_highlightUnderCursor = 1
   vim.cmd[[
-  augroup illuminate_augroup
-      autocmd!
-      autocmd VimEnter * hi illuminatedCurWord cterm=italic gui=italic
-      autocmd VimEnter * hi illuminatedWord cterm=underline gui=underline
-  augroup END
+    augroup illuminate_augroup
+	autocmd!
+	autocmd VimEnter * hi illuminatedCurWord cterm=italic gui=italic
+	autocmd VimEnter * hi illuminatedWord cterm=underline gui=underline
+    augroup END
   ]]
 else
   print("RRethy/vim-illuminate not installed")
@@ -102,7 +105,7 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'vim-better-whitespace')) == 0 then
   -- vimg.g.strip_whitespace_confirm=1
   vim.g.current_line_whitespace_disabled_hard=1
   -- vim.g.current_line_whitespace_disabled_soft=1
-  vim.g.better_whitespace_filetypes_blacklist={'fzf', 'floaterm', 'fm', 'netrw', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive'}
+  vim.g.better_whitespace_filetypes_blacklist={'fzf', 'floaterm', 'toggleterm', 'term', 'fm', 'netrw', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive'}
 else
   print("ntpeters/vim-better-whitespace not installed")
 end
