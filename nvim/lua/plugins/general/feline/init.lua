@@ -1,6 +1,12 @@
+local has_feline, feline = pcall(require, 'feline')
+if not has_feline then
+  return
+end
+
 -- Reference:
 -- 1) ibhagwan setup (https://github.com/ibhagwan/nvim-lua/blob/main/lua/plugins/feline.lua)
 -- 2)  crivotz/nv-ide setup (https://github.com/crivotz/nv-ide/blob/master/lua/plugins/feline.lua)
+-- 3) AstroNvim setup (https://github.com/AstroNvim/AstroNvim)
 
 local lsp = require('feline.providers.lsp')
 local vi_mode_utils = require('feline.providers.vi_mode')
@@ -103,6 +109,11 @@ local LinesInfo = function()
   return string.format("%d:%d  %d", column, line, total_line)
 end
 
+local TreesitterStatus = function()
+  local ts = vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()]
+  return (ts and next(ts)) and " 綠TS" or ""
+end
+
 local buffer_not_empty = function()
   if vim.fn.empty(vim.fn.expand('%:t')) ~= 1 then
     return true
@@ -110,8 +121,14 @@ local buffer_not_empty = function()
   return false
 end
 
-local fullBar = function()
+local FullBar = function()
   return vim.api.nvim_win_get_width(0) > 75
+end
+
+local BarWidth = function(n)
+  return function()
+    return (vim.opt.laststatus:get() == 3 and vim.opt.columns:get() or vim.fn.winwidth(0)) > (n or 80)
+  end
 end
 
 local function is_buffer_empty()
@@ -141,7 +158,10 @@ force_inactive.filetypes = {
   'packer',
   'startify',
   'fugitive',
-  'fugitiveblame'
+  'term',
+  'toggleterm',
+  'fm',
+  'fugitiveblame',
 }
 
 force_inactive.buftypes = {
@@ -185,11 +205,7 @@ components.active[1][2] = {
   end,
   icon = {
     str = '  ',
-    hl = {
-      name = 'StatusComponentVimMode',
-      vimode_hl,
-      style = 'bold',
-    }
+    hl = vimode_hl,
   },
   right_sep = {
     str = ' ',
@@ -284,7 +300,7 @@ components.active[1][6] = {
 -- diffAdd
 components.active[1][7] = {
   provider = 'git_diff_added',
-  enabled = fullBar,
+  enabled = FullBar,
   hl = {
     fg = 'green',
     bg = 'bg',
@@ -294,7 +310,7 @@ components.active[1][7] = {
 -- diffModfified
 components.active[1][8] = {
   provider = 'git_diff_changed',
-  enabled = fullBar,
+  enabled = FullBar,
   hl = {
     fg = 'orange',
     bg = 'bg',
@@ -304,7 +320,7 @@ components.active[1][8] = {
 -- diffRemove
 components.active[1][9] = {
   provider = 'git_diff_removed',
-  enabled = fullBar,
+  enabled = FullBar,
   hl = {
     fg = 'red',
     bg = 'bg',
@@ -355,7 +371,16 @@ components.active[2][4] = {
 -- diagnosticInfo
 components.active[2][5] = {
   provider = 'diagnostic_info',
-  enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.HINT),
+  enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.INFO),
+  hl = {
+    fg = 'skyblue',
+    style = 'bold'
+  }
+}
+-- Treesitter status
+components.active[2][6] = {
+  provider = TreesitterStatus,
+  enabled = FullBar,
   hl = {
     fg = 'skyblue',
     style = 'bold'
@@ -374,7 +399,7 @@ components.active[3][1] = {
     end
     return icon
   end,
-  -- enabled = fullBar,
+  -- enabled = FullBar,
   hl = function()
     local val = {}
     local filename = vim.fn.expand('%:t')
@@ -395,7 +420,7 @@ components.active[3][1] = {
 -- fileType
 components.active[3][2] = {
   provider = 'file_type',
-  -- enabled = fullBar,
+  enabled = FullBar,
   hl = function()
     local val = {}
     local filename = vim.fn.expand('%:t')
@@ -426,7 +451,7 @@ components.active[3][3] = {
 -- linePercent
 components.active[3][4] = {
   provider = 'line_percentage',
-  enabled = fullBar,
+  enabled = FullBar,
   hl = {
     fg = 'white',
     bg = 'bg',
@@ -437,7 +462,7 @@ components.active[3][4] = {
 -- scrollBar
 components.active[3][5] = {
   provider = 'scroll_bar',
-  enabled = fullBar,
+  enabled = FullBar,
   right_sep = ' ',
   hl = {
     fg = 'magenta',
@@ -447,7 +472,7 @@ components.active[3][5] = {
 -- fileSize
 components.active[3][6] = {
   provider = 'file_size',
-  enabled = fullBar,
+  enabled = FullBar,
   hl = {
     fg = 'skyblue',
     bg = 'bg',
@@ -458,7 +483,7 @@ components.active[3][6] = {
 -- fileFormat
 components.active[3][7] = {
   provider = file_osinfo,
-  enabled = fullBar,
+  enabled = FullBar,
   hl = function()
     local val = {}
 
@@ -478,7 +503,7 @@ components.active[3][7] = {
 -- fileEncode
 components.active[3][8] = {
   provider = 'file_encoding',
-  -- enabled = fullBar,
+  -- enabled = FullBar,
   hl = function()
     local val = {}
 
@@ -502,7 +527,100 @@ components.active[3][9] = bordersDecor.right
 
 -- fileType
 components.inactive[1][1] = {
+  provider = '' ,
+  hl = {
+    fg = 'red',
+    bg = 'black',
+    style = 'bold'
+  },
+  left_sep = {
+    str = ' ',
+    hl = {
+      fg = 'black',
+      bg = 'black'
+    }
+  },
+  right_sep = {
+    str = ' -> ',
+    hl = {
+      fg = 'yellow',
+      bg = 'black'
+    },
+  }
+}
+components.inactive[1][2] = {
+  provider = function()
+    return vi_mode_utils.get_vim_mode()
+  end,
+  hl = function()
+    local val = {}
+    val.name = vi_mode_utils.get_mode_highlight_name()
+    val.fg = 'blue'
+    val.bg = 'black'
+    val.style = 'bold'
+    return val
+  end,
+  right_sep = {
+    str = ' ',
+    hl = {
+      fg = 'black',
+      bg = 'black'
+    },
+  }
+}
+
+components.inactive[1][3] = {
+  provider = '',
+  hl = function()
+    local val = {}
+
+    val.fg = 'cyan'
+    val.bg = 'black'
+    val.style = 'bold'
+
+    return val
+  end,
+}
+
+-- filetype
+components.inactive[1][4] = {
   provider = 'file_type',
+  hl = {
+    fg = 'yellow',
+    bg = 'NONE',
+  },
+  left_sep = {
+    str = ' FT : ',
+    hl = {
+      fg = 'yellow',
+      bg = 'NONE'
+    }
+  },
+  right_sep = {
+    {
+      str = ' ',
+      hl = {
+        fg = 'cyan',
+        bg = 'NONE',
+      }
+    },
+  }
+}
+
+components.inactive[1][5] = {
+  provider = ' ',
+  hl = {
+    fg = 'cyan',
+    bg = 'NONE',
+    style = 'bold'
+  },
+}
+
+components.inactive[2][1] = {
+  provider = "Code Status:" .. '%{g:asyncrun_status}',
+  enabled = function()
+    return vim.g.asyncrun_status ~= nil and vim.bo.filetype == 'qf'
+  end,
   hl = {
     fg = 'black',
     bg = 'cyan',
@@ -519,41 +637,11 @@ components.inactive[1][1] = {
     {
       str = ' ',
       hl = {
-        fg = 'NONE',
-        bg = 'cyan'
+	fg = 'NONE',
+	bg = 'cyan'
       }
     },
-    ' '
   }
-}
-
-components.inactive[2][1] = {
-  provider = "Code Status:" .. '%{g:asyncrun_status}',
-  enabled = function()
-    return vim.g.asyncrun_status ~= nil and vim.bo.filetype == 'qf'
-  end,
-  hl = {
-    fg = 'black',
-  bg = 'cyan',
-  style = 'bold'
-  },
-  left_sep = {
-    str = ' ',
-    hl = {
-      fg = 'NONE',
-      bg = 'cyan'
-    }
-  },
-right_sep = {
-  {
-    str = ' ',
-    hl = {
-      fg = 'NONE',
-      bg = 'cyan'
-    }
-  },
-  ' '
-}
 }
 
 -- require('feline').use_theme(my_theme)

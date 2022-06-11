@@ -1,85 +1,24 @@
 --##########################################################################################################
--- LSP Keybindings and completion---------------------------------------------------------------------------
+-- LSP customization---------------------------------------------------------------------------
 --###################################################################################################################
-
 vim.lsp.set_log_level 'warn'
 
-local M = {}
-
--- Mappings.
------------------------------------------------------------------------------
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { remap=false, silent=true }
-vim.keymap.set('n', '<localleader>le', function() vim.diagnostic.open_float() end, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<localleader>lq', vim.diagnostic.setloclist , opts)
-
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-M.custom_on_attach = function(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  if client.server_capabilities.code_lens then
-    vim.api.nvim_create_autocmd({'BufEnter', 'CursorHold', 'InsertLeave'}, {
-      buffer = bufnr,
-      callback = vim.lsp.codelens.refresh
-    })
-    vim.lsp.codelens.refresh()
-  end
-
-  if client.resolved_capabilities.document_highlight then
-    vim.cmd([[
-      hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
-      augroup lsp_document_highlight
-	autocmd! * <buffer>
-	autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-	autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]])
-  end
-
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-
-  -- local bufopts = { remap=false, silent=true, buffer=bufnr }
-  local function buffer_map(key, result, desc)
-    vim.keymap.set('n', key, result, {silent = true, buffer=bufnr, desc=desc})
-  end
-
-  buffer_map('n', '<localleader>lD', vim.lsp.buf.declaration, 'vim.lsp.buf.declaration')
-  buffer_map('n', '<localleader>ld', vim.lsp.buf.definition, 'vim.lsp.buf.definition')
-  buffer_map('n', '<localleader>K', vim.lsp.buf.hover, 'vim.lsp.buf.hover')
-  buffer_map('n', '<localleader>li', vim.lsp.buf.implementation, 'vim.lsp.buf.implementation')
-  vim.keymap.set('n', '<localleader><C-k>', vim.lsp.buf.signature_help,{buffer=bufnr, desc='vim.lsp.buf.signature_help'})
-  buffer_map('n', '<localleader>lwa', vim.lsp.buf.add_workspace_folder, 'vim.lsp.buf.add_workspace_folder')
-  buffer_map('n', '<localleader>lwr', vim.lsp.buf.remove_workspace_folder, 'vim.lsp.buf.remove_workspace_folder')
-  buffer_map('n', '<localleader>lwl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, 'vim.lsp.buf.list_workspace_folders')
-  buffer_map('n', '<localleader>lt', vim.lsp.buf.type_definition, 'vim.lsp.buf.type_definition')
-  buffer_map('n', '<localleader>lR', vim.lsp.buf.rename, 'vim.lsp.buf.rename')
-  buffer_map('n', '<localleader>la', vim.lsp.buf.code_action, 'vim.lsp.buf.code_action')
-  buffer_map('n', '<localleader>lc', vim.lsp.codelens.run, 'vim.lsp.codelens.run')
-  buffer_map('n', '<localleader>lr', vim.lsp.buf.references, 'vim.lsp.buf.references')
-  buffer_map('n', '<localleader>lf', vim.lsp.buf.formatting, 'vim.lsp.buf.formatting')
-  buffer_map('n', '<localleader>ll', function()
-    vim.diagnostic.disable(0)
-  end, 'vim.diagnostic.disable(0)')
-
-  -- require 'illuminate'.on_attach(client)
-  local has_aerial, aerial = pcall(require, 'aerial')
-  if has_aerial then
-    aerial.on_attach(client, bufnr)
-  end
-
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  opts = opts or {}
+  opts.border = opts.border or "rounded"
+  return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
+-- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+--   border = "rounded",
+-- })
+-- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+--   border = "rounded",
+-- })
 
 vim.diagnostic.config({
   virtual_text = false,
+  float = { source = "always", },
   virtual_lines = true,
   signs = true,
   underline = true,
@@ -146,5 +85,116 @@ augroup MyLspShowDiagnostics
   " autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})
 augroup end
 ]])
+
+--##########################################################################################################
+-- LSP Keybindings and completion---------------------------------------------------------------------------
+--###################################################################################################################
+
+-- Global.
+-----------------------------------------------------------------------------
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+local opts = { remap=false, silent=true }
+vim.keymap.set('n', '<localleader>le', function() vim.diagnostic.open_float() end, opts)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<localleader>lq', vim.diagnostic.setloclist , opts)
+
+local M = {}
+
+-- buffer.
+-----------------------------------------------------------------------------
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+M.custom_on_attach = function(client, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  if client.server_capabilities.code_lens then
+    vim.api.nvim_create_autocmd({'BufEnter', 'CursorHold', 'InsertLeave'}, {
+      buffer = bufnr,
+      callback = vim.lsp.codelens.refresh
+    })
+    vim.lsp.codelens.refresh()
+  end
+
+  if client.resolved_capabilities.document_highlight then
+    vim.cmd([[
+      hi! link LspReferenceRead Visual
+      hi! link LspReferenceText Visual
+      hi! link LspReferenceWrite Visual
+      " hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
+    ]])
+    vim.api.nvim_create_augroup('lsp_document_highlight', {
+      clear = false
+    })
+    vim.api.nvim_clear_autocmds({
+      buffer = bufnr,
+      group = 'lsp_document_highlight',
+    })
+    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+      group = 'lsp_document_highlight',
+      buffer = bufnr,
+      callback = vim.lsp.buf.document_highlight,
+    })
+    vim.api.nvim_create_autocmd('CursorMoved', {
+      group = 'lsp_document_highlight',
+      buffer = bufnr,
+      callback = vim.lsp.buf.clear_references,
+    })
+  end
+
+  if vim.g.logging_level == 'debug' then
+    local msg = string.format("Language server %s started!", client.name)
+    vim.notify(msg, 'info', {title = 'Nvim-config'})
+  end
+
+  -- Mappings.
+  ------------------------------------------------------------------------
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+
+  -- local bufopts = { remap=false, silent=true, buffer=bufnr }
+  local function buffer_map(key, result, desc)
+    vim.keymap.set('n', key, result, {silent = true, buffer=bufnr, desc=desc})
+  end
+
+  buffer_map('n', '<localleader>lD', vim.lsp.buf.declaration, 'vim.lsp.buf.declaration')
+  buffer_map('n', '<localleader>ld', vim.lsp.buf.definition, 'vim.lsp.buf.definition')
+  buffer_map('n', '<localleader>K', vim.lsp.buf.hover, 'vim.lsp.buf.hover')
+  buffer_map('n', '<localleader>li', vim.lsp.buf.implementation, 'vim.lsp.buf.implementation')
+  vim.keymap.set('n', '<localleader><C-k>', vim.lsp.buf.signature_help,{buffer=bufnr, desc='vim.lsp.buf.signature_help'})
+  buffer_map('n', '<localleader>lwa', vim.lsp.buf.add_workspace_folder, 'vim.lsp.buf.add_workspace_folder')
+  buffer_map('n', '<localleader>lwr', vim.lsp.buf.remove_workspace_folder, 'vim.lsp.buf.remove_workspace_folder')
+  buffer_map('n', '<localleader>lwl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, 'vim.lsp.buf.list_workspace_folders')
+  buffer_map('n', '<localleader>lt', vim.lsp.buf.type_definition, 'vim.lsp.buf.type_definition')
+  buffer_map('n', '<localleader>lR', vim.lsp.buf.rename, 'vim.lsp.buf.rename')
+  buffer_map('n', '<localleader>la', vim.lsp.buf.code_action, 'vim.lsp.buf.code_action')
+  buffer_map('n', '<localleader>lc', vim.lsp.codelens.run, 'vim.lsp.codelens.run')
+  buffer_map('n', '<localleader>lr', vim.lsp.buf.references, 'vim.lsp.buf.references')
+  buffer_map('n', '<localleader>lf', vim.lsp.buf.formatting, 'vim.lsp.buf.formatting')
+  buffer_map('n', '<localleader>ll', function()
+    vim.diagnostic.disable(0)
+  end, 'vim.diagnostic.disable(0)')
+
+  -- Set some key bindings conditional on server capabilities
+  if client.resolved_capabilities.document_formatting then
+    buffer_map('n', '<localleader>lf', vim.lsp.buf.formatting_sync, 'vim.lsp.buf.formatting_sync')
+  end
+  if client.resolved_capabilities.document_range_formatting then
+    buffer_map('n', '<localleader>lf', vim.lsp.buf.range_formatting, 'vim.lsp.buf.range_formatting')
+  end
+
+  local has_illuminate, illuminate = pcall(require, 'illuminate')
+  if has_illuminate then
+    illuminate.on_attach(client)
+  end
+
+  local has_aerial, aerial = pcall(require, 'aerial')
+  if has_aerial then
+    aerial.on_attach(client, bufnr)
+  end
+
+end
 
 return M

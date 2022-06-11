@@ -1,4 +1,5 @@
 local nvim_lsp = require('lspconfig')
+local executable = require("options.utils").executable
 
 local custom_on_attach = require('plugins/LSP/settings').custom_on_attach
 
@@ -26,42 +27,63 @@ local server_config = {
 -- and map buffer local keybindings when the language server attaches
 local servers = { 'cmake','vimls'}
 -- for _, lsp in ipairs(servers) do
--- 	nvim_lsp[lsp].setup {
--- 		--root_dir = vim.loop.cwd;
--- 		capabilities = capabilities;
--- 		on_attach = on_attach;
--- 		flags = {
--- 			debounce_text_changes = 150,
--- 		}
--- 	}
+-- 	nvim_lsp[lsp].setup(general_config)
 -- end
 
--- nvim_lsp.bashls.setup {
---     --root_dir = vim.loop.cwd;
---     filetypes = { "sh", "bash", "zsh" },
---     capabilities = capabilities,
---     on_attach = on_attach,
---     flags = {
--- 			debounce_text_changes = 150,
---     }
--- }
+-- set up LSP for python
+if executable('pylsp') then
+  nvim_lsp.pylsp.setup({
+    on_attach = custom_attach,
+    settings = {
+      pylsp = {
+        plugins = {
+          pylint = { enabled = true, executable = "pylint" },
+          pyflakes = { enabled = false },
+          pycodestyle = { enabled = false },
+          jedi_completion = { fuzzy = true },
+          pyls_isort = { enabled = true },
+          pylsp_mypy = { enabled = true },
+        },
+      },
+    },
+    flags = {
+      debounce_text_changes = 200,
+    },
+    capabilities = capabilities,
+  })
+else
+  vim.notify("pylsp not found!", 'warn', {title = 'LSP-config'})
+end
+
+-- set up bash-language-server
+if executable('bash-language-server') then
+  nvim_lsp.bashls.setup({
+    on_attach = custom_on_attach,
+    capabilities = capabilities,
+    filetypes = { "sh", "bash", "zsh" },
+  })
+end
 
 --##########################################################################################################
--- C++ config------------------------------------------
+-- C/C++ config------------------------------------------
 --###################################################################################################################
 
-nvim_lsp.clangd.setup {
-  capabilities = capabilities;
-  on_attach = custom_on_attach;
-  flags = {
-    debounce_text_changes = 150,
-  },
-  cmd = {
-    "clangd",
-    "--background-index",
-  },
-  -- root_dir = require('lspconfig/util').root_pattern("compile_commands.json", "compile_flags.txt", ".ccls"),
-}
+if executable('clangd') then
+  nvim_lsp.clangd.setup({
+    capabilities = capabilities;
+    on_attach = custom_on_attach;
+    flags = {
+      debounce_text_changes = 150,
+    },
+    cmd = {
+      "clangd",
+      "--background-index",
+    },
+    -- root_dir = require('lspconfig/util').root_pattern("compile_commands.json", "compile_flags.txt", ".ccls"),
+  })
+else
+  vim.notify("clangd not found!", 'warn', {title = 'LSP-config'})
+end
 
 -- require('LSP/ccpp')
 -- local cclscachepath = vim.fn.getenv("HOME").."/tmp/ccls-cache"
