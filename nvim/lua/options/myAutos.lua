@@ -112,14 +112,14 @@ api.nvim_create_autocmd(
 -- )
 
 local MyQuickFixGroup = api.nvim_create_augroup("MyQuickFixGroup", { clear = true })
-api.nvim_create_autocmd(
-  "QuickFixCmdPost",
-  { command = "cgetexpr cwindow", group = MyQuickFixGroup }
-)
-api.nvim_create_autocmd(
-  "QuickFixCmdPost",
-  { command = "lgetexpr lwindow", group = MyQuickFixGroup }
-)
+-- api.nvim_create_autocmd(
+--   "QuickFixCmdPost",
+--   { command = "cgetexpr cwindow", group = MyQuickFixGroup }
+-- )
+-- api.nvim_create_autocmd(
+--   "QuickFixCmdPost",
+--   { command = "lgetexpr lwindow", group = MyQuickFixGroup }
+-- )
 vim.api.nvim_create_autocmd( "FileType" , {
   group = MyQuickFixGroup,
   pattern = { "qf" },
@@ -128,29 +128,29 @@ vim.api.nvim_create_autocmd( "FileType" , {
   end,
   once = false,
 })
--- vim.cmd([[
--- augroup myQuickfixFix
---   autocmd!
---   autocmd QuickFixCmdPost cgetexpr cwindow
---   autocmd QuickFixCmdPost lgetexpr lwindow
--- augroup END
--- ]])
--- vim.api.nvim_create_autocmd({ "QuickfixCmdPost" }, {
---   group = MyQuickFixGroup,
---   pattern = { "make", "grep", "grepadd", "vimgrep", "vimgrepadd" },
---   callback = function()
---     vim.cmd([[cwin]])
---   end,
---   once = false,
--- })
--- vim.api.nvim_create_autocmd({ "QuickfixCmdPost" }, {
---   group = MyQuickFixGroup,
---   pattern = { "lmake", "lgrep", "lgrepadd", "lvimgrep", "lvimgrepadd" },
---   callback = function()
---     vim.cmd([[lwin]])
---   end,
---   once = false,
--- })
+vim.cmd([[
+augroup myQuickfixFix
+  autocmd!
+  autocmd QuickFixCmdPost cgetexpr cwindow
+  autocmd QuickFixCmdPost lgetexpr lwindow
+augroup END
+]])
+vim.api.nvim_create_autocmd({ "QuickfixCmdPost" }, {
+  group = MyQuickFixGroup,
+  pattern = { "make", "grep", "grepadd", "vimgrep", "vimgrepadd" },
+  callback = function()
+    vim.cmd([[cwin]])
+  end,
+  once = false,
+})
+vim.api.nvim_create_autocmd({ "QuickfixCmdPost" }, {
+  group = MyQuickFixGroup,
+  pattern = { "lmake", "lgrep", "lgrepadd", "lvimgrep", "lvimgrepadd" },
+  callback = function()
+    vim.cmd([[lwin]])
+  end,
+  once = false,
+})
 
 local MyFiletypeDetectGroup = api.nvim_create_augroup("MyFiletypeDetectGroup", { clear = true })
 api.nvim_create_autocmd(

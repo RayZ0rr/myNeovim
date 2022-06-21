@@ -19,7 +19,7 @@ packer.startup(function(use)
   -- GENERAL
   --------------------------------------------------
 
-  -- fzf ----------------------------------------
+  -- FZF ----------------------------------------
   use {
     'ibhagwan/fzf-lua',
     requires = {
@@ -29,6 +29,13 @@ packer.startup(function(use)
       require('plugins/general/fzf-lua')
     end,
     -- config = [[ require('plugins/general/fzf-lua') ]]
+  }
+  -- Better quickfix --------------------------
+  use {
+    'gabrielpoca/replacer.nvim',
+    config = function()
+      require('plugins/general/misc')
+    end,
   }
   -- Undo history ------------------------------
   use {
@@ -46,9 +53,9 @@ packer.startup(function(use)
   }
   -- Terminal conveniences plugin (filebrowser with vifm, lazygit etc)
   use {
-    'akinsho/toggleterm.nvim',
+    'is0n/fm-nvim',
     config = function()
-      require('plugins/general/toggleterm')
+      require('plugins/general/fm-nvim')
     end,
   }
   -- Autocompletion plugin ---------------------

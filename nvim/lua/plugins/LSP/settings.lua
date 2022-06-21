@@ -80,8 +80,8 @@ end
 vim.cmd([[
 augroup MyLspShowDiagnostics
   autocmd!
-  autocmd! CursorHold * lua PrintDiagnostics()
-  " autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float()
+  " autocmd! CursorHold * lua PrintDiagnostics()
+  autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float()
   " autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})
 augroup end
 ]])
@@ -94,10 +94,10 @@ augroup end
 -----------------------------------------------------------------------------
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { remap=false, silent=true }
-vim.keymap.set('n', '<localleader>le', function() vim.diagnostic.open_float() end, opts)
+vim.keymap.set('n', '<leader>le', function() vim.diagnostic.open_float() end, opts)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<localleader>lq', vim.diagnostic.setloclist , opts)
+vim.keymap.set('n', '<leader>lq', vim.diagnostic.setloclist , opts)
 
 local M = {}
 
@@ -119,9 +119,9 @@ M.custom_on_attach = function(client, bufnr)
 
   if client.resolved_capabilities.document_highlight then
     vim.cmd([[
-      hi! link LspReferenceRead Visual
-      hi! link LspReferenceText Visual
-      hi! link LspReferenceWrite Visual
+      hi! link LspReferenceRead CursorLine
+      hi! link LspReferenceText CursorLine
+      hi! link LspReferenceWrite CursorLine
       " hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
     ]])
     vim.api.nvim_create_augroup('lsp_document_highlight', {
@@ -157,32 +157,32 @@ M.custom_on_attach = function(client, bufnr)
     vim.keymap.set('n', key, result, {silent = true, buffer=bufnr, desc=desc})
   end
 
-  buffer_map('n', '<localleader>lD', vim.lsp.buf.declaration, 'vim.lsp.buf.declaration')
-  buffer_map('n', '<localleader>ld', vim.lsp.buf.definition, 'vim.lsp.buf.definition')
-  buffer_map('n', '<localleader>K', vim.lsp.buf.hover, 'vim.lsp.buf.hover')
-  buffer_map('n', '<localleader>li', vim.lsp.buf.implementation, 'vim.lsp.buf.implementation')
-  vim.keymap.set('n', '<localleader><C-k>', vim.lsp.buf.signature_help,{buffer=bufnr, desc='vim.lsp.buf.signature_help'})
-  buffer_map('n', '<localleader>lwa', vim.lsp.buf.add_workspace_folder, 'vim.lsp.buf.add_workspace_folder')
-  buffer_map('n', '<localleader>lwr', vim.lsp.buf.remove_workspace_folder, 'vim.lsp.buf.remove_workspace_folder')
-  buffer_map('n', '<localleader>lwl', function()
+  buffer_map( '<leader>lD', vim.lsp.buf.declaration, 'vim.lsp.buf.declaration')
+  buffer_map( '<leader>ld', vim.lsp.buf.definition, 'vim.lsp.buf.definition')
+  buffer_map( '<leader>K', vim.lsp.buf.hover, 'vim.lsp.buf.hover')
+  buffer_map( '<leader>li', vim.lsp.buf.implementation, 'vim.lsp.buf.implementation')
+  vim.keymap.set( 'n', '<leader><C-k>', vim.lsp.buf.signature_help,{buffer=bufnr, desc='vim.lsp.buf.signature_help'})
+  buffer_map( '<leader>lwa', vim.lsp.buf.add_workspace_folder, 'vim.lsp.buf.add_workspace_folder')
+  buffer_map( '<leader>lwr', vim.lsp.buf.remove_workspace_folder, 'vim.lsp.buf.remove_workspace_folder')
+  buffer_map( '<leader>lwl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, 'vim.lsp.buf.list_workspace_folders')
-  buffer_map('n', '<localleader>lt', vim.lsp.buf.type_definition, 'vim.lsp.buf.type_definition')
-  buffer_map('n', '<localleader>lR', vim.lsp.buf.rename, 'vim.lsp.buf.rename')
-  buffer_map('n', '<localleader>la', vim.lsp.buf.code_action, 'vim.lsp.buf.code_action')
-  buffer_map('n', '<localleader>lc', vim.lsp.codelens.run, 'vim.lsp.codelens.run')
-  buffer_map('n', '<localleader>lr', vim.lsp.buf.references, 'vim.lsp.buf.references')
-  buffer_map('n', '<localleader>lf', vim.lsp.buf.formatting, 'vim.lsp.buf.formatting')
-  buffer_map('n', '<localleader>ll', function()
+  buffer_map( '<leader>lt', vim.lsp.buf.type_definition, 'vim.lsp.buf.type_definition')
+  buffer_map( '<leader>lR', vim.lsp.buf.rename, 'vim.lsp.buf.rename')
+  buffer_map( '<leader>la', vim.lsp.buf.code_action, 'vim.lsp.buf.code_action')
+  buffer_map( '<leader>lc', vim.lsp.codelens.run, 'vim.lsp.codelens.run')
+  buffer_map( '<leader>lr', vim.lsp.buf.references, 'vim.lsp.buf.references')
+  buffer_map( '<leader>lf', vim.lsp.buf.formatting, 'vim.lsp.buf.formatting')
+  buffer_map( '<leader>ll', function()
     vim.diagnostic.disable(0)
   end, 'vim.diagnostic.disable(0)')
 
   -- Set some key bindings conditional on server capabilities
   if client.resolved_capabilities.document_formatting then
-    buffer_map('n', '<localleader>lf', vim.lsp.buf.formatting_sync, 'vim.lsp.buf.formatting_sync')
+    buffer_map( '<leader>lf', vim.lsp.buf.formatting_sync, 'vim.lsp.buf.formatting_sync')
   end
   if client.resolved_capabilities.document_range_formatting then
-    buffer_map('n', '<localleader>lf', vim.lsp.buf.range_formatting, 'vim.lsp.buf.range_formatting')
+    vim.keymap.set('x', '<leader>lf', vim.lsp.buf.range_formatting, {silent = true, buffer=bufnr, desc= 'vim.lsp.buf.range_formatting'})
   end
 
   local has_illuminate, illuminate = pcall(require, 'illuminate')
