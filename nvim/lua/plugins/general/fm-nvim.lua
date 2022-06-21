@@ -1,5 +1,9 @@
+nmap = require('options/utils').nnmap
+bmap = require('options/utils').bmap
+local executable = require("options.utils").executable
 
-vim.api.nvim_set_keymap('n','<leader>tt', [[:execute 'Vifm' fnameescape(getcwd())<CR>]], {noremap = true, silent = true})
+nmap('<leader>tt', [[:execute 'Vifm' fnameescape(getcwd())<CR>]] )
+nmap('<leader>tg', [[:execute 'Lazygit' <CR>]] )
 
 require('fm-nvim').setup{
   -- (Vim) Command used to open files

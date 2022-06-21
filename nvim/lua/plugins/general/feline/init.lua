@@ -161,6 +161,7 @@ force_inactive.filetypes = {
   'term',
   'toggleterm',
   'fm',
+  'replacer',
   'fugitiveblame',
 }
 
@@ -254,6 +255,7 @@ components.active[1][4] = {
       type = 'unique-short'
     }
   },
+  short_provider = 'file_type',
   icon = '',
   enabled = is_buffer_empty,
   hl = {
@@ -300,6 +302,7 @@ components.active[1][6] = {
 -- diffAdd
 components.active[1][7] = {
   provider = 'git_diff_added',
+  truncate_hide = true,
   enabled = FullBar,
   hl = {
     fg = 'green',
@@ -310,6 +313,7 @@ components.active[1][7] = {
 -- diffModfified
 components.active[1][8] = {
   provider = 'git_diff_changed',
+  truncate_hide = true,
   enabled = FullBar,
   hl = {
     fg = 'orange',
@@ -320,6 +324,7 @@ components.active[1][8] = {
 -- diffRemove
 components.active[1][9] = {
   provider = 'git_diff_removed',
+  truncate_hide = true,
   enabled = FullBar,
   hl = {
     fg = 'red',
@@ -353,6 +358,7 @@ components.active[2][2] = {
 -- diagnosticWarn
 components.active[2][3] = {
   provider = 'diagnostic_warnings',
+  truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.WARN),
   hl = {
     fg = 'yellow',
@@ -362,6 +368,7 @@ components.active[2][3] = {
 -- diagnosticHint
 components.active[2][4] = {
   provider = 'diagnostic_hints',
+  truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.HINT),
   hl = {
     fg = 'cyan',
@@ -371,6 +378,7 @@ components.active[2][4] = {
 -- diagnosticInfo
 components.active[2][5] = {
   provider = 'diagnostic_info',
+  truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.INFO),
   hl = {
     fg = 'skyblue',
@@ -380,7 +388,7 @@ components.active[2][5] = {
 -- Treesitter status
 components.active[2][6] = {
   provider = TreesitterStatus,
-  enabled = FullBar,
+  enabled = BarWidth,
   hl = {
     fg = 'skyblue',
     style = 'bold'

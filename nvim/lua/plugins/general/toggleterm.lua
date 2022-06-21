@@ -60,6 +60,7 @@ if executable('vifm') then
     on_open = function(term)
       vim.cmd("startinsert!")
       bmap("n", "<c-q>", "<cmd>close<CR>", {buffer = term.bufnr})
+      bmap("t", "<cr>", "<cmd>edit<CR>", {buffer = term.bufnr})
     end,
   })
   function VifmToggle()

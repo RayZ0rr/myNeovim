@@ -1,17 +1,22 @@
+
+local nnmap = require('options/utils').nnmap
+local vnmap = require('options/utils').vnmap
+local xnmap = require('options/utils').xnmap
+
 vim.g.kommentary_create_default_mappings = false
 
-vim.keymap.set("n", "gcc", "<Plug>kommentary_line_default", {})
-vim.keymap.set("n", "gc", "<Plug>kommentary_motion_default", {})
-vim.keymap.set("v", "gc", "<Plug>kommentary_visual_default<C-c>", {})
+nnmap("gcc", "<Plug>kommentary_line_default", {})
+nnmap("gc", "<Plug>kommentary_motion_default", {})
+vnmap("gc", "<Plug>kommentary_visual_default<C-c>", {})
 
 -- require('kommentary.config').use_extended_mappings()
 
-vim.keymap.set("n", "<leader>gcic", "<Plug>kommentary_line_increase", {})
-vim.keymap.set("n", "<leader>gci", "<Plug>kommentary_motion_increase", {})
-vim.keymap.set("x", "<leader>gci", "<Plug>kommentary_visual_increase", {})
-vim.keymap.set("n", "<leader>gcdc", "<Plug>kommentary_line_decrease", {})
-vim.keymap.set("n", "<leader>gcd", "<Plug>kommentary_motion_decrease", {})
-vim.keymap.set("x", "<leader>gcd", "<Plug>kommentary_visual_decrease", {})
+nnmap("<leader>gcic", "<Plug>kommentary_line_increase", {})
+nnmap("<leader>gci", "<Plug>kommentary_motion_increase", {})
+xnmap("<leader>gci", "<Plug>kommentary_visual_increase", {})
+nnmap("<leader>gcdc", "<Plug>kommentary_line_decrease", {})
+nnmap("<leader>gcd", "<Plug>kommentary_motion_decrease", {})
+xnmap("<leader>gcd", "<Plug>kommentary_visual_decrease", {})
 
 require('kommentary.config').configure_language("default", {
   prefer_single_line_comments = true,

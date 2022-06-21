@@ -1,36 +1,33 @@
 
-local map = function(keys,command)
-  vim.api.nvim_set_keymap('n', keys, command,{ noremap = true, silent = true })
-end
+local nnmap = require('options/utils').nnmap
+local xnmap = require('options/utils').xnmap
 
-local vmap = function(keys,command)
-  vim.api.nvim_set_keymap('v', keys, command,{ noremap = true, silent = true })
-end
+nnmap('<leader>ff',"<cmd>lua require('fzf-lua').files({show_cwd_header=true})<CR>")
+nnmap('<leader>fa',":FzfLua files cwd=~<CR>")
+nnmap('<leader>fn',":FzfLua files cwd=~/.config/nvim<CR>")
+nnmap(
+  '<leader>fo',
+  function()
+    require('fzf-lua').oldfiles({
+    cwd_only = function()
+      return vim.api.nvim_command('pwd') ~= vim.env.HOME
+    end
+    })
+  end
+)
 
-map('<leader>ff',"<cmd>lua require('fzf-lua').files()<CR>")
-map('<leader>fa',":FzfLua files cwd=~<CR>")
-map('<leader>fn',":FzfLua files cwd=~/.config/nvim<CR>")
-map('<leader>fo',":FzfLua oldfiles<CR>")
--- m', '<leader>fa',"<cmd>lua require('fzf-lua').files({ cwd = '~'})<CR>",{ noremap = true, silent = true })
-map('<leader>fbb',"<cmd>lua require('fzf-lua').buffers()<CR>")
-map('<leader>fbl',"<cmd>lua require('fzf-lua').blines()<CR>")
-map('<leader>fl',"<cmd>lua require('fzf-lua').lines()<CR>")
-map('<leader>fgg',"<cmd>FzfLua grep_project<CR>")
--- vmap('<leader>fgv',"<cmd>FzfLua grep_visual<CR>")
-map('<leader>fh',"<cmd>lua require('fzf-lua').help_tags()<CR>")
-map([[<leader>fk]],"<cmd>lua require('fzf-lua').man_pages()<CR>")
-map([[<leader>fm]],"<cmd>lua require('fzf-lua').marks()<CR>")
-map('<leader>fH',"<cmd>lua require('fzf-lua').command_history()<CR>")
+-- nnmap('<leader>gg',  "<cmd>FzfLua grep_project<CR>")
+nnmap('<leader>gg',  function() require("fzf-lua").grep({ search = "", fzf_opts = { ['--nth'] = '2..' } }) end)
+nnmap('<leader>gr',  function() require("fzf-lua").grep({ continue_last_search = true }) end)
+nnmap('<leader>gl',  function() require("fzf-lua").live_grep({ exec_empty_query = true, debug=true }) end)
+xnmap('<leader>gv',   "<cmd>FzfLua grep_visual<CR>")
+nnmap('<leader>gw',  function() require'fzf-lua'.grep_project({ fzf_opts={ ['--query']=vim.fn.expand('<cword>') }}) end)
 
--- vim.api.nvim_set_keymap('n', '<leader>ff',
---     "<cmd>lua require('fzf-lua').files()<CR>",
---     { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>fa',":FzfLua files cwd=~<CR>",{ noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>fnv',":FzfLua files cwd=~/.config/nvim<CR>",{ noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>fa',"<cmd>lua require('fzf-lua').files({ cwd = '~'})<CR>",{ noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>fbb',"<cmd>lua require('fzf-lua').buffers()<CR>",{ noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>fbl',"<cmd>lua require('fzf-lua').blines()<CR>",{ noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>fl',"<cmd>lua require('fzf-lua').lines()<CR>",{ noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>fh',"<cmd>lua require('fzf-lua').help_tags()<CR>",{ noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>fm',"<cmd>lua require('fzf-lua').man_pages()<CR>",{ noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>fH',"<cmd>lua require('fzf-lua').command_history()<CR>",{ noremap = true, silent = true })
+nnmap('<leader>fgi',  "<cmd>Fzflua git_files<CR>")
+nnmap('<leader>fbb',  "<cmd>lua require('fzf-lua').buffers()<CR>")
+nnmap('<leader>fbl',  "<cmd>lua require('fzf-lua').blines()<CR>")
+nnmap('<leader>fl',   "<cmd>lua require('fzf-lua').lines()<CR>")
+nnmap('<leader>fh',   "<cmd>lua require('fzf-lua').help_tags()<CR>")
+nnmap('<leader>fk', "<cmd>lua require('fzf-lua').man_pages()<CR>")
+nnmap('<leader>fm', "<cmd>lua require('fzf-lua').marks()<CR>")
+nnmap('<leader>fH',   "<cmd>lua require('fzf-lua').command_history()<CR>")

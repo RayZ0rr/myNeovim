@@ -1,18 +1,22 @@
 -- Settings
 local actions = require "fzf-lua.actions"
 require'fzf-lua'.setup {
--- fzf_bin         = 'sk',            -- use skim instead of fzf?
-                                        -- https://github.com/lotabout/skim
+  -- fzf_bin         = 'sk',            -- use skim instead of fzf?
+  -- https://github.com/lotabout/skim
   global_resume      = true,            -- enable global `resume`?
-                                        -- can also be sent individually:
-                                        -- `<any_function>.({ gl ... })`
+  -- can also be sent individually:
+  -- `<any_function>.({ gl ... })`
   global_resume_query = true,           -- include typed query in `resume`?
+  winopts_fn = function()
+    -- larger width if neovim win has over 80 columns
+    return { width = vim.o.columns>80 and 0.85 or 0.65 }
+  end,
   winopts = {
     -- split         = "belowright new",-- open in a split instead?
-                                        -- "belowright new"  : split below
-                                        -- "aboveleft new"   : split above
-                                        -- "belowright vnew" : split right
-                                        -- "aboveleft vnew   : split left
+    -- "belowright new"  : split below
+    -- "aboveleft new"   : split above
+    -- "belowright vnew" : split right
+    -- "aboveleft vnew   : split left
     -- Only valid when using a float window
     -- (i.e. when 'split' is not defined, default)
     height           = 0.85,            -- window height
@@ -38,9 +42,9 @@ require'fzf-lua'.setup {
     },
     preview = {
       -- default     = 'bat',           -- override the default previewer?
-                                        -- default uses the 'builtin' previewer
+      -- default uses the 'builtin' previewer
       border         = 'border',        -- border|noborder, applies only to
-                                        -- native fzf previewers (bat/cat/git/etc)
+      -- native fzf previewers (bat/cat/git/etc)
       wrap           = 'nowrap',        -- wrap|nowrap
       hidden         = 'nohidden',      -- hidden|nohidden
       vertical       = 'down:45%',      -- up|down:size
@@ -50,24 +54,24 @@ require'fzf-lua'.setup {
       -- Only valid with the builtin previewer:
       title          = true,            -- preview border title (file/buf)?
       scrollbar      = 'float',         -- `false` or string:'float|border'
-                                        -- float:  in-window floating border 
-                                        -- border: in-border chars (see below)
+      -- float:  in-window floating border 
+      -- border: in-border chars (see below)
       scrolloff      = '-2',            -- float scrollbar offset from right
-                                        -- applies only when scrollbar = 'float'
+      -- applies only when scrollbar = 'float'
       scrollchars    = {'█', '' },      -- scrollbar chars ({ <full>, <empty> }
-                                        -- applies only when scrollbar = 'border'
+      -- applies only when scrollbar = 'border'
       delay          = 100,             -- delay(ms) displaying the preview
-                                        -- prevents lag on fast scrolling
+      -- prevents lag on fast scrolling
       winopts = {                       -- builtin previewer window options
-        number            = true,
-        relativenumber    = false,
-        cursorline        = true,
-        cursorlineopt     = 'both',
-        cursorcolumn      = false,
-        signcolumn        = 'no',
-        list              = false,
-        foldenable        = false,
-        foldmethod        = 'manual',
+	number            = true,
+	relativenumber    = false,
+	cursorline        = true,
+	cursorlineopt     = 'both',
+	cursorcolumn      = false,
+	signcolumn        = 'no',
+	list              = false,
+	foldenable        = false,
+	foldmethod        = 'manual',
       },
     },
     on_create = function()
@@ -200,9 +204,9 @@ require'fzf-lua'.setup {
       -- for example, use `viu` for image previews
       -- will do nothing if `viu` isn't executable
       extensions      = {
-        -- neovim terminal only supports `viu` block output
-        ["png"]       = { "viu", "-b" },
-        ["jpg"]       = { "ueberzug" },
+	-- neovim terminal only supports `viu` block output
+	["png"]       = { "viu", "-b" },
+	["jpg"]       = { "ueberzug" },
       },
       -- if using `ueberzug` in the above extensions map
       -- set the default image scaler, possible scalers:
@@ -215,8 +219,8 @@ require'fzf-lua'.setup {
   -- provider setup
   files = {
     -- previewer      = "bat",          -- uncomment to override previewer
-                                        -- (name from 'previewers' table)
-                                        -- set to 'false' to disable
+    -- (name from 'previewers' table)
+    -- set to 'false' to disable
     prompt            = 'Files❯ ',
     multiprocess      = true,           -- run command in a separate process
     git_icons         = true,           -- show git icons?
@@ -258,9 +262,9 @@ require'fzf-lua'.setup {
       git_icons       = true,
       color_icons     = true,
       actions = {
-        -- actions inherit from 'actions.files' and merge
-        ["right"]   = { actions.git_unstage, actions.resume },
-        ["left"]    = { actions.git_stage, actions.resume },
+	-- actions inherit from 'actions.files' and merge
+	["right"]   = { actions.git_unstage, actions.resume },
+	["left"]    = { actions.git_stage, actions.resume },
       },
     },
     commits = {
@@ -268,7 +272,7 @@ require'fzf-lua'.setup {
       cmd             = "git log --pretty=oneline --abbrev-commit --color",
       preview         = "git show --pretty='%Cred%H%n%Cblue%an%n%Cgreen%s' --color {1}",
       actions = {
-        ["default"] = actions.git_checkout,
+	["default"] = actions.git_checkout,
       },
     },
     bcommits = {
@@ -276,10 +280,10 @@ require'fzf-lua'.setup {
       cmd             = "git log --pretty=oneline --abbrev-commit --color",
       preview         = "git show --pretty='%Cred%H%n%Cblue%an%n%Cgreen%s' --color {1}",
       actions = {
-        ["default"] = actions.git_buf_edit,
-        ["ctrl-s"]  = actions.git_buf_split,
-        ["ctrl-v"]  = actions.git_buf_vsplit,
-        ["ctrl-t"]  = actions.git_buf_tabedit,
+	["default"] = actions.git_buf_edit,
+	["ctrl-s"]  = actions.git_buf_split,
+	["ctrl-v"]  = actions.git_buf_vsplit,
+	["ctrl-t"]  = actions.git_buf_tabedit,
       },
     },
     branches = {
@@ -287,7 +291,7 @@ require'fzf-lua'.setup {
       cmd             = "git branch --all --color",
       preview         = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
       actions = {
-        ["default"] = actions.git_switch,
+	["default"] = actions.git_switch,
       },
     },
     icons = {
@@ -418,7 +422,7 @@ require'fzf-lua'.setup {
   },
   lsp = {
     prompt_postfix    = '❯ ',       -- will be appended to the LSP label
-                                    -- to override use 'prompt' instead
+    -- to override use 'prompt' instead
     cwd_only          = false,      -- LSP/diagnostics for cwd only?
     async_or_timeout  = 5000,       -- timeout(ms) or 'true' for async calls
     file_icons        = true,

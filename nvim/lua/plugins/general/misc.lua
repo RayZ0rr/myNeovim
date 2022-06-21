@@ -35,6 +35,32 @@ else
 end
 
 --##########################################################################################################
+-- Better Quickfix ---------------------------------------------------------------------------------------------
+-- QF editable in both content and file path.
+--##########################################################################################################
+local present, _ = pcall(require, 'replacer')
+if present then
+  nnmap('<Leader>qf', ':lua require("replacer").run()<cr>', { nowait = true, silent = true })
+
+else
+  print("gabrielpoca/replacer.nvim not installed")
+end
+
+--##########################################################################################################
+-- Ferret ---------------------------------------------------------------------------------------------
+-- Enhanced multi-file search for Vim
+--##########################################################################################################
+if vim.fn.empty(vim.fn.glob(plugins_path..'ferret')) == 0 then
+  vim.g.FerretMap = 0
+  -- nnmap('<leader>gg', [[:execute "normal \<Plug>(FerretAckWord) \<Plug>(FerretAcks)"<CR>]])
+  nnmap('<leader>gg', [[:Ack <C-R><C-W><CR>:Acks /<C-R><c-w>//<left>]])
+  xnmap('<leader>gf', [[y:Ack <C-R>"<CR>:Acks /<C-R>"//<left>]])
+  nnmap('<leader>gb', [[<Plug>(FerretBack)]], {remap=true})
+else
+  print("wincent/ferret not installed")
+end
+
+--##########################################################################################################
 -- Vim-easy-align ---------------------------------------------------------------------------------------------
 -- A Vim alignment plugin
 --##########################################################################################################
@@ -92,9 +118,9 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'vim-better-whitespace')) == 0 then
   nnmap( ']w', ':NextTrailingWhitespace<CR>')
   nnmap( '[w', ':PrevTrailingWhitespace<CR>')
 
-  nnmap( '<leader>wt', ':ToggleWhitespace<CR>')
+  nnmap( '<leader>wt', ':ToggleWhitespace | echo "Whitspace toggled"<CR><CR>')
   nnmap( '<leader>wr', ':StripWhitespace<CR>')
-  nnmap( '<leader>ws', ':ToggleStripWhitespaceOnSave<CR>')
+  nnmap( '<leader>ws', ':ToggleStripWhitespaceOnSave | echo "Whitspace strip on save toggled"<CR><CR>')
 
   -- vim.cmd[[autocmd FileType * ToggleWhitespace]]
 
@@ -105,7 +131,7 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'vim-better-whitespace')) == 0 then
   -- vimg.g.strip_whitespace_confirm=1
   vim.g.current_line_whitespace_disabled_hard=1
   -- vim.g.current_line_whitespace_disabled_soft=1
-  vim.g.better_whitespace_filetypes_blacklist={'fzf', 'floaterm', 'toggleterm', 'term', 'fm', 'netrw', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive'}
+  vim.g.better_whitespace_filetypes_blacklist={'fzf', 'floaterm', 'toggleterm', 'term', 'fm', 'replacer', 'netrw', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive'}
 else
   print("ntpeters/vim-better-whitespace not installed")
 end

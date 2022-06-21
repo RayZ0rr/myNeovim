@@ -110,7 +110,7 @@ local buttons = {
   type = "group",
   val = {
     button("e", "  New file", "ene"),
-    button("f", "  File Explorer","FzfLua files"),
+    button("f", "  File Explorer","FzfLua files show_header=true"),
     button("o", "  Recently opened files","FzfLua oldfiles"),
     button("g", "  Find word","FzfLua grep_project"),
     button("m", "  Jump to bookmarks","lua require('fzf-lua').marks()"),
