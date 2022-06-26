@@ -1,29 +1,26 @@
 
-local nnmap = function(key,action)
-  vim.api.nvim_set_keymap('n',key,action,{noremap = true})
-end
-
-local snnmap = function(key,action)
-  vim.api.nvim_set_keymap('n',key,action,{noremap = true, silent = true})
-end
+local nnmap = require('options/utils').nnmap
+local inmap = require('options/utils').inmap
 
 -- snnmap('<S-x>', ':BufferClose<CR>')
 
 --These commands will move the current buffer backwards or forwards in the bufferline
-snnmap('<leader><TAB>',':BufferLineMoveNext<CR>')
-snnmap('<leader><S-TAB>',':BufferLineMovePrev<CR>')
+nnmap('<leader><TAB>',':BufferLineMoveNext<CR>')
+nnmap('<leader><S-TAB>',':BufferLineMovePrev<CR>')
 
 -- These commands will navigate through buffers in order regardless of which mode you are using
 -- e.g. if you change the order of buffers :bnext and :bprevious will not respect the custom ordering
-snnmap(']b',':BufferLineCycleNext<CR>')
-snnmap('[b',':BufferLineCyclePrev<CR>')
+nnmap('<M-a>',':BufferLineCyclePrev<CR>')
+nnmap('<M-s>',':BufferLineCycleNext<CR>')
+inmap('<M-a>','<esc>:BufferLineCyclePrev<CR>')
+inmap('<M-s>','<esc>:BufferLineCycleNext<CR>')
 
 snnmap('<leader>bfp', ':BufferLinePick<CR>')
 
 --These commands will sort buffers by directory, language, or a custom criteria
-snnmap('<leader>bfe',':BufferLineSortByExtension<CR>')
-snnmap('<leader>bfd',':BufferLineSortByDirectory<CR>')
-snnmap('<leader>bfn', ":lua require('bufferline').sort_buffers_by(function (buf_a, buf_b) return buf_a.id < buf_b.id end)<CR>" )
+nnmap('<leader>bfe',':BufferLineSortByExtension<CR>')
+nnmap('<leader>bfd',':BufferLineSortByDirectory<CR>')
+nnmap('<leader>bfn', ":lua require('bufferline').sort_buffers_by(function (buf_a, buf_b) return buf_a.id < buf_b.id end)<CR>" )
 
 -- require("bufferline").setup{}
 require('bufferline').setup {

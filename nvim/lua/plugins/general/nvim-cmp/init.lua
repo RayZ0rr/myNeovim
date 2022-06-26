@@ -1,3 +1,9 @@
+local has_cmp, cmp = pcall(require, 'cmp')
+if not has_cmp then
+  return
+end
+
+local luasnip = require("luasnip")
 
 -- lsp-kind alternative
 local kind_icons = {
@@ -42,9 +48,6 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
-local luasnip = require("luasnip")
-local cmp = require("cmp")
-
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menu,menuone,noselect'
 
@@ -87,8 +90,8 @@ cmp.setup({
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
+      -- elseif luasnip.expand_or_jumpable() then
+      --   luasnip.expand_or_jump()
       -- elseif has_words_before() then
       --   cmp.complete()
       else
@@ -168,3 +171,16 @@ cmp.setup({
 --   history = true,
 -- }
 require("luasnip.loaders.from_vscode").lazy_load()
+
+local LuasnipPrev = function()
+  if luasnip.jumpable(-1) then
+    luasnip.jump(-1)
+  end
+end
+local LuasnipNext = function()
+  if luasnip.expand_or_jumpable() then
+    luasnip.expand_or_jump()
+  end
+end
+vim.keymap.set({"i","s"},"<C-j>",LuasnipPrev,{desc="Luasnip choose previous node function"})
+vim.keymap.set({"i","s"},"<C-k>",LuasnipNext,{desc="Luasnip choose next node function"})

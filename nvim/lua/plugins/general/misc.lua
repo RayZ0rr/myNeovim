@@ -240,7 +240,7 @@ if present then
       },
   }
 
-  nnmap('<leader>spt', [[<cmd>lua require('specs').toggle() | echo "Specs toggled"<cr>]])
+  nnmap('<leader>spt', function() require('specs').toggle() print("Specs toggled") end)
   nnmap('<leader>spp', [[<cmd>lua require('specs').show_specs()<cr>]])
 
 else
