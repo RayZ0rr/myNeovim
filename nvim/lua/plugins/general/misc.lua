@@ -240,7 +240,7 @@ if present then
       },
   }
 
-  nnmap('<leader>spt', function() require('specs').toggle() print("Specs toggled") end)
+  nnmap('<leader>spt', function() require('specs').toggle() print("Specs toggled") end, {desc="Toggle specs function"})
   nnmap('<leader>spp', [[<cmd>lua require('specs').show_specs()<cr>]])
 
 else
@@ -278,47 +278,3 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'beacon.nvim')) == 0 then
 -- else
 --   print("DanilaMihailov/beacon.nvim not installed")
 end
-
---##########################################################################################################
--- vim floaterm -------------------------------------------------------------------------------------------
---##########################################################################################################
--- vim.g.floaterm_opener = 'edit'
--- vim.g.floaterm_autoclose = 1
--- vim.api.nvim_set_keymap('n','<leader>tt', [[:execute 'FloatermNew --name=Vifm --disposable vifmrun' fnameescape(getcwd())<CR>]], {remap = false, silent = true})
--- vim.api.nvim_set_keymap('t','<leader>tt', [[<C-\><C-n>:execute 'FloatermToggle Vifm'<CR>]], {remap = false, silent = true})
--- vim.api.nvim_set_keymap('n','<leader>tt', [[:execute 'FloatermToggle Vifm'<CR>]], {remap = false, silent = false})
--- vim.api.nvim_set_keymap('n','<leader>tf', [[:execute 'FloatermNew --name=Vifm vifmrun' fnameescape(getcwd())<CR>]], {remap = false, silent = false})
--- vim.api.nvim_set_keymap('n','<leader>tt', [[:execute 'FloatermToggle Vifm'<CR>]], {remap = false, silent = false})
--- vim.api.nvim_set_keymap('t','<leader>tt', [[<C-\><C-n>:execute 'FloatermToggle Vifm'<CR>]], {remap = false, silent = false})
--- vim.cmd[[autocmd User FloatermOpen nnoremap tt :FloatermToggle<CR>]]
--- vim.api.nvim_set_keymap('t','<leader>tt', [[<C-\><C-n>:execute 'FloatermToggle vifm'<CR>]], {remap = false, silent = true})
-
--- vim.api.nvim_set_keymap('n','<leader>tr', ':FloatermToggle<CR>', {remap = false, silent = true})
--- vim.api.nvim_set_keymap('t','<leader>tr', [[<C-\><C-n>:FloatermToggle<CR>]], {remap = false, silent = true})
-
---##########################################################################################################
--- fm-nvim ------------------------------------------------------------------------------------------------
---##########################################################################################################
--- vim.api.nvim_set_keymap('n','<leader>tr', ':Vifm<CR>', {remap = false})
-
--- Move selected line / block of text in visual mode
--- vim.api.nvim_set_keymap('x', 'K', ':move \'<-2<CR>gv-gv', {remap = false, silent = true})
--- vim.api.nvim_set_keymap('x', 'J', ':move \'>+1<CR>gv-gv', {remap = false, silent = true})
--- vim-move plugin
--- vim.api.nvim_command('let g:move_key_modifier = "C"')
-
--- require('nvim_comment').setup(
--- {
---   -- lINTERS PREFER COMMENT AND LINE TO HAVE A SPACE IN BETWEEN MARKERS
---   MARKER_PADDING = TRUE,
---   -- SHOULD COMMENT OUT EMPTY OR WHITESPACE ONLY LINES
---   COMMENT_EMPTY = FALSE,
---   -- sHOULD KEY MAPPINGS BE CREATED
---   CREATE_MAPPINGS = TRUE,
---   -- nORMAL MODE MAPPING LEFT HAND SIDE
---   LINE_MAPPING = "GCC",
---   -- vISUAL/oPERATOR MAPPING LEFT HAND SIDE
---   OPERATOR_MAPPING = "GC"
--- }
--- )
-

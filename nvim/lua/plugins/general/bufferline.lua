@@ -15,7 +15,7 @@ nnmap('<M-s>',':BufferLineCycleNext<CR>')
 inmap('<M-a>','<esc>:BufferLineCyclePrev<CR>')
 inmap('<M-s>','<esc>:BufferLineCycleNext<CR>')
 
-snnmap('<leader>bfp', ':BufferLinePick<CR>')
+nnmap('<leader>bfp', ':BufferLinePick<CR>')
 
 --These commands will sort buffers by directory, language, or a custom criteria
 nnmap('<leader>bfe',':BufferLineSortByExtension<CR>')

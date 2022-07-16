@@ -619,7 +619,16 @@ components.inactive[1][5] = {
   provider = ' ',
   hl = {
     fg = 'cyan',
-    bg = 'NONE',
+    bg = 'black',
+    style = 'bold'
+  },
+}
+
+components.inactive[1][6] = {
+  provider = ' ',
+  hl = {
+    fg = 'red',
+    bg = 'black',
     style = 'bold'
   },
 }

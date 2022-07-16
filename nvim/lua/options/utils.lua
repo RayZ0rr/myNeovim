@@ -44,6 +44,14 @@ function M.xnmap(lhs, rhs, opts)
     vim.keymap.set('x', lhs, rhs, options)
 end
 
+function M.tnmap(lhs, rhs, opts)
+    local options = {remap = false, silent = true}
+    if opts then
+        options = vim.tbl_extend("force", options, opts)
+    end
+    vim.keymap.set('t', lhs, rhs, options)
+end
+
 function M.executable(name)
   if vim.fn.executable(name) > 0 then
     return true

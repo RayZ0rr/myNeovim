@@ -173,6 +173,7 @@ api.nvim_create_autocmd(
     callback = function()
       vim.cmd([[
 	setlocal nonumber
+	setlocal nospell
 	setlocal norelativenumber
 	setlocal signcolumn=no
 	setlocal ft=term

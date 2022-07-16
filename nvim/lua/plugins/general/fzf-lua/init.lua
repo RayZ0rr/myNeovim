@@ -330,6 +330,7 @@ require'fzf-lua'.setup {
     actions = {
       -- actions inherit from 'actions.files' and merge
       -- this action toggles between 'grep' and 'live_grep'
+      ["default"]     = actions.file_edit_or_qf,
       ["ctrl-g"]      = { actions.grep_lgrep }
     },
     no_header             = false,    -- hide grep|cwd header?

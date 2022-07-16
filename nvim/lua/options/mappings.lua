@@ -32,6 +32,7 @@ local nnmap = require('options/utils').nnmap
 local inmap = require('options/utils').inmap
 local vnmap = require('options/utils').vnmap
 local xnmap = require('options/utils').xnmap
+local tnmap = require('options/utils').tnmap
 
 nnmap('<leader>kl', [[:s/chakkachakkachakka/chakka/e<CR>]])
 
@@ -70,6 +71,11 @@ xnmap('<space>', 'g_')
 -- Open terminal buffer
 -----------------------------------------------------------------------------//
 nnmap("<leader>tr",":terminal<cr>")
+tnmap( '<C-h>', [[<C-\><C-N><C-h>]] )
+tnmap( '<C-l>', [[<C-\><C-N><C-l>]] )
+tnmap( '<C-j>', [[<C-\><C-N><C-j>]] )
+tnmap( '<C-k>', [[<C-\><C-N><C-k>]] )
+nnmap( '<leader>ty', [[:split<bar>below<bar>resize 10<bar>term<CR>]])
 
 -----------------------------------------------------------------------------//
 -- Netrw Explorer  on the left (:h :Lexplore)
@@ -111,7 +117,7 @@ local toggle_qf = function()
   end
   vim.cmd([[copen]])
 end
-nnmap(',cc',toggle_qf)
+nnmap(',qt',toggle_qf)
 nnmap(']q', '<cmd>cnext<CR>zz')
 nnmap('[q', '<cmd>cprev<CR>zz')
 nnmap(']l', '<cmd>lnext<cr>zz')

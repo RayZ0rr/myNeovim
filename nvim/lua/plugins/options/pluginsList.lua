@@ -58,6 +58,12 @@ packer.startup(function(use)
       require('plugins/general/fm-nvim')
     end,
   }
+  -- use {
+  --   'voldikss/vim-floaterm',
+  --   config = function()
+  --     require('plugins/general/floaterm')
+  --   end,
+  -- }
   -- Autocompletion plugin ---------------------
   use {
     'hrsh7th/nvim-cmp',
@@ -114,7 +120,7 @@ packer.startup(function(use)
     -- 'rmagatti/auto-session',
     'Shatur/neovim-session-manager',
     config = function()
-      require('plugins/general/auto-session')
+      require('plugins/general/sessions')
     end,
   }
 
