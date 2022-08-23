@@ -95,7 +95,7 @@ if present then
   vim.api.nvim_command [[ hi def link LspReferenceRead CursorLine ]]
   nnmap('<a-n>', '<cmd>lua require"illuminate".next_reference{wrap=true}<cr>')
   nnmap('<a-p>', '<cmd>lua require"illuminate".next_reference{reverse=true,wrap=true}<cr>')
-  nnmap('<leader>il', [[:exe 'IlluminationToggle!' | echo "Illuminate toggled"<cr>]])
+  nnmap('<leader>ill', [[:exe 'IlluminationToggle!' | echo "Illuminate toggled"<cr>]])
   -- Don't highlight word under cursor (default: 1)
   -- vim.g.Illuminate_highlightUnderCursor = 1
   vim.cmd[[
@@ -193,7 +193,7 @@ if present then
     colorizer_cfg
   )
 
-  nnmap('<leader>clr', [[<cmd>ColorizerToggle | echo "Colorizer toggled"<cr>]])
+  nnmap('<leader>clr', ':exec "ColorizerToggle" | echo "Colorizer toggled"<cr>')
 
 else
   print("norcalli/nvim-colorizer.lua not installed")

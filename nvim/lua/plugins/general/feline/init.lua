@@ -122,7 +122,7 @@ local buffer_not_empty = function()
 end
 
 local FullBar = function()
-  return vim.api.nvim_win_get_width(0) > 75
+  return vim.api.nvim_win_get_width(0) > 95
 end
 
 local BarWidth = function(n)

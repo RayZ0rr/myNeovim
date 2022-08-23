@@ -14,7 +14,7 @@ onedarkpro.setup({
       bg = "#1e1e1e" -- dark
     },
   },
-  hlgroups = {  -- Override default highlight groups
+  highlights = {  -- Override default highlight groups
     Cursorline = { bg="Grey20" , },
     Folded = { fg="Black", bg="Grey40" , },
     IncSearch = { fg='#4B4B4B' , bg="#e5c07b" },

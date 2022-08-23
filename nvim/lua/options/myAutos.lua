@@ -45,7 +45,7 @@ api.nvim_create_autocmd(
 )
 api.nvim_create_autocmd(
   { "BufEnter" },
-  { pattern = "vifmrc", command = [[setlocal commentstring=\"\ %s]], group = MyCommentsGroup }
+  { pattern = {"vifmrc","*.vifm"}, command = [[setlocal commentstring=\"\ %s]], group = MyCommentsGroup }
 )
 
 -- Highlight on yank
