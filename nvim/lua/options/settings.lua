@@ -64,7 +64,7 @@ set.grepformat = "%l:%c:%m"
 -- set.grepformat:prepend{"%f:%l:%c:%m"}
 
 set.undofile = true
-local undoPath = vim.fn.stdpath('config') .. '/.undoDir'
+local undoPath = vim.fn.stdpath('data') .. '/.UndoDir'
 if vim.fn.isdirectory(undoPath) == 0 then
   vim.fn.system {
     'mkdir',
@@ -89,7 +89,7 @@ set.sessionoptions="blank,buffers,curdir,help,tabpages,winsize,winpos,terminal"
 -- vim.cmd[[set sessionoptions-=folds]]
 
 set.viewoptions="cursor,folds,slash,unix"
-local viewPath = vim.fn.stdpath('config') .. '/.mkViewDir'
+local viewPath = vim.fn.stdpath('data') .. '/.ViewDir'
 if vim.fn.isdirectory(viewPath) == 0 then
   vim.fn.system {
     'mkdir',
