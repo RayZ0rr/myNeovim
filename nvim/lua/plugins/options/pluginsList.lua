@@ -2,6 +2,7 @@
 local ok, packer = pcall(require, "packer")
 if not ok then return end
 
+local packer_bootstrap = require('plugins/options/bootstrap').packer_bootstrap
 -- ########################################################
 -- All the used plugins
 -- ########################################################
@@ -131,11 +132,16 @@ packer.startup(function(use)
   -- Onedark Theme -----------------------------
   use {
     'olimorris/onedarkpro.nvim',
+    -- config = function()
+    --   require('plugins/themes/onedarkpro')
+    -- end,
+  }
+  use {
+    'marko-cerovac/material.nvim',
     config = function()
-      require('plugins/themes/onedarkpro')
+      require('plugins/themes/material')
     end,
   }
-  -- use 'marko-cerovac/material.nvim'
   -- use 'navarasu/onedark.nvim' -- Onedark colorscheme with lsp support
   -- use 'sainnhe/sonokai' -- Monokai colorscheme with lsp support
   -- use 'joshdick/onedark.vim' -- Onedark
@@ -220,7 +226,7 @@ packer.startup(function(use)
   }
   -- Show colours around hex code ------------------
   use {
-    'norcalli/nvim-colorizer.lua',
+    'NvChad/nvim-colorizer.lua',
     config = function()
       require('plugins/general/misc')
     end,
@@ -322,5 +328,11 @@ packer.startup(function(use)
     'JoosepAlviste/nvim-ts-context-commentstring',
     requires = {'nvim-treesitter/nvim-treesitter'}
   }
+
+  -- Automatically set up your configuration after cloning packer.nvim
+  -- Put this at the end after all plugins
+  if packer_bootstrap then
+    require('packer').sync()
+  end
 
 end)

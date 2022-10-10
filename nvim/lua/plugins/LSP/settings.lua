@@ -3,18 +3,23 @@
 --###################################################################################################################
 vim.lsp.set_log_level 'warn'
 
+local border = {
+  {"🭽", "FloatBorder"},
+  {"▔", "FloatBorder"},
+  {"🭾", "FloatBorder"},
+  {"▕", "FloatBorder"},
+  {"🭿", "FloatBorder"},
+  {"▁", "FloatBorder"},
+  {"🭼", "FloatBorder"},
+  {"▏", "FloatBorder"},
+}
+
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
   opts = opts or {}
   opts.border = opts.border or "rounded"
   return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
--- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
---   border = "rounded",
--- })
--- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
---   border = "rounded",
--- })
 
 vim.diagnostic.config({
   virtual_text = false,
@@ -57,34 +62,13 @@ vim.diagnostic.handlers.signs = {
   hide = orig_signs_handler.hide
 }
 
-function PrintDiagnostics(opts, bufnr, line_nr, client_id)
-  bufnr = bufnr or 0
-  line_nr = line_nr or (vim.api.nvim_win_get_cursor(0)[1] - 1)
-  opts = opts or {['lnum'] = line_nr}
-
-  local line_diagnostics = vim.diagnostic.get(bufnr, opts)
-  if vim.tbl_isempty(line_diagnostics) then return end
-
-  local diagnostic_message = ""
-  for i, diagnostic in ipairs(line_diagnostics) do
-    diagnostic_message = diagnostic_message .. string.format("%d: %s", i, diagnostic.message or "")
-    print(diagnostic_message)
-    if i ~= #line_diagnostics then
-      diagnostic_message = diagnostic_message .. "\n"
-    end
-  end
-  vim.api.nvim_echo({{diagnostic_message, "Normal"}}, false, {})
+local util = require 'vim.lsp.util'
+local formatting_callback = function(client, bufnr)
+  vim.keymap.set('n', '<leader>lf', function()
+    local params = util.make_formatting_params({})
+    client.request('textDocument/formatting', params, nil, bufnr)
+  end, {buffer = bufnr, desc='lsp formatting'})
 end
-
-
-vim.cmd([[
-augroup MyLspShowDiagnostics
-  autocmd!
-  " autocmd! CursorHold * lua PrintDiagnostics()
-  autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float()
-  " autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})
-augroup end
-]])
 
 --##########################################################################################################
 -- LSP Keybindings and completion---------------------------------------------------------------------------
@@ -117,7 +101,22 @@ M.custom_on_attach = function(client, bufnr)
     vim.lsp.codelens.refresh()
   end
 
-  if client.resolved_capabilities.document_highlight then
+  vim.api.nvim_create_autocmd("CursorHold", {
+    buffer = bufnr,
+    callback = function()
+      local opts = {
+	focusable = false,
+	close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+	border = 'rounded',
+	source = 'always',
+	prefix = ' ',
+	scope = 'cursor',
+      }
+      vim.diagnostic.open_float(nil, opts)
+    end
+  })
+
+  if client.server_capabilities.documentHighlightProvider then
     vim.cmd([[
       hi! link LspReferenceRead CursorLine
       hi! link LspReferenceText CursorLine
@@ -178,12 +177,13 @@ M.custom_on_attach = function(client, bufnr)
   end, 'vim.diagnostic.disable(0)')
 
   -- Set some key bindings conditional on server capabilities
-  if client.resolved_capabilities.document_formatting then
-    buffer_map( '<leader>lf', vim.lsp.buf.formatting_sync, 'vim.lsp.buf.formatting_sync')
-  end
-  if client.resolved_capabilities.document_range_formatting then
-    vim.keymap.set('x', '<leader>lf', vim.lsp.buf.range_formatting, {silent = true, buffer=bufnr, desc= 'vim.lsp.buf.range_formatting'})
-  end
+  formatting_callback(client, bufnr)
+  -- if client.server_capabilities.document_formatting then
+  --   buffer_map( '<leader>lf', vim.lsp.buf.formatting_sync, 'vim.lsp.buf.formatting_sync')
+  -- end
+  -- if client.server_capabilities.document_range_formatting then
+  --   vim.keymap.set('x', '<leader>lf', vim.lsp.buf.range_formatting, {silent = true, buffer=bufnr, desc= 'vim.lsp.buf.range_formatting'})
+  -- end
 
   local has_illuminate, illuminate = pcall(require, 'illuminate')
   if has_illuminate then

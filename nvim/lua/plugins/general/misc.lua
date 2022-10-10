@@ -30,8 +30,8 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'undotree')) == 0 then
     { "FileType" },
     { pattern = "undotree", command = [[nmap <buffer> <c-q> q]], group = MyUndoTreeMappingGroup }
   )
-else
-  print("mbbill/undotree not installed")
+-- else
+--   print("mbbill/undotree not installed")
 end
 
 --##########################################################################################################
@@ -42,8 +42,8 @@ local present, _ = pcall(require, 'replacer')
 if present then
   nnmap('<Leader>qf', ':lua require("replacer").run()<cr>', { nowait = true, silent = true })
 
-else
-  print("gabrielpoca/replacer.nvim not installed")
+-- else
+--   print("gabrielpoca/replacer.nvim not installed")
 end
 
 --##########################################################################################################
@@ -56,8 +56,8 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'ferret')) == 0 then
   nnmap('<leader>gg', [[:Ack <C-R><C-W><CR>:Acks /<C-R><c-w>//<left>]])
   xnmap('<leader>gf', [[y:Ack <C-R>"<CR>:Acks /<C-R>"//<left>]])
   nnmap('<leader>gb', [[<Plug>(FerretBack)]], {remap=true})
-else
-  print("wincent/ferret not installed")
+-- else
+--   print("wincent/ferret not installed")
 end
 
 --##########################################################################################################
@@ -76,8 +76,8 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'vim-easy-align')) == 0 then
   -- vim.g.easy_align_interactive_modes = {'l', 'r'}
   -- vim.g.easy_align_bang_interactive_modes = {'c', 'r'}
 
-else
-  print("junegunn/vim-easy-align not installed")
+-- else
+--   print("junegunn/vim-easy-align not installed")
 end
 
 --##########################################################################################################
@@ -105,8 +105,8 @@ if present then
 	autocmd VimEnter * hi illuminatedWord cterm=underline gui=underline
     augroup END
   ]]
-else
-  print("RRethy/vim-illuminate not installed")
+-- else
+--   print("RRethy/vim-illuminate not installed")
 end
 
 --##########################################################################################################
@@ -132,8 +132,8 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'vim-better-whitespace')) == 0 then
   vim.g.current_line_whitespace_disabled_hard=1
   -- vim.g.current_line_whitespace_disabled_soft=1
   vim.g.better_whitespace_filetypes_blacklist={'fzf', 'floaterm', 'toggleterm', 'term', 'fm', 'replacer', 'netrw', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive'}
-else
-  print("ntpeters/vim-better-whitespace not installed")
+-- else
+--   print("ntpeters/vim-better-whitespace not installed")
 end
 
 --##########################################################################################################
@@ -155,8 +155,8 @@ if present then
    -- will get overriden by `get_icons` option
    -- default = true;
   }
-else
-  print("kyazdani42/nvim-web-devicons not installed")
+-- else
+--   print("kyazdani42/nvim-web-devicons not installed")
 end
 
 --##########################################################################################################
@@ -165,8 +165,8 @@ end
 local present, _ = pcall(require, 'gitsigns.nvim')
 if present then
   require('gitsigns').setup()
-else
-  print("lewis6991/gitsigns.nvim not installed")
+-- else
+--   print("lewis6991/gitsigns.nvim not installed")
 end
 
 --##########################################################################################################
@@ -175,28 +175,36 @@ end
 local present, _ = pcall(require, 'colorizer')
 if present then
   local colorizer_cfg = {
-    RGB      = true;         -- #RGB hex codes
-    RRGGBB   = true;         -- #RRGGBB hex codes
-    names    = true;         -- "Name" codes like Blue
-    RRGGBBAA = true;        -- #RRGGBBAA hex codes
-    -- rgb_fn   = false;        -- CSS rgb() and rgba() functions
-    -- hsl_fn   = false;        -- CSS hsl() and hsla() functions
-    -- css      = false;        -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-    -- css_fn   = false,        -- Enable all CSS *functions*: rgb_fn, hsl_fn
-    -- Available modes: foreground, background
-    mode     = 'background'; -- Set the display mode.
+    filetypes = { "*" },
+    user_default_options = {
+    RGB = true, -- #RGB hex codes
+    RRGGBB = true, -- #RRGGBB hex codes
+    names = true, -- "Name" codes like Blue or blue
+    RRGGBBAA = true, -- #RRGGBBAA hex codes
+    AARRGGBB = true, -- 0xAARRGGBB hex codes
+    rgb_fn = false, -- CSS rgb() and rgba() functions
+    hsl_fn = false, -- CSS hsl() and hsla() functions
+    css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+    css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+    -- Available modes for `mode`: foreground, background,  virtualtext
+    mode = "background", -- Set the display mode.
+    -- Available methods are false / true / "normal" / "lsp" / "both"
+    -- True is same as normal
+    tailwind = false, -- Enable tailwind colors
+    -- parsers can contain values used in |user_default_options|
+    sass = { enable = false, parsers = { css }, }, -- Enable sass colors
+    virtualtext = "■",
+    },
+    -- all the sub-options of filetypes apply to buftypes
+    buftypes = {},
   }
   require'colorizer'.setup(
-    {
-      '*' ;
-    },
     colorizer_cfg
   )
-
   nnmap('<leader>clr', ':exec "ColorizerToggle" | echo "Colorizer toggled"<cr>')
 
-else
-  print("norcalli/nvim-colorizer.lua not installed")
+-- else
+--   print("norcalli/nvim-colorizer.lua not installed")
 end
 
 --##########################################################################################################
@@ -212,8 +220,8 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'FastFold')) == 0 then
   xnmap('iz',[[:<c-u>FastFoldUpdate<cr><esc>:<c-u>normal! ]zv[z<cr>]])
   xnmap('az',[[:<c-u>FastFoldUpdate<cr><esc>:<c-u>normal! ]zV[z<cr>]])
   -- vim.g.fastfold_skip_filetypes
-else
-  print("Konfekt/FastFold not installed")
+-- else
+--   print("Konfekt/FastFold not installed")
 end
 
 --##########################################################################################################
@@ -223,28 +231,29 @@ end
 local present, _ = pcall(require, 'specs')
 if present then
   require('specs').setup{
-      show_jumps  = true,
-      min_jump = 10,
-      popup = {
-          delay_ms = 0, -- delay before popup displays
-          inc_ms = 3, -- time increments used for fade/resize effects
-          blend = 10, -- starting blend, between 0-100 (fully transparent), see :h winblend
-          width = 80,
-          winhl = "Search",
-          fader = require('specs').pulse_fader,
-          resizer = require('specs').empty_resizer
-      },
-      ignore_filetypes = {},
-      ignore_buftypes = {
-          nofile = true,
-      },
+    show_jumps  = true,
+    min_jump = 10,
+    popup = {
+      delay_ms = 0, -- delay before popup displays
+      inc_ms = 3, -- time increments used for fade/resize effects
+      blend = 10, -- starting blend, between 0-100 (fully transparent), see :h winblend
+      width = 80,
+      winhl = "DiffAdd",
+      fader = require('specs').pulse_fader,
+      -- resizer = require('specs').empty_resizer
+      resizer = require('specs').shrink_resizer
+    },
+    ignore_filetypes = {},
+    ignore_buftypes = {
+	nofile = true,
+    },
   }
 
   nnmap('<leader>spt', function() require('specs').toggle() print("Specs toggled") end, {desc="Toggle specs function"})
   nnmap('<leader>spp', [[<cmd>lua require('specs').show_specs()<cr>]])
 
-else
-  print("edluffy/specs.nvim not installed")
+-- else
+--   print("edluffy/specs.nvim not installed")
 end
 
 --##########################################################################################################

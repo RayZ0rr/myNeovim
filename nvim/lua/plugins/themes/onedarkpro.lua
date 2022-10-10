@@ -1,28 +1,32 @@
 local onedarkpro = require("onedarkpro")
 onedarkpro.setup({
   -- Theme can be overwritten with 'onedark' or 'onelight' as a string!
-  theme = function()
-    if vim.o.background == "dark" then
-      return "onedark"
-    else
-      return "onelight"
-    end
-  end,
+  -- caching = false, -- Use caching for the theme?
+  -- cache_path = vim.fn.expand(vim.fn.stdpath("cache") .. "/onedarkpro/"), -- The path to the cache directory
+  -- theme = function()
+  --   if vim.o.background == "dark" then
+  --     return "onedark"
+  --   else
+  --     return "onelight"
+  --   end
+  -- end,
+  dark_theme = "onedark", -- The default dark theme
+  light_theme = "onelight", -- The default light theme
   -- Override default colors. Can specify colors for "onelight" or "onedark" themes by passing in a table
   colors = {
     onedark = {
       bg = "#1e1e1e" -- dark
     },
   },
-  highlights = {  -- Override default highlight groups
-    Cursorline = { bg="Grey20" , },
-    Folded = { fg="Black", bg="Grey40" , },
-    IncSearch = { fg='#4B4B4B' , bg="#e5c07b" },
-  },
+  -- highlights = {  -- Override default highlight groups
+  --   Cursorline = { bg="Grey20" , },
+  --   Folded = { fg="Black", bg="Grey40" , },
+  --   IncSearch = { fg='#4B4B4B' , bg="#e5c07b" },
+  -- },
   plugins = { -- Override which plugins highlight groups are loaded
     native_lsp = true,
-    polygot = false,
     treesitter = true,
+    polygot = false,
     -- Others omitted for brevity
   },
   styles = {
@@ -44,4 +48,4 @@ onedarkpro.setup({
   }
 })
 vim.o.background = "dark" -- to load onedark
-onedarkpro.load()
+vim.cmd("colorscheme onedarkpro")  -- Lua

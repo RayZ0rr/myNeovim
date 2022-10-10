@@ -2,40 +2,61 @@ local aerial = require'aerial'
 
 aerial_on_attach = function(bufnr)
     -- Toggle the aerial window with <leader>a
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ar', '<cmd>AerialToggle!<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ar', '<cmd>AerialToggle<CR>', {})
     -- Jump forwards/backwards with '{' and '}'
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '{', '<cmd>AerialPrev<CR>', {})
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '}', '<cmd>AerialNext<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '{', '<cmd>AerialPrev<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '}', '<cmd>AerialNext<CR>', {})
     -- Jump up the tree with '[[' or ']]'
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '[[', '<cmd>AerialPrevUp<CR>', {})
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', ']]', '<cmd>AerialNextUp<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '[[', '<cmd>AerialPrevUp<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', ']]', '<cmd>AerialNextUp<CR>', {})
   end
 
 -- Call the setup function to change the default behavior
 require("aerial").setup({
   -- Priority list of preferred backends for aerial.
   -- This can be a filetype map (see :help aerial-filetype-map)
-  backends = { "lsp", "treesitter", "markdown" },
+  backends = { "treesitter", "lsp", "markdown" },
 
-  -- Enum: persist, close, auto, global
-  --   persist - aerial window will stay open until closed
-  --   close   - aerial window will close when original file is no longer visible
-  --   auto    - aerial window will stay open as long as there is a visible
-  --             buffer to attach to
-  --   global  - same as 'persist', and will always show symbols for the current buffer
-  close_behavior = "close",
+  layout = {
+    -- These control the width of the aerial window.
+    -- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+    -- min_width and max_width can be a list of mixed types.
+    -- max_width = {40, 0.2} means "the lesser of 40 columns or 20% of total"
+    max_width = { 40, 0.2 },
+    width = nil,
+    min_width = 10,
+
+    -- Determines the default direction to open the aerial window. The 'prefer'
+    -- options will open the window in the other direction *if* there is a
+    -- different buffer in the way of the preferred direction
+    -- Enum: prefer_right, prefer_left, right, left, float
+    default_direction = "prefer_right",
+
+    -- Determines where the aerial window will be opened
+    --   edge   - open aerial at the far right/left of the editor
+    --   window - open aerial to the right/left of the current window
+    placement = "window",
+  },
+
+  -- Determines how the aerial window decides which buffer to display symbols for
+  --   window - aerial window will display symbols for the buffer in the window from which it was opened
+  --   global - aerial window will display symbols for the current window
+  attach_mode = "window",
+
+  -- List of enum values that configure when to auto-close the aerial window
+  --   unfocus       - close aerial when you leave the original source window
+  --   switch_buffer - close aerial when you change buffers in the source window
+  --   unsupported   - close aerial when attaching to a buffer that has no symbol source
+  close_automatic_events = {},
 
   -- Set to false to remove the default keybindings for the aerial buffer
   default_bindings = true,
 
-  -- Enum: prefer_right, prefer_left, right, left, float
-  -- Determines the default direction to open the aerial window. The 'prefer'
-  -- options will open the window in the other direction *if* there is a
-  -- different buffer in the way of the preferred direction
-  default_direction = "right",
-
   -- Disable aerial on files with this many lines
   disable_max_lines = 10000,
+
+  -- Disable aerial on files this size or larger (in bytes)
+  disable_max_size = 2000000, -- Default 2MB
 
   -- A list of all symbols to display. Set to false to display all symbols.
   -- This can be a filetype map (see :help aerial-filetype-map)
@@ -66,6 +87,9 @@ require("aerial").setup({
   -- Highlight the closest symbol if the cursor is not exactly on one.
   highlight_closest = true,
 
+  -- Highlight the symbol in the source buffer when cursor is in the aerial win
+  highlight_on_hover = false,
+
   -- When jumping to a symbol, highlight the line for this many ms.
   -- Set to false to disable
   highlight_on_jump = 300,
@@ -75,6 +99,7 @@ require("aerial").setup({
   -- default collapsed icon. The default icon set is determined by the
   -- "nerd_font" option below.
   -- If you have lspkind-nvim installed, aerial will use it for icons.
+  -- This can be a filetype map (see :help aerial-filetype-map)
   icons = {},
 
   -- Control which windows and buffers aerial should ignore.
@@ -127,14 +152,6 @@ require("aerial").setup({
   -- 'auto' will manage folds if your previous foldmethod was 'manual'
   manage_folds = false,
 
-  -- These control the width of the aerial window.
-  -- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
-  -- min_width and max_width can be a list of mixed types.
-  -- max_value = {40, 0.2} means "the lesser of 40 columns or 20% of total"
-  max_width = { 40, 0.4 },
-  width = nil,
-  min_width = 10,
-
   -- Set default symbol icons to use patched font icons (see https://www.nerdfonts.com/)
   -- "auto" will set it to true if nvim-web-devicons or lspkind-nvim is installed.
   nerd_font = "auto",
@@ -143,13 +160,13 @@ require("aerial").setup({
   -- Useful for setting keymaps. Takes a single `bufnr` argument.
   on_attach = aerial_on_attach,
 
+  -- Call this function when aerial first sets symbols on a buffer.
+  -- Takes a single `bufnr` argument.
+  on_first_symbols = nil,
+
   -- Automatically open aerial when entering supported buffers.
   -- This can be a function (see :help aerial-open-automatic)
   open_automatic = false,
-
-  -- Set to true to only open aerial at the far right/left of the editor
-  -- Default behavior opens aerial relative to current window
-  placement_editor_edge = false,
 
   -- Run this command after jumping to a symbol (false will disable)
   post_jump_cmd = "normal! zz",
@@ -159,6 +176,9 @@ require("aerial").setup({
 
   -- Show box drawing characters for the tree hierarchy
   show_guides = false,
+
+  -- The autocmds that trigger symbols update (not used for LSP backend)
+  update_events = "TextChanged,InsertLeave",
 
   -- Customize the characters used when show_guides = true
   guides = {
@@ -205,6 +225,10 @@ require("aerial").setup({
 
     -- Set to false to not update the symbols when there are LSP errors
     update_when_errors = true,
+
+    -- How long to wait (in ms) after a buffer change before updating
+    -- Only used when diagnostics_trigger_update = false
+    update_delay = 300,
   },
 
   treesitter = {

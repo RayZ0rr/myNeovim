@@ -57,7 +57,8 @@ require('fm-nvim').setup{
     fzf_cmd     = "fzf", -- eg: fzf_cmd = "fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
     fzy_cmd     = "find . | fzy",
     xplr_cmd    = "xplr",
-    vifm_cmd   = "~/.local/bin/vf",
+    -- vifm_cmd   = "~/.local/bin/vf",
+    vifm_cmd   = "vifm",
     skim_cmd    = "sk",
     broot_cmd   = "broot",
     gitui_cmd   = "gitui",
