@@ -171,11 +171,12 @@ force_inactive.buftypes = {
 
 local bordersDecor = {
   left = {
+    name = 'LeftBar',
     provider = '▊',
     hl = vimode_hl,
-    right_sep = ' '
   },
   right = {
+    name = 'RightBar',
     provider = '▊',
     hl = vimode_hl,
     left_sep = ' '
@@ -185,15 +186,13 @@ local bordersDecor = {
 -- LEFT
 
 -- vi-mode
-components.active[1][1] = {
-  provider = '▊',
-  hl = vimode_hl,
-  -- right_sep = ' '
-}
-components.active[1][2] = {
-  -- provider = ' NV-IDE ',
+table.insert(components.active[1],
+  bordersDecor.left
+    -- Component info here
+)
+table.insert(components.active[1], {
+  name = 'VimMode',
   provider = function()
-    -- return '  ' .. vi_mode_utils.get_vim_mode()
     return vi_mode_utils.get_vim_mode()
   end,
   hl = function()
@@ -206,7 +205,13 @@ components.active[1][2] = {
   end,
   icon = {
     str = '  ',
-    hl = vimode_hl,
+    hl = function()
+      local val = {}
+      val.name = 'Status_VIcon'
+      val.fg = vi_mode_utils.get_mode_color()
+      val.bg = 'black'
+      return val
+    end,
   },
   right_sep = {
     str = ' ',
@@ -215,39 +220,22 @@ components.active[1][2] = {
       bg = 'black'
     }
   }
-}
+})
 
--- vi-mode
-components.active[1][3] = {
+table.insert(components.active[1], {
+  name = 'FileSepLeft',
   provider = '',
   hl = function()
     local val = {}
-
     val.fg = 'yellow'
     val.bg = 'black'
-    -- val.style = 'bold'
-
     return val
   end,
-}
-
--- vi-symbol
--- components.active[1][2] = {
-  --   provider = function()
-    --     return vi_mode_text[vi_mode_utils.get_vim_mode()]
-    --   end,
-    --   hl = function()
-      --     local val = {}
-      --     val.fg = vi_mode_utils.get_mode_color()
-      --     val.bg = 'bg'
-      --     val.style = 'bold'
-      --     return val
-      --   end,
-      --   right_sep = ' '
-  -- }
+})
 
 -- filename
-components.active[1][4] = {
+table.insert(components.active[1], {
+  name = 'FileInfo',
   provider = {
     name = 'file_info',
     colored_icon = true,
@@ -266,41 +254,31 @@ components.active[1][4] = {
   right_sep = " ",
   left_sep = " ",
 
-}
+})
 
-components.active[1][5] = {
+table.insert(components.active[1], {
+  name = 'FileSepRight',
   provider = ' ',
   hl = {
     fg = 'yellow',
     bg = 'bg',
     style = 'bold'
   },
-  -- right_sep = ' '
-}
-
--- components.active[1][3] = {
-  --   provider = function()
-    --     return vim.fn.expand("%:F")
-    --   end,
-    --   hl = {
-      --     bg = 'yellow',
-      --     fg = 'bg',
-      --     style = 'bold'
-      --   },
-      --   right_sep = ' '
-      -- }
+})
 
 -- gitBranch
-components.active[1][6] = {
+table.insert(components.active[1], {
+  name = 'GitBranch',
   provider = 'git_branch',
   hl = {
-    -- bg = 'yellow',
     fg = 'violet',
     style = 'bold'
   }
-}
+})
+
 -- diffAdd
-components.active[1][7] = {
+table.insert(components.active[1], {
+  name = 'GitDiffAdd',
   provider = 'git_diff_added',
   truncate_hide = true,
   enabled = FullBar,
@@ -309,9 +287,11 @@ components.active[1][7] = {
     bg = 'bg',
     style = 'bold'
   }
-}
+})
+
 -- diffModfified
-components.active[1][8] = {
+table.insert(components.active[1], {
+  name = 'GitDiffMod',
   provider = 'git_diff_changed',
   truncate_hide = true,
   enabled = FullBar,
@@ -320,9 +300,11 @@ components.active[1][8] = {
     bg = 'bg',
     style = 'bold'
   }
-}
+})
+
 -- diffRemove
-components.active[1][9] = {
+table.insert(components.active[1], {
+  name = 'GitDiffRem',
   provider = 'git_diff_removed',
   truncate_hide = true,
   enabled = FullBar,
@@ -331,12 +313,13 @@ components.active[1][9] = {
     bg = 'bg',
     style = 'bold'
   }
-}
+})
 
 -- MID
 
 -- LspName
-components.active[2][1] = {
+table.insert(components.active[2], {
+  name = 'LspClient',
   provider = 'lsp_client_names',
   hl = {
     fg = 'yellow',
@@ -344,19 +327,20 @@ components.active[2][1] = {
     style = 'bold'
   },
   right_sep = ' '
-}
+})
 -- diagnosticErrors
-components.active[2][2] = {
+table.insert(components.active[2], {
+  name = 'DiagErr',
   provider = 'diagnostic_errors',
-  -- enabled = function() return lsp.diagnostics_exist('Error') end,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.ERROR),
   hl = {
     fg = 'red',
     style = 'bold'
   }
-}
+})
 -- diagnosticWarn
-components.active[2][3] = {
+table.insert(components.active[2], {
+  name = 'DiagWarn',
   provider = 'diagnostic_warnings',
   truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.WARN),
@@ -364,9 +348,10 @@ components.active[2][3] = {
     fg = 'yellow',
     style = 'bold'
   }
-}
+})
 -- diagnosticHint
-components.active[2][4] = {
+table.insert(components.active[2], {
+  name = 'DiagHint',
   provider = 'diagnostic_hints',
   truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.HINT),
@@ -374,9 +359,10 @@ components.active[2][4] = {
     fg = 'cyan',
     style = 'bold'
   }
-}
+})
 -- diagnosticInfo
-components.active[2][5] = {
+table.insert(components.active[2], {
+  name = 'DiagInfo',
   provider = 'diagnostic_info',
   truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.INFO),
@@ -384,20 +370,22 @@ components.active[2][5] = {
     fg = 'skyblue',
     style = 'bold'
   }
-}
+})
 -- Treesitter status
-components.active[2][6] = {
+table.insert(components.active[2], {
+  name = 'Treesitter',
   provider = TreesitterStatus,
   enabled = BarWidth,
   hl = {
     fg = 'skyblue',
     style = 'bold'
   }
-}
+})
 
 -- RIGHT
 -- fileIcon
-components.active[3][1] = {
+table.insert(components.active[3], {
+  name = 'FileIcon',
   provider = function()
     local filename = vim.fn.expand('%:t')
     local extension = vim.fn.expand('%:e')
@@ -423,10 +411,11 @@ components.active[3][1] = {
     return val
   end,
   right_sep = ' '
-}
+})
 
 -- fileType
-components.active[3][2] = {
+table.insert(components.active[3], {
+  name = 'FileType',
   provider = 'file_type',
   enabled = FullBar,
   hl = function()
@@ -444,9 +433,10 @@ components.active[3][2] = {
     return val
   end,
   right_sep = ' '
-}
+})
 -- lineInfo
-components.active[3][3] = {
+table.insert(components.active[3], {
+  name = 'LinesInfo',
   provider = LinesInfo,
   -- provider = 'position',
   hl = {
@@ -455,9 +445,10 @@ components.active[3][3] = {
     style = 'bold'
   },
   right_sep = ' '
-}
+})
 -- linePercent
-components.active[3][4] = {
+table.insert(components.active[3], {
+  name = 'LinePerc',
   provider = 'line_percentage',
   enabled = FullBar,
   hl = {
@@ -466,9 +457,10 @@ components.active[3][4] = {
     style = 'bold'
   },
   right_sep = ' '
-}
+})
 -- scrollBar
-components.active[3][5] = {
+table.insert(components.active[3], {
+  name = 'ScrollBar',
   provider = 'scroll_bar',
   enabled = FullBar,
   right_sep = ' ',
@@ -476,9 +468,10 @@ components.active[3][5] = {
     fg = 'magenta',
     style = 'bold'
   }
-}
+})
 -- fileSize
-components.active[3][6] = {
+table.insert(components.active[3], {
+  name = 'FileSize',
   provider = 'file_size',
   enabled = FullBar,
   hl = {
@@ -487,9 +480,10 @@ components.active[3][6] = {
     style = 'bold'
   },
   right_sep = ' '
-}
+})
 -- fileFormat
-components.active[3][7] = {
+table.insert(components.active[3], {
+  name = 'FileFormat',
   provider = file_osinfo,
   enabled = FullBar,
   hl = function()
@@ -507,29 +501,21 @@ components.active[3][7] = {
     -- style = 'bold'
     --    },
   right_sep = ' '
-}
+})
 -- fileEncode
-components.active[3][8] = {
+table.insert(components.active[3], {
+  name = 'FileEncode',
   provider = 'file_encoding',
-  -- enabled = FullBar,
   hl = function()
     local val = {}
-
     val.fg = vi_mode_utils.get_mode_color()
     val.bg = 'black'
     val.style = 'bold'
-
     return val
   end,
-  --    hl = {
-  -- fg = 'white',
-  -- bg = 'bg',
-  -- style = 'bold'
-  --    },
-  -- right_sep = ' '
-}
+})
 
-components.active[3][9] = bordersDecor.right
+table.insert(components.active[3], bordersDecor.right)
 
 -- INACTIVE
 
