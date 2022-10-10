@@ -132,8 +132,8 @@ local BarWidth = function(n)
 end
 
 local function is_buffer_empty()
-  -- Check whether the current buffer is empty
-  return vim.fn.empty(vim.fn.expand '%:t') ~= 1
+    -- Check whether the current buffer is empty
+    return vim.fn.empty(vim.fn.expand '%:t') ~= 1
 end
 
 local checkwidth = function()
@@ -142,6 +142,13 @@ local checkwidth = function()
     return true
   end
   return false
+end
+
+local function vimode_hl()
+  return {
+    name = vi_mode_utils.get_mode_highlight_name(),
+    fg = vi_mode_utils.get_mode_color()
+  }
 end
 
 force_inactive.filetypes = {
@@ -162,53 +169,32 @@ force_inactive.buftypes = {
   'terminal'
 }
 
-local function vimode_hl()
-  return {
-    name = vi_mode_utils.get_mode_highlight_name(),
-    fg = vi_mode_utils.get_mode_color()
-  }
-end
-
 local bordersDecor = {
   left = {
+    name = 'LeftBar',
     provider = '▊',
-    hl = {
-      name = 'Status_LeftBar',
-      fg = vi_mode_utils.get_mode_color()
-    },
-    right_sep = ' '
+    hl = vimode_hl,
   },
   right = {
+    name = 'RightBar',
     provider = '▊',
-    hl = {
-      name = 'Status_RightBar',
-      fg = vi_mode_utils.get_mode_color()
-    },
+    hl = vimode_hl,
     left_sep = ' '
   }
 }
 
 -- LEFT
 
-table.insert(components.active[1], {
+-- vi-mode
+table.insert(components.active[1],
   bordersDecor.left
     -- Component info here
-})
--- vi-mode
--- components.active[1][1] = {
---   provider = '▊',
---   hl = vimode_hl,
---   -- right_sep = ' '
--- }
-
--- components.active[1][2] = {
+)
 table.insert(components.active[1], {
-  -- provider = ' NV-IDE ',
-  -- provider = function()
-  --   -- return '  ' .. vi_mode_utils.get_vim_mode()
-  --   return vi_mode_utils.get_vim_mode()
-  -- end,
-  provider = 'Desc',
+  name = 'VimMode',
+  provider = function()
+    return vi_mode_utils.get_vim_mode()
+  end,
   hl = function()
     local val = {}
     val.name = vi_mode_utils.get_mode_highlight_name()
@@ -236,39 +222,20 @@ table.insert(components.active[1], {
   }
 })
 
--- vi-mode
--- components.active[1][3] = {
 table.insert(components.active[1], {
+  name = 'FileSepLeft',
   provider = '',
   hl = function()
     local val = {}
-
     val.fg = 'yellow'
     val.bg = 'black'
-    -- val.style = 'bold'
-
     return val
   end,
 })
 
--- vi-symbol
--- components.active[1][2] = {
-  --   provider = function()
-    --     return vi_mode_text[vi_mode_utils.get_vim_mode()]
-    --   end,
-    --   hl = function()
-      --     local val = {}
-      --     val.fg = vi_mode_utils.get_mode_color()
-      --     val.bg = 'bg'
-      --     val.style = 'bold'
-      --     return val
-      --   end,
-      --   right_sep = ' '
-  -- }
-
 -- filename
--- components.active[1][4] = {
 table.insert(components.active[1], {
+  name = 'FileInfo',
   provider = {
     name = 'file_info',
     colored_icon = true,
@@ -289,43 +256,29 @@ table.insert(components.active[1], {
 
 })
 
--- components.active[1][5] = {
 table.insert(components.active[1], {
+  name = 'FileSepRight',
   provider = ' ',
   hl = {
     fg = 'yellow',
     bg = 'bg',
     style = 'bold'
   },
-  -- right_sep = ' '
 })
 
--- components.active[1][3] = {
-  --   provider = function()
-    --     return vim.fn.expand("%:F")
-    --   end,
-    --   hl = {
-      --     bg = 'yellow',
-      --     fg = 'bg',
-      --     style = 'bold'
-      --   },
-      --   right_sep = ' '
-      -- }
-
 -- gitBranch
--- components.active[1][6] = {
 table.insert(components.active[1], {
+  name = 'GitBranch',
   provider = 'git_branch',
   hl = {
-    -- bg = 'yellow',
     fg = 'violet',
     style = 'bold'
   }
 })
 
 -- diffAdd
--- components.active[1][7] = {
 table.insert(components.active[1], {
+  name = 'GitDiffAdd',
   provider = 'git_diff_added',
   truncate_hide = true,
   enabled = FullBar,
@@ -337,8 +290,8 @@ table.insert(components.active[1], {
 })
 
 -- diffModfified
--- components.active[1][8] = {
 table.insert(components.active[1], {
+  name = 'GitDiffMod',
   provider = 'git_diff_changed',
   truncate_hide = true,
   enabled = FullBar,
@@ -350,8 +303,8 @@ table.insert(components.active[1], {
 })
 
 -- diffRemove
--- components.active[1][9] = {
 table.insert(components.active[1], {
+  name = 'GitDiffRem',
   provider = 'git_diff_removed',
   truncate_hide = true,
   enabled = FullBar,
@@ -365,8 +318,8 @@ table.insert(components.active[1], {
 -- MID
 
 -- LspName
--- components.active[2][1] = {
 table.insert(components.active[2], {
+  name = 'LspClient',
   provider = 'lsp_client_names',
   hl = {
     fg = 'yellow',
@@ -375,22 +328,19 @@ table.insert(components.active[2], {
   },
   right_sep = ' '
 })
-
 -- diagnosticErrors
--- components.active[2][2] = {
 table.insert(components.active[2], {
+  name = 'DiagErr',
   provider = 'diagnostic_errors',
-  -- enabled = function() return lsp.diagnostics_exist('Error') end,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.ERROR),
   hl = {
     fg = 'red',
     style = 'bold'
   }
 })
-
 -- diagnosticWarn
--- components.active[2][3] = {
 table.insert(components.active[2], {
+  name = 'DiagWarn',
   provider = 'diagnostic_warnings',
   truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.WARN),
@@ -399,10 +349,9 @@ table.insert(components.active[2], {
     style = 'bold'
   }
 })
-
 -- diagnosticHint
--- components.active[2][4] = {
 table.insert(components.active[2], {
+  name = 'DiagHint',
   provider = 'diagnostic_hints',
   truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.HINT),
@@ -411,10 +360,9 @@ table.insert(components.active[2], {
     style = 'bold'
   }
 })
-
 -- diagnosticInfo
--- components.active[2][5] = {
 table.insert(components.active[2], {
+  name = 'DiagInfo',
   provider = 'diagnostic_info',
   truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.INFO),
@@ -423,10 +371,9 @@ table.insert(components.active[2], {
     style = 'bold'
   }
 })
-
 -- Treesitter status
--- components.active[2][6] = {
 table.insert(components.active[2], {
+  name = 'Treesitter',
   provider = TreesitterStatus,
   enabled = BarWidth,
   hl = {
@@ -437,8 +384,8 @@ table.insert(components.active[2], {
 
 -- RIGHT
 -- fileIcon
--- components.active[3][1] = {
 table.insert(components.active[3], {
+  name = 'FileIcon',
   provider = function()
     local filename = vim.fn.expand('%:t')
     local extension = vim.fn.expand('%:e')
@@ -467,8 +414,8 @@ table.insert(components.active[3], {
 })
 
 -- fileType
--- components.active[3][2] = {
 table.insert(components.active[3], {
+  name = 'FileType',
   provider = 'file_type',
   enabled = FullBar,
   hl = function()
@@ -488,8 +435,8 @@ table.insert(components.active[3], {
   right_sep = ' '
 })
 -- lineInfo
--- components.active[3][3] = {
 table.insert(components.active[3], {
+  name = 'LinesInfo',
   provider = LinesInfo,
   -- provider = 'position',
   hl = {
@@ -500,8 +447,8 @@ table.insert(components.active[3], {
   right_sep = ' '
 })
 -- linePercent
--- components.active[3][4] = {
 table.insert(components.active[3], {
+  name = 'LinePerc',
   provider = 'line_percentage',
   enabled = FullBar,
   hl = {
@@ -512,8 +459,8 @@ table.insert(components.active[3], {
   right_sep = ' '
 })
 -- scrollBar
--- components.active[3][5] = {
 table.insert(components.active[3], {
+  name = 'ScrollBar',
   provider = 'scroll_bar',
   enabled = FullBar,
   right_sep = ' ',
@@ -523,8 +470,8 @@ table.insert(components.active[3], {
   }
 })
 -- fileSize
--- components.active[3][6] = {
 table.insert(components.active[3], {
+  name = 'FileSize',
   provider = 'file_size',
   enabled = FullBar,
   hl = {
@@ -535,8 +482,8 @@ table.insert(components.active[3], {
   right_sep = ' '
 })
 -- fileFormat
--- components.active[3][7] = {
 table.insert(components.active[3], {
+  name = 'FileFormat',
   provider = file_osinfo,
   enabled = FullBar,
   hl = function()
@@ -556,31 +503,20 @@ table.insert(components.active[3], {
   right_sep = ' '
 })
 -- fileEncode
--- components.active[3][8] = {
 table.insert(components.active[3], {
+  name = 'FileEncode',
   provider = 'file_encoding',
-  -- enabled = FullBar,
   hl = function()
     local val = {}
-
     val.fg = vi_mode_utils.get_mode_color()
     val.bg = 'black'
     val.style = 'bold'
-
     return val
   end,
-  --    hl = {
-  -- fg = 'white',
-  -- bg = 'bg',
-  -- style = 'bold'
-  --    },
-  -- right_sep = ' '
 })
 
--- components.active[3][9] = bordersDecor.right
-table.insert(components.active[3], {
-  bordersDecor.right
-})
+table.insert(components.active[3], bordersDecor.right)
+
 -- INACTIVE
 
 -- fileType
@@ -714,6 +650,7 @@ components.inactive[2][1] = {
 -- require('feline').use_theme(my_theme)
 require('feline').setup{
   theme = my_theme,
+  -- theme = 'onedark',
   components = components,
   vi_mode_colors = vi_mode_colors,
   force_inactive = force_inactive,

@@ -3,11 +3,6 @@ if not has_feline then
   return
 end
 
--- Reference:
--- 1) ibhagwan setup (https://github.com/ibhagwan/nvim-lua/blob/main/lua/plugins/feline.lua)
--- 2)  crivotz/nv-ide setup (https://github.com/crivotz/nv-ide/blob/master/lua/plugins/feline.lua)
--- 3) AstroNvim setup (https://github.com/AstroNvim/AstroNvim)
-
 local lsp = require('feline.providers.lsp')
 local vi_mode_utils = require('feline.providers.vi_mode')
 
@@ -17,6 +12,7 @@ local force_inactive = {
   bufnames = {}
 }
 
+-- Three sections for active statusbar and three for inactive
 local components = {
   active = {{}, {}, {}},
   inactive = {{}, {}, {}},
@@ -57,24 +53,6 @@ local vi_mode_colors = {
   NONE = 'yellow'
 }
 
-local vi_mode_text = {
-  NORMAL = '<|',
-  OP = '<|',
-  INSERT = '|>',
-  VISUAL = '<>',
-  LINES = '<>',
-  BLOCK = '<>',
-  REPLACE = '<>',
-  ['V-REPLACE'] = '<>',
-  ENTER = '<>',
-  MORE = '<>',
-  SELECT = '<>',
-  COMMAND = '<|',
-  SHELL = '<|',
-  TERM = '<|',
-  NONE = '<>'
-}
-
 local icons = {
   linux = ' ',
   macos = ' ',
@@ -89,7 +67,7 @@ local icons = {
   git = ''
 }
 
-local file_osinfo = function()
+local OSinfo = function()
   local os = vim.bo.fileformat:upper()
   local icon
   if os == 'UNIX' then
@@ -114,7 +92,7 @@ local TreesitterStatus = function()
   return (ts and next(ts)) and " 綠TS" or ""
 end
 
-local buffer_not_empty = function()
+local BufferNotEmpty = function()
   if vim.fn.empty(vim.fn.expand('%:t')) ~= 1 then
     return true
   end
@@ -126,17 +104,15 @@ local FullBar = function()
 end
 
 local BarWidth = function(n)
-  return function()
-    return (vim.opt.laststatus:get() == 3 and vim.opt.columns:get() or vim.fn.winwidth(0)) > (n or 80)
-  end
+  return (vim.opt.laststatus:get() == 3 and vim.opt.columns:get() or vim.fn.winwidth(0)) > (n or 80)
 end
 
-local function is_buffer_empty()
+local function BufferEmpty()
     -- Check whether the current buffer is empty
     return vim.fn.empty(vim.fn.expand '%:t') ~= 1
 end
 
-local checkwidth = function()
+local CheckWidth = function()
   local squeeze_width  = vim.fn.winwidth(0) / 2
   if squeeze_width > 40 then
     return true
@@ -161,6 +137,7 @@ force_inactive.filetypes = {
   'term',
   'toggleterm',
   'fm',
+  'fzf',
   'replacer',
   'fugitiveblame',
 }
@@ -169,32 +146,45 @@ force_inactive.buftypes = {
   'terminal'
 }
 
-local bordersDecor = {
+local Borders = {
   left = {
     name = 'LeftBar',
     provider = '▊',
-    hl = vimode_hl,
+    hl = function()
+      local val = {}
+      val.name = 'Status_LeftBar'
+      val.fg = vi_mode_utils.get_mode_color()
+      val.style = 'bold'
+      return val
+    end,
   },
   right = {
     name = 'RightBar',
     provider = '▊',
-    hl = vimode_hl,
-    left_sep = ' '
+    hl = function()
+      local val = {}
+      val.name = 'Status_RightBar'
+      val.fg = vi_mode_utils.get_mode_color()
+      val.style = 'bold'
+      return val
+    end,
+    left_sep = " "
   }
 }
 
+---------------------------------------------
 -- LEFT
+---------------------------------------------
 
+table.insert(components.active[1], Borders.left)
 -- vi-mode
-table.insert(components.active[1],
-  bordersDecor.left
-    -- Component info here
-)
 table.insert(components.active[1], {
   name = 'VimMode',
-  provider = function()
-    return vi_mode_utils.get_vim_mode()
-  end,
+  -- provider = function()
+  --   return vi_mode_utils.get_vim_mode()
+  -- end,
+  -- provider = 'vi_mode',
+  provider = '  ',
   hl = function()
     local val = {}
     val.name = vi_mode_utils.get_mode_highlight_name()
@@ -203,36 +193,21 @@ table.insert(components.active[1], {
     val.style = 'bold'
     return val
   end,
-  icon = {
-    str = '  ',
-    hl = function()
-      local val = {}
-      val.name = 'Status_VIcon'
-      val.fg = vi_mode_utils.get_mode_color()
-      val.bg = 'black'
-      return val
-    end,
-  },
-  right_sep = {
-    str = ' ',
-    hl = {
-      fg = 'black',
-      bg = 'black'
-    }
-  }
+  right_sep = " "
 })
 
 table.insert(components.active[1], {
   name = 'FileSepLeft',
-  provider = '',
+  -- provider = '',
+  provider = '(',
   hl = function()
     local val = {}
+    val.name = 'Status_FileSep'
     val.fg = 'yellow'
     val.bg = 'black'
     return val
   end,
 })
-
 -- filename
 table.insert(components.active[1], {
   name = 'FileInfo',
@@ -244,22 +219,22 @@ table.insert(components.active[1], {
     }
   },
   short_provider = 'file_type',
-  icon = '',
-  enabled = is_buffer_empty,
   hl = {
+    name = 'Status_FileInfo',
     fg = 'blue',
     bg = 'bg',
     style = 'bold'
   },
   right_sep = " ",
   left_sep = " ",
-
 })
 
 table.insert(components.active[1], {
   name = 'FileSepRight',
-  provider = ' ',
+  -- provider = ' ',
+  provider = ')',
   hl = {
+    name = 'Status_FileSep',
     fg = 'yellow',
     bg = 'bg',
     style = 'bold'
@@ -271,6 +246,7 @@ table.insert(components.active[1], {
   name = 'GitBranch',
   provider = 'git_branch',
   hl = {
+    name = 'Status_GitBranch',
     fg = 'violet',
     style = 'bold'
   }
@@ -281,8 +257,8 @@ table.insert(components.active[1], {
   name = 'GitDiffAdd',
   provider = 'git_diff_added',
   truncate_hide = true,
-  enabled = FullBar,
   hl = {
+    name = 'Status_GitDiffAdd',
     fg = 'green',
     bg = 'bg',
     style = 'bold'
@@ -294,8 +270,8 @@ table.insert(components.active[1], {
   name = 'GitDiffMod',
   provider = 'git_diff_changed',
   truncate_hide = true,
-  enabled = FullBar,
   hl = {
+    name = 'Status_GitDiffMod',
     fg = 'orange',
     bg = 'bg',
     style = 'bold'
@@ -307,21 +283,24 @@ table.insert(components.active[1], {
   name = 'GitDiffRem',
   provider = 'git_diff_removed',
   truncate_hide = true,
-  enabled = FullBar,
   hl = {
+    name = 'Status_GitDiffRem',
     fg = 'red',
     bg = 'bg',
     style = 'bold'
   }
 })
 
+---------------------------------------------
 -- MID
+---------------------------------------------
 
 -- LspName
 table.insert(components.active[2], {
   name = 'LspClient',
   provider = 'lsp_client_names',
   hl = {
+    name = 'Status_Lsp',
     fg = 'yellow',
     bg = 'bg',
     style = 'bold'
@@ -334,6 +313,7 @@ table.insert(components.active[2], {
   provider = 'diagnostic_errors',
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.ERROR),
   hl = {
+    name = 'Status_DiagErr',
     fg = 'red',
     style = 'bold'
   }
@@ -345,6 +325,7 @@ table.insert(components.active[2], {
   truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.WARN),
   hl = {
+    name = 'Status_DiagWarn',
     fg = 'yellow',
     style = 'bold'
   }
@@ -356,6 +337,7 @@ table.insert(components.active[2], {
   truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.HINT),
   hl = {
+    name = 'Status_DiagHint',
     fg = 'cyan',
     style = 'bold'
   }
@@ -367,6 +349,7 @@ table.insert(components.active[2], {
   truncate_hide = true,
   enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.INFO),
   hl = {
+    name = 'Status_DiagInfo',
     fg = 'skyblue',
     style = 'bold'
   }
@@ -375,14 +358,17 @@ table.insert(components.active[2], {
 table.insert(components.active[2], {
   name = 'Treesitter',
   provider = TreesitterStatus,
-  enabled = BarWidth,
   hl = {
+    name = 'Status_Treesitter',
     fg = 'skyblue',
     style = 'bold'
   }
 })
 
+---------------------------------------------
 -- RIGHT
+---------------------------------------------
+
 -- fileIcon
 table.insert(components.active[3], {
   name = 'FileIcon',
@@ -398,6 +384,7 @@ table.insert(components.active[3], {
   -- enabled = FullBar,
   hl = function()
     local val = {}
+    val.name = 'Status_FileIcon'
     local filename = vim.fn.expand('%:t')
     local extension = vim.fn.expand('%:e')
     local icon, name  = require'nvim-web-devicons'.get_icon(filename, extension)
@@ -417,9 +404,9 @@ table.insert(components.active[3], {
 table.insert(components.active[3], {
   name = 'FileType',
   provider = 'file_type',
-  enabled = FullBar,
   hl = function()
     local val = {}
+    val.name = 'Status_FileType'
     local filename = vim.fn.expand('%:t')
     local extension = vim.fn.expand('%:e')
     local icon, name  = require'nvim-web-devicons'.get_icon(filename, extension)
@@ -438,8 +425,9 @@ table.insert(components.active[3], {
 table.insert(components.active[3], {
   name = 'LinesInfo',
   provider = LinesInfo,
-  -- provider = 'position',
+  truncate_hide = true,
   hl = {
+    name = 'Status_LinesInfo',
     fg = 'white',
     bg = 'bg',
     style = 'bold'
@@ -450,8 +438,9 @@ table.insert(components.active[3], {
 table.insert(components.active[3], {
   name = 'LinePerc',
   provider = 'line_percentage',
-  enabled = FullBar,
+  truncate_hide = true,
   hl = {
+    name = 'Status_LinesPerc',
     fg = 'white',
     bg = 'bg',
     style = 'bold'
@@ -462,9 +451,10 @@ table.insert(components.active[3], {
 table.insert(components.active[3], {
   name = 'ScrollBar',
   provider = 'scroll_bar',
-  enabled = FullBar,
+  truncate_hide = true,
   right_sep = ' ',
   hl = {
+    name = 'Status_ScrollBar',
     fg = 'magenta',
     style = 'bold'
   }
@@ -473,8 +463,9 @@ table.insert(components.active[3], {
 table.insert(components.active[3], {
   name = 'FileSize',
   provider = 'file_size',
-  enabled = FullBar,
+  truncate_hide = true,
   hl = {
+    name = 'Status_FileSize',
     fg = 'skyblue',
     bg = 'bg',
     style = 'bold'
@@ -484,15 +475,14 @@ table.insert(components.active[3], {
 -- fileFormat
 table.insert(components.active[3], {
   name = 'FileFormat',
-  provider = file_osinfo,
-  enabled = FullBar,
+  provider = OSinfo,
+  truncate_hide = true,
   hl = function()
     local val = {}
-
+    val.name = 'Status_FileFormat'
     val.fg = vi_mode_utils.get_mode_color()
     val.bg = 'black'
     val.style = 'bold'
-
     return val
   end,
   --    hl = {
@@ -506,8 +496,10 @@ table.insert(components.active[3], {
 table.insert(components.active[3], {
   name = 'FileEncode',
   provider = 'file_encoding',
+  truncate_hide = true,
   hl = function()
     local val = {}
+    val.name = 'Status_FileEncode'
     val.fg = vi_mode_utils.get_mode_color()
     val.bg = 'black'
     val.style = 'bold'
@@ -515,7 +507,7 @@ table.insert(components.active[3], {
   end,
 })
 
-table.insert(components.active[3], bordersDecor.right)
+table.insert(components.active[3], Borders.right)
 
 -- INACTIVE
 
