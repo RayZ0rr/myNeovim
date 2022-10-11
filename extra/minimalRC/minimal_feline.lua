@@ -1,3 +1,48 @@
+-- ignore default config and plugins
+vim.opt.runtimepath:remove(vim.fn.expand("~/.config/nvim"))
+vim.opt.packpath:remove(vim.fn.expand("~/.local/share/nvim/site"))
+
+-- append test directory
+local test_dir = "/tmp/feline"
+vim.opt.runtimepath:append(vim.fn.expand(test_dir))
+vim.opt.packpath:append(vim.fn.expand(test_dir))
+
+-- install packer
+local install_path = test_dir .. "/pack/packer/start/packer.nvim"
+local install_plugins = false
+
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+    vim.cmd("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
+    vim.cmd("packadd packer.nvim")
+    install_plugins = true
+end
+
+local packer = require("packer")
+
+packer.init({
+    package_root = test_dir .. "/pack",
+    compile_path = test_dir .. "/plugin/packer_compiled.lua",
+})
+
+-- install plugins
+packer.startup(function(use)
+    use("wbthomason/packer.nvim")
+    use {
+      'feline-nvim/feline.nvim',
+      requires = 'kyazdani42/nvim-web-devicons',
+      -- config = function()
+      --     require('feline').setup()
+      -- end
+     }
+    use 'RRethy/vim-illuminate'
+    use 'chentoast/marks.nvim'
+    if install_plugins then
+        packer.sync()
+    end
+end)
+
+vim.opt.termguicolors = true
+
 local has_feline, feline = pcall(require, 'feline')
 if not has_feline then
   return
@@ -130,8 +175,6 @@ end
 force_inactive.filetypes = {
   'NvimTree',
   'fern',
-  'alpha',
-  'dashboard',
   'dbui',
   'packer',
   'startify',
@@ -227,7 +270,6 @@ table.insert(components.active[1], {
     bg = 'bg',
     style = 'bold'
   },
-  enabled = BufferEmpty,
   right_sep = " ",
   left_sep = " ",
 })
@@ -573,7 +615,6 @@ components.inactive[1][3] = {
 
 -- filetype
 components.inactive[1][4] = {
-  enabled = BufferEmpty,
   provider = 'file_type',
   hl = {
     fg = 'yellow',
@@ -651,3 +692,85 @@ require('feline').setup{
   vi_mode_colors = vi_mode_colors,
   force_inactive = force_inactive,
 }
+
+require('illuminate').configure({
+  -- providers: provider used to get references in the buffer, ordered by priority
+  providers = {
+      'treesitter',
+      'lsp',
+      'regex',
+  },
+  -- delay: delay in milliseconds
+  delay = 100,
+  -- filetype_overrides: filetype specific overrides.
+  -- The keys are strings to represent the filetype while the values are tables that
+  -- supports the same keys passed to .configure except for filetypes_denylist and filetypes_allowlist
+  filetype_overrides = {},
+  -- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
+  filetypes_denylist = {
+      'dirvish',
+      'fugitive',
+  },
+  -- filetypes_allowlist: filetypes to illuminate, this is overriden by filetypes_denylist
+  filetypes_allowlist = {},
+  -- modes_denylist: modes to not illuminate, this overrides modes_allowlist
+  modes_denylist = {},
+  -- modes_allowlist: modes to illuminate, this is overriden by modes_denylist
+  modes_allowlist = {},
+  -- providers_regex_syntax_denylist: syntax to not illuminate, this overrides providers_regex_syntax_allowlist
+  -- Only applies to the 'regex' provider
+  -- Use :echom synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
+  providers_regex_syntax_denylist = {},
+  -- providers_regex_syntax_allowlist: syntax to illuminate, this is overriden by providers_regex_syntax_denylist
+  -- Only applies to the 'regex' provider
+  -- Use :echom synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
+  providers_regex_syntax_allowlist = {},
+  -- under_cursor: whether or not to illuminate under the cursor
+  under_cursor = false,
+  -- large_file_cutoff: number of lines at which to use large_file_config
+  -- The `under_cursor` option is disabled when this cutoff is hit
+  large_file_cutoff = nil,
+  -- large_file_config: config to use for large files (based on large_file_cutoff).
+  -- Supports the same keys passed to .configure
+  -- If nil, vim-illuminate will be disabled for large files.
+  large_file_overrides = nil,
+})
+vim.api.nvim_set_hl(0,'IlluminatedWordText',{italic = true})
+vim.api.nvim_set_hl(0,'IlluminatedWordRead',{underline = true, italic = true})
+vim.api.nvim_set_hl(0,'IlluminatedWordWrite',{underline = true, italic = true})
+
+require'marks'.setup {
+  -- whether to map keybinds or not. default true
+  default_mappings = true,
+  -- which builtin marks to show. default {}
+  builtin_marks = { ".", "<", ">", "^" },
+  -- whether movements cycle back to the beginning/end of buffer. default true
+  cyclic = true,
+  -- whether the shada file is updated after modifying uppercase marks. default false
+  force_write_shada = false,
+  -- how often (in ms) to redraw signs/recompute mark positions.
+  -- higher values will have better performance but may cause visual lag,
+  -- while lower values may cause performance penalties. default 150.
+  refresh_interval = 250,
+  -- sign priorities for each type of mark - builtin marks, uppercase marks, lowercase
+  -- marks, and bookmarks.
+  -- can be either a table with all/none of the keys, or a single number, in which case
+  -- the priority applies to all marks.
+  -- default 10.
+  sign_priority = { lower=10, upper=15, builtin=8, bookmark=20 },
+  -- disables mark tracking for specific filetypes. default {}
+  excluded_filetypes = {'floaterm', 'term', 'toggleterm', 'fzf','alpha','Fm','DressingSelect','netrw'},
+  -- marks.nvim allows you to configure up to 10 bookmark groups, each with its own
+  -- sign/virttext. Bookmarks can be used to group together positions and quickly move
+  -- across multiple buffers. default sign is '!@#$%^&*()' (from 0 to 9), and
+  -- default virt_text is "".
+  bookmark_0 = {
+    sign = "⚑",
+    -- virt_text = "hello world"
+  },
+  mappings = {}
+}
+
+vim.api.nvim_set_keymap('n', '<leader>mm', ':marks<cr>',{ noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>mn', ':MarksToggleSigns buffer<cr>',{ noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>MN', ':MarksToggleSigns<cr>',{ noremap = true, silent = true })

@@ -120,6 +120,7 @@ packer.startup(function(use)
   use {
     -- 'rmagatti/auto-session',
     'Shatur/neovim-session-manager',
+    requires = 'nvim-lua/plenary.nvim',
     config = function()
       require('plugins/general/sessions')
     end,
@@ -130,12 +131,12 @@ packer.startup(function(use)
   ----------------------------------------------
 
   -- Onedark Theme -----------------------------
-  use {
-    'olimorris/onedarkpro.nvim',
+  -- use {
+  --   'olimorris/onedarkpro.nvim',
     -- config = function()
     --   require('plugins/themes/onedarkpro')
     -- end,
-  }
+  -- }
   use {
     'marko-cerovac/material.nvim',
     config = function()
@@ -254,7 +255,12 @@ packer.startup(function(use)
     end,
   }
   -- Registers in floating window and other convenience
-  use "tversteeg/registers.nvim"
+  use {
+    "tversteeg/registers.nvim",
+    config = function()
+      require("registers").setup()
+    end,
+  }
   -- use { -- Add indentation guides even on blank lines
   --   'lukas-reineke/indent-blankline.nvim',
   --   config = [[ require('plugins/general/indent-blankline') ]],

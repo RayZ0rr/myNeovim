@@ -24,7 +24,7 @@ require("aerial").setup({
     -- max_width = {40, 0.2} means "the lesser of 40 columns or 20% of total"
     max_width = { 40, 0.2 },
     width = nil,
-    min_width = 10,
+    min_width = 30,
 
     -- Determines the default direction to open the aerial window. The 'prefer'
     -- options will open the window in the other direction *if* there is a
