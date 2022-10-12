@@ -48,12 +48,13 @@ api.nvim_create_autocmd(
   { pattern = {"vifmrc","*.vifm"}, command = [[setlocal commentstring=\"\ %s]], group = MyCommentsGroup }
 )
 
+api.nvim_set_hl(0,"YankHighlightGroup",{fg='#4B4B4B' , bg="#e5c07b" })
 -- Highlight on yank
 local MyYankHighlightGroup = api.nvim_create_augroup("MyYankHighlightGroup", { clear = true })
 api.nvim_create_autocmd(
   "TextYankPost",
   {
-    command = "silent! lua vim.highlight.on_yank()",
+    command = "silent! lua vim.highlight.on_yank({higroup='YankHighlightGroup'})",
     group = MyYankHighlightGroup,
   }
 )

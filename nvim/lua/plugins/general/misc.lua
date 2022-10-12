@@ -259,6 +259,7 @@ end
 --##########################################################################################################
 local present, _ = pcall(require, 'specs')
 if present then
+  vim.api.nvim_set_hl(0,"SpecsHighlightGroup",{ fg = '#C3E88D', reverse = true }) -- diff mode: Added line
   require('specs').setup{
     show_jumps  = true,
     min_jump = 10,
@@ -267,7 +268,7 @@ if present then
       inc_ms = 3, -- time increments used for fade/resize effects
       blend = 10, -- starting blend, between 0-100 (fully transparent), see :h winblend
       width = 80,
-      winhl = "DiffAdd",
+      winhl = "SpecsHighlightGroup",
       fader = require('specs').pulse_fader,
       -- resizer = require('specs').empty_resizer
       resizer = require('specs').shrink_resizer

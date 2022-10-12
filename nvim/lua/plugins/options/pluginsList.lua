@@ -14,11 +14,11 @@ packer.startup(function(use)
   -- Package manager ---------------------------
   use 'wbthomason/packer.nvim'
 
-  use 'lewis6991/impatient.nvim'
+  --------------------------------------------------
+  -- Utilities
+  --------------------------------------------------
 
-  --------------------------------------------------
-  -- GENERAL
-  --------------------------------------------------
+  use 'lewis6991/impatient.nvim'
 
   -- FZF ----------------------------------------
   use {
@@ -54,15 +54,15 @@ packer.startup(function(use)
   }
   -- Terminal conveniences plugin (filebrowser with vifm, lazygit etc)
   use {
-    'is0n/fm-nvim',
+    'voldikss/vim-floaterm',
     config = function()
-      require('plugins/general/fm-nvim')
+      require('plugins/general/floaterm')
     end,
   }
   -- use {
-  --   'voldikss/vim-floaterm',
+  --   'is0n/fm-nvim',
   --   config = function()
-  --     require('plugins/general/floaterm')
+  --     require('plugins/general/fm-nvim')
   --   end,
   -- }
   -- Autocompletion plugin ---------------------
@@ -118,11 +118,17 @@ packer.startup(function(use)
   }
   -- Auto-session maker -------------------------
   use {
-    -- 'rmagatti/auto-session',
     'Shatur/neovim-session-manager',
     requires = 'nvim-lua/plenary.nvim',
     config = function()
       require('plugins/general/sessions')
+    end,
+  }
+  -- Higlight occurances of word under cursor
+  use {
+    'RRethy/vim-illuminate',
+    config = function()
+      require('plugins/general/misc')
     end,
   }
 
@@ -131,33 +137,24 @@ packer.startup(function(use)
   ----------------------------------------------
 
   -- Onedark Theme -----------------------------
-  -- use {
-  --   'olimorris/onedarkpro.nvim',
-    -- config = function()
-    --   require('plugins/themes/onedarkpro')
-    -- end,
-  -- }
   use {
-    'marko-cerovac/material.nvim',
+    'olimorris/onedarkpro.nvim',
     config = function()
-      require('plugins/themes/material')
+      require('plugins/themes/onedarkpro')
     end,
   }
-  -- use 'navarasu/onedark.nvim' -- Onedark colorscheme with lsp support
-  -- use 'sainnhe/sonokai' -- Monokai colorscheme with lsp support
-  -- use 'joshdick/onedark.vim' -- Onedark
-
-  -- use 'RRethy/nvim-base16' -- Colorscheme list
-  -- use 'folke/lsp-colors.nvim' -- Add lsp highlights to colorscheme without it
-
-  -- use 'morhetz/gruvbox' -- Gruvbox
+  -- Material Theme -----------------------------
+  -- use {
+  --   'marko-cerovac/material.nvim',
+  --   config = function()
+  --     require('plugins/themes/material')
+  --   end,
+  -- }
 
   -- -----------------------------------------------
   -- UI/LOOK
   -- -----------------------------------------------
 
-  -- Startup time measure --------------------------
-  use 'dstein64/vim-startuptime'
   -- Icon set ---------------------------------
   use {
     'kyazdani42/nvim-web-devicons',
@@ -183,9 +180,6 @@ packer.startup(function(use)
     config = function()
       require('plugins/general/alpha')
     end,
-    -- config = function ()
-    --     require'alpha'.setup(require'alpha.themes.dashboard'.opts)
-    -- end
   }
   -- Tab/buffers display and customize -----------
   use {
@@ -195,6 +189,8 @@ packer.startup(function(use)
       require('plugins/general/bufferline')
     end,
   }
+  -- Startup time measure --------------------------
+  use 'dstein64/vim-startuptime'
   -- Align code for eg, arround '=' sign ---------
   use {
     'junegunn/vim-easy-align',
@@ -208,14 +204,6 @@ packer.startup(function(use)
     requires = 'nvim-lua/plenary.nvim',
     config = function()
       require('plugins/general/misc')
-    end,
-  }
-  -- Spell check helper plugin ---------------------
-  use {
-    'kamykn/spelunker.vim',
-    requires = 'kamykn/popup-menu.nvim',
-    config = function()
-      require('plugins/general/spelunker')
     end,
   }
   -- Highlight, navigate, and operate on sets of matching text
@@ -234,19 +222,18 @@ packer.startup(function(use)
   }
   -- Highlight cursorline during jump ---------------
   use {
-    -- 'danilamihailov/beacon.nvim'
     'edluffy/specs.nvim',
     config = function()
       require('plugins/general/misc')
     end,
   }
   -- Improve the default UI hooks (vim.ui.select and vim.ui.input)
-  use {
-    'stevearc/dressing.nvim',
-    config = function()
-      require('plugins/general/dressing')
-    end,
-  }
+  -- use {
+  --   'stevearc/dressing.nvim',
+  --   config = function()
+  --     require('plugins/general/dressing')
+  --   end,
+  -- }
   -- Show marks and bookmarks -------------------
   use {
     'chentoast/marks.nvim',
@@ -261,10 +248,6 @@ packer.startup(function(use)
       require("registers").setup()
     end,
   }
-  -- use { -- Add indentation guides even on blank lines
-  --   'lukas-reineke/indent-blankline.nvim',
-  --   config = [[ require('plugins/general/indent-blankline') ]],
-  -- }
 
   --------------------------------------------------
   -- LSP
@@ -277,40 +260,13 @@ packer.startup(function(use)
       require('plugins/LSP')
     end,
   }
-  -- File Browser ------------------------------
+  -- Symbol Browser ------------------------------
   use {
     'stevearc/aerial.nvim',
     config = function()
       require('plugins/LSP/utils/aerial')
     end,
   }
-  -- Higlight occurances of word under cursor
-  use {
-    'RRethy/vim-illuminate',
-    config = function()
-      require('plugins/general/misc')
-    end,
-  }
-
-  -- use({
-  --  "jose-elias-alvarez/null-ls.nvim",
-  -- config = function()
-  --  require("null-ls").setup()
-  -- end,
-  --  requires = { "nvim-lua/plenary.nvim" },
-  -- })
-  -- use { -- Show lightbulb for diagnostics
-  --   'kosayoda/nvim-lightbulb',
-  --   config = [[ require('plugins/LSP/utils/nvim-lightbulb') ]],
-  -- }
-  -- use { -- Signature help plug
-  --   'ray-x/lsp_signature.nvim',
-  --   config = [[ require('plugins/LSP/utils/lsp_signature') ]],
-  -- }
-  -- use  { -- Lsp better functioning.
-  --  'RishabhRD/nvim-lsputils',
-  --  requires = {'RishabhRD/popfix'}
-  -- }
 
   --------------------------------------------------
   -- Treesitter

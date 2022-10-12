@@ -5,6 +5,7 @@ end
 
 local lsp = require('feline.providers.lsp')
 local vi_mode_utils = require('feline.providers.vi_mode')
+local utils = require('plugins.general.feline.utils')
 
 local force_inactive = {
   filetypes = {},
@@ -19,6 +20,7 @@ local components = {
 }
 
 local my_theme = {
+  fg = '#a89984',
   bg = '#282828',
   black = '#282828',
   yellow = '#d8a657',
@@ -29,7 +31,6 @@ local my_theme = {
   violet = '#d3869b',
   magenta = '#D16D9E',
   white = '#a89984',
-  fg = '#a89984',
   skyblue = '#7daea3',
   red = '#ea6962',
   blue = '#61afef',
@@ -53,73 +54,6 @@ local vi_mode_colors = {
   NONE = 'yellow'
 }
 
-local icons = {
-  linux = ' ',
-  macos = ' ',
-  windows = ' ',
-
-  errs = ' ',
-  warns = ' ',
-  infos = ' ',
-  hints = ' ',
-
-  lsp = ' ',
-  git = ''
-}
-
-local OSinfo = function()
-  local os = vim.bo.fileformat:upper()
-  local icon
-  if os == 'UNIX' then
-    icon = icons.linux
-  elseif os == 'MAC' then
-    icon = icons.macos
-  else
-    icon = icons.windows
-  end
-  return icon .. os
-end
-
-local LinesInfo = function()
-  local line = vim.fn.line('.')
-  local column = vim.fn.col('.')
-  local total_line = vim.fn.line('$')
-  return string.format("%d:%d  %d", column, line, total_line)
-end
-
-local TreesitterStatus = function()
-  local ts = vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()]
-  return (ts and next(ts)) and " 綠TS" or ""
-end
-
-local BufferNotEmpty = function()
-  if vim.fn.empty(vim.fn.expand('%:t')) ~= 1 then
-    return true
-  end
-  return false
-end
-
-local FullBar = function()
-  return vim.api.nvim_win_get_width(0) > 95
-end
-
-local BarWidth = function(n)
-  return (vim.opt.laststatus:get() == 3 and vim.opt.columns:get() or vim.fn.winwidth(0)) > (n or 80)
-end
-
-local function BufferEmpty()
-    -- Check whether the current buffer is empty
-    return vim.fn.empty(vim.fn.expand '%:t') ~= 1
-end
-
-local CheckWidth = function()
-  local squeeze_width  = vim.fn.winwidth(0) / 2
-  if squeeze_width > 40 then
-    return true
-  end
-  return false
-end
-
 local function vimode_hl()
   return {
     name = vi_mode_utils.get_mode_highlight_name(),
@@ -137,6 +71,7 @@ force_inactive.filetypes = {
   'startify',
   'fugitive',
   'term',
+  'floaterm',
   'toggleterm',
   'fm',
   'fzf',
@@ -186,7 +121,8 @@ table.insert(components.active[1], {
   --   return vi_mode_utils.get_vim_mode()
   -- end,
   -- provider = 'vi_mode',
-  provider = '  ',
+  -- provider = '  ',
+  provider = '   ',
   hl = function()
     local val = {}
     val.name = vi_mode_utils.get_mode_highlight_name()
@@ -195,13 +131,12 @@ table.insert(components.active[1], {
     val.style = 'bold'
     return val
   end,
-  right_sep = " "
 })
 
 table.insert(components.active[1], {
   name = 'FileSepLeft',
-  -- provider = '',
-  provider = '(',
+  provider = '',
+  -- provider = '(',
   hl = function()
     local val = {}
     val.name = 'Status_FileSep'
@@ -227,15 +162,15 @@ table.insert(components.active[1], {
     bg = 'bg',
     style = 'bold'
   },
-  enabled = BufferEmpty,
+  enabled = utils.BufferEmpty,
   right_sep = " ",
   left_sep = " ",
 })
 
 table.insert(components.active[1], {
   name = 'FileSepRight',
-  -- provider = ' ',
-  provider = ')',
+  provider = ' ',
+  -- provider = ')',
   hl = {
     name = 'Status_FileSep',
     fg = 'yellow',
@@ -314,7 +249,7 @@ table.insert(components.active[2], {
 table.insert(components.active[2], {
   name = 'DiagErr',
   provider = 'diagnostic_errors',
-  enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.ERROR),
+  enabled = lsp.diagnostics_exist(vim.diagnostic.severity.ERROR),
   hl = {
     name = 'Status_DiagErr',
     fg = 'red',
@@ -326,7 +261,7 @@ table.insert(components.active[2], {
   name = 'DiagWarn',
   provider = 'diagnostic_warnings',
   truncate_hide = true,
-  enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.WARN),
+  enabled = lsp.diagnostics_exist(vim.diagnostic.severity.WARN),
   hl = {
     name = 'Status_DiagWarn',
     fg = 'yellow',
@@ -338,7 +273,7 @@ table.insert(components.active[2], {
   name = 'DiagHint',
   provider = 'diagnostic_hints',
   truncate_hide = true,
-  enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.HINT),
+  enabled = lsp.diagnostics_exist(vim.diagnostic.severity.HINT),
   hl = {
     name = 'Status_DiagHint',
     fg = 'cyan',
@@ -350,7 +285,7 @@ table.insert(components.active[2], {
   name = 'DiagInfo',
   provider = 'diagnostic_info',
   truncate_hide = true,
-  enabled = require('feline.providers.lsp').diagnostics_exist(vim.diagnostic.severity.INFO),
+  enabled = lsp.diagnostics_exist(vim.diagnostic.severity.INFO),
   hl = {
     name = 'Status_DiagInfo',
     fg = 'skyblue',
@@ -360,7 +295,7 @@ table.insert(components.active[2], {
 -- Treesitter status
 table.insert(components.active[2], {
   name = 'Treesitter',
-  provider = TreesitterStatus,
+  provider = utils.TreesitterStatus,
   hl = {
     name = 'Status_Treesitter',
     fg = 'skyblue',
@@ -427,7 +362,7 @@ table.insert(components.active[3], {
 -- lineInfo
 table.insert(components.active[3], {
   name = 'LinesInfo',
-  provider = LinesInfo,
+  provider = utils.LinesInfo,
   truncate_hide = true,
   hl = {
     name = 'Status_LinesInfo',
@@ -478,7 +413,7 @@ table.insert(components.active[3], {
 -- fileFormat
 table.insert(components.active[3], {
   name = 'FileFormat',
-  provider = OSinfo,
+  provider = utils.OSinfo,
   truncate_hide = true,
   hl = function()
     local val = {}
@@ -488,11 +423,6 @@ table.insert(components.active[3], {
     val.style = 'bold'
     return val
   end,
-  --    hl = {
-    -- fg = 'white',
-    -- bg = 'bg',
-    -- style = 'bold'
-    --    },
   right_sep = ' '
 })
 -- fileEncode
@@ -515,7 +445,8 @@ table.insert(components.active[3], Borders.right)
 -- INACTIVE
 
 -- fileType
-components.inactive[1][1] = {
+-- components.inactive[1][1] = {
+table.insert(components.inactive[1], {
   provider = '' ,
   hl = {
     fg = 'red',
@@ -536,14 +467,14 @@ components.inactive[1][1] = {
       bg = 'black'
     },
   }
-}
-components.inactive[1][2] = {
+})
+table.insert(components.inactive[1], {
   provider = function()
     return vi_mode_utils.get_vim_mode()
   end,
   hl = function()
     local val = {}
-    val.name = vi_mode_utils.get_mode_highlight_name()
+    val.name = "StatusInactive_VimMode"
     val.fg = 'blue'
     val.bg = 'black'
     val.style = 'bold'
@@ -556,9 +487,8 @@ components.inactive[1][2] = {
       bg = 'black'
     },
   }
-}
-
-components.inactive[1][3] = {
+})
+table.insert(components.inactive[1], {
   provider = '',
   hl = function()
     local val = {}
@@ -569,11 +499,11 @@ components.inactive[1][3] = {
 
     return val
   end,
-}
+})
 
 -- filetype
-components.inactive[1][4] = {
-  enabled = BufferEmpty,
+table.insert(components.inactive[1], {
+  enabled = utils.BufferEmpty,
   provider = 'file_type',
   hl = {
     fg = 'yellow',
@@ -595,27 +525,27 @@ components.inactive[1][4] = {
       }
     },
   }
-}
+})
 
-components.inactive[1][5] = {
+table.insert(components.inactive[1], {
   provider = ' ',
   hl = {
     fg = 'cyan',
     bg = 'black',
     style = 'bold'
   },
-}
+})
 
-components.inactive[1][6] = {
+table.insert(components.inactive[1], {
   provider = ' ',
   hl = {
     fg = 'red',
     bg = 'black',
     style = 'bold'
   },
-}
+})
 
-components.inactive[2][1] = {
+table.insert(components.inactive[2], {
   provider = "Code Status:" .. '%{g:asyncrun_status}',
   enabled = function()
     return vim.g.asyncrun_status ~= nil and vim.bo.filetype == 'qf'
@@ -641,12 +571,12 @@ components.inactive[2][1] = {
       }
     },
   }
-}
+})
 
 -- require('feline').use_theme(my_theme)
 require('feline').setup{
   theme = my_theme,
-  -- theme = 'onedark',
+  colors = { fg = "NONE", bg = "NONE" },
   components = components,
   vi_mode_colors = vi_mode_colors,
   force_inactive = force_inactive,

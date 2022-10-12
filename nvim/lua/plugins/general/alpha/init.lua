@@ -1,6 +1,10 @@
 local if_nil = vim.F.if_nil
 
-local alpha = require'alpha'
+local has_alpha, alpha = pcall(require, 'alpha')
+if not has_alpha then
+  return
+end
+
 local dashboard = require'alpha.themes.dashboard'
 
 local default_header = {
@@ -40,13 +44,17 @@ local date = {
 }
 
 local function pluginsCount()
-    -- local total_plugins = #vim.tbl_keys(packer_plugins)
     local datetime = os.date(" %d-%m-%Y   %H:%M:%S")
     local version = vim.version()
     local nvim_version_info = "   v" .. version.major .. "." .. version.minor .. "." .. version.patch
 
-    return datetime .. "   " ..  nvim_version_info
-    -- return datetime .. "   " .. total_plugins .. " plugins" .. nvim_version_info
+    local has_packer, _ = pcall(require, 'packer')
+    if not has_packer then
+      return datetime .. "   " ..  nvim_version_info
+    else
+      local total_plugins = #vim.tbl_keys(packer_plugins)
+      return datetime .. "   " .. total_plugins .. " plugins" .. nvim_version_info
+    end
 end
 
 local footer1 = {
@@ -69,58 +77,32 @@ local footer2 = {
     -- hl = "Comment",
   },
 }
-
---- @param sc string
---- @param txt string
---- @param keybind string optional
---- @param keybind_opts table optional
 local function button(sc, txt, keybind, keybind_opts)
-  local sc_ = sc:gsub("%s", ""):gsub("SPC", "<leader>")
-
-  local opts = {
-    position = "center",
-    shortcut = sc,
-    cursor = 5,
-    width = 50,
-    hl = "Label",
-    align_shortcut = "right",
-    hl_shortcut = "Keyword",
-  }
-  if keybind then
-    keybind_opts = if_nil(keybind_opts, { noremap = true, silent = true, nowait = true })
-    -- opts.keymap = { "n", sc_, keybind, keybind_opts }
-    opts.keymap = { "n", sc_, "<cmd>" .. keybind .. "<cr>", keybind_opts }
-  end
-
-  local function on_press()
-    local key = vim.api.nvim_replace_termcodes(sc_ .. "<Ignore>", true, false, true)
-    -- vim.api.nvim_feedkeys(key, "normal", false)
-    vim.cmd(keybind)
-  end
-
-  return {
-    type = "button",
-    val = txt,
-    on_press = on_press,
-    opts = opts,
-  }
+  local b = dashboard.button(sc, txt, keybind, keybind_opts)
+  b.opts.hl = "AlphaButtonText"
+  b.opts.hl_shortcut = "AlphaButtonShortcut"
+  b.opts.position = "center"
+  b.opts.hl = "Label"
+  b.opts.align_shortcut = "right"
+  b.opts.hl_shortcut = "Keyword"
+  b.cursor = 5
+  b.width = 51
+  return b
 end
 
+dashboard.section.buttons.val = {
+  button("n", "   New file", ":ene <BAR> startinsert <CR>"),
+  button("f", "  File Explorer",":FzfLua files show_header=true<CR>"),
+  button("o", "  Recently opened files",":FzfLua oldfiles<CR>"),
+  button("g", "  Find word",":FzfLua grep_project<CR>"),
+  button("m", "  Jump to bookmarks",":lua require('fzf-lua').marks()<CR>"),
+  button("u", "   Update plugins", ":PackerSync<CR>"), -- Packer sync
+  button("s", "   Load session", ':SessionManager load_session<CR>'),
+  button("q", "   Quit Neovim", ":qa!<CR>"),
+}
 local buttons = {
   type = "group",
-  val = {
-    button("e", "  New file", "ene"),
-    button("f", "  File Explorer","FzfLua files show_header=true"),
-    button("o", "  Recently opened files","FzfLua oldfiles"),
-    button("g", "  Find word","FzfLua grep_project"),
-    button("m", "  Jump to bookmarks","lua require('fzf-lua').marks()"),
-    button("s", "  Open last session","SessionManager load_session"),
-    -- button("SPC f f", "  Find file","lua require('fzf-lua').files()"),
-    -- button("SPC f o", "  Recently opened files","FzfLua oldfiles"),
-    -- button("SPC f g g", "  Find word","FzfLua grep_project"),
-    -- button("SPC f m", "  Jump to bookmarks","lua require('fzf-lua').marks()"),
-    -- button("SPC s l", "  Open last session"),
-  },
+  val = dashboard.section.buttons.val,
   opts = {
     spacing = 1,
   },

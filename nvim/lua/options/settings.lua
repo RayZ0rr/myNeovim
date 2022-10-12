@@ -1,13 +1,7 @@
 local set = vim.opt
 local g = vim.g
 
--- use filetype.lua instead of filetype.vim
--- g.did_load_filetypes = 0
--- g.do_filetype_lua = 1
-
 -- set leader key
--- nnoremap <Space> <Nop>
--- nnoremap <silent> <Space>	    <Nop>
 g.mapleader = ","
 g.maplocalleader=" "
 
@@ -37,7 +31,7 @@ set.scrolloff=4                         -- Keep 4 lines below cursor before scro
 set.sidescrolloff=8                     -- Keep 4 lines below cursor before scrolling the screen horizontally
 set.smartindent = true                  -- Makes indenting smart
 set.number = true                       -- Line numbers
-set.cursorline = true                   -- Enable highlighting of the current line
+set.cursorline = false                   -- Enable highlighting of the current line
 set.showmatch = true                    -- " Highlight matching brace
 set.showtabline=2                       -- Always show tabs
 set.showmode = false                    -- We don't need to see things like -- INSERT -- anymore
@@ -45,11 +39,12 @@ set.updatetime=200			-- " Faster completion
 set.timeoutlen=500                      -- By default timeoutlen is 1000 ms
 -- vim.cmd[[set formatoptions=jql]]	-- Stop newline continution of comments
 set.formatoptions:remove('o')		-- Automatically insert comment leader after 'o' or 'O' in Normal mode.
+set.formatoptions:remove('t')		-- Do not auto wrap text
 set.formatoptions:append('r')		-- Automatically insert comment leader after <Enter> in Insert mode.
 set.formatoptions:append('l')		-- Long lines are not broken in insert mode.
-set.formatoptions:remove('t')		-- Do not auto wrap text
 set.formatoptions:append('n')		-- Recognise lists
-set.clipboard='unnamedplus'		-- Copy paste between vim and everything else
+set.clipboard:append('unnamedplus')	-- Copy paste between vim and everything else
+-- vim.cmd[[set clipboard+=unnamedplus]]	-- Copy paste between vim and everything else
 set.autochdir = true                    -- Your working directory will always be the same as your working directory
 set.laststatus=3			-- Global statusline
 set.title = true
@@ -84,9 +79,8 @@ vim.cmd[[set rtp-=/usr/share/vim/vimfiles]]
 
 set.pastetoggle='<leader>pp'
 
-set.sessionoptions="blank,buffers,curdir,help,tabpages,winsize,winpos,terminal"
--- vim.cmd[[set sessionoptions+=globals,blank,buffers,curdir,help,tabpages,winsize]]
--- vim.cmd[[set sessionoptions-=folds]]
+vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
+-- vim.cmd[[set sessionoptions+=winpos,terminal,folds]]
 
 set.viewoptions="cursor,folds,slash,unix"
 local viewPath = vim.fn.stdpath('data') .. '/.ViewDir'
