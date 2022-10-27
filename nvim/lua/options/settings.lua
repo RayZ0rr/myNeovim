@@ -1,64 +1,66 @@
-local set = vim.opt
+local opt = vim.opt
 local g = vim.g
 
 -- set leader key
 g.mapleader = ","
 g.maplocalleader=" "
 
--- set.whichwrap:append "<>[]hl"
-set.breakindent = true
-set.termguicolors = true
-set.ignorecase = true
-set.smartcase = true
-set.hlsearch = false
-set.inccommand='nosplit'
-set.wrap = false                        -- Display long lines as just one line
-set.pumheight=10                        -- Makes popup menu smaller
-set.fileencoding='utf-8'                -- The encoding written to file
-set.cmdheight=2                         -- More space for displaying messages
+-- opt.whichwrap:append "<>[]hl"
+opt.breakindent = true
+opt.termguicolors = true
+opt.ignorecase = true
+opt.smartcase = true
+opt.hlsearch = false
+opt.inccommand='nosplit'
+opt.wrap = false                        -- Display long lines as just one line
+opt.pumheight=10                        -- Makes popup menu smaller
+opt.fileencoding='utf-8'                -- The encoding written to file
+opt.cmdheight=2                         -- More space for displaying messages
 vim.cmd[[set iskeyword+=-]]             -- treat dash separated words as a word text object
-set.mouse='a'                           -- Enable your mouse
-set.shortmess:append('c')		-- Avoid showing message extra message when using completion
-set.splitbelow = true                   -- Horizontal splits will automatically be below
-set.splitright = true                   -- Vertical splits will automatically be to the right
--- set.t_Co=256				-- Support 256 colors
-set.conceallevel=0                      -- So that I can see `` in markdown files
-set.tabstop=8
-set.shiftwidth=2                        -- number of auto-indent spaces
-set.softtabstop=2
--- set.expandtab = true			-- Insert 2 spaces for a tab
-set.scrolloff=4                         -- Keep 4 lines below cursor before scrolling the screen vertically
-set.sidescrolloff=8                     -- Keep 4 lines below cursor before scrolling the screen horizontally
-set.smartindent = true                  -- Makes indenting smart
-set.number = true                       -- Line numbers
-set.cursorline = false                   -- Enable highlighting of the current line
-set.showmatch = true                    -- " Highlight matching brace
-set.showtabline=2                       -- Always show tabs
-set.showmode = false                    -- We don't need to see things like -- INSERT -- anymore
-set.updatetime=200			-- " Faster completion
-set.timeoutlen=500                      -- By default timeoutlen is 1000 ms
+opt.mouse='a'                           -- Enable your mouse
+opt.shortmess:append('c')		-- Avoid showing message extra message when using completion
+opt.splitbelow = true                   -- Horizontal splits will automatically be below
+opt.splitright = true                   -- Vertical splits will automatically be to the right
+-- opt.t_Co=256				-- Support 256 colors
+opt.conceallevel=0                      -- So that I can see `` in markdown files
+opt.tabstop=8
+opt.shiftwidth=2                        -- number of auto-indent spaces
+opt.softtabstop=2
+-- opt.expandtab = true			-- Insert 2 spaces for a tab
+opt.scrolloff=4                         -- Keep 4 lines below cursor before scrolling the screen vertically
+opt.sidescrolloff=8                     -- Keep 4 lines below cursor before scrolling the screen horizontally
+opt.smartindent = true                  -- Makes indenting smart
+opt.number = true                       -- Line numbers
+opt.cursorline = false                   -- Enable highlighting of the current line
+opt.showmatch = true                    -- " Highlight matching brace
+opt.showtabline=2                       -- Always show tabs
+opt.showmode = false                    -- We don't need to see things like -- INSERT -- anymore
+opt.updatetime=200			-- " Faster completion
+opt.timeoutlen=500                      -- By default timeoutlen is 1000 ms
 -- vim.cmd[[set formatoptions=jql]]	-- Stop newline continution of comments
-set.formatoptions:remove('o')		-- Automatically insert comment leader after 'o' or 'O' in Normal mode.
-set.formatoptions:remove('t')		-- Do not auto wrap text
-set.formatoptions:append('r')		-- Automatically insert comment leader after <Enter> in Insert mode.
-set.formatoptions:append('l')		-- Long lines are not broken in insert mode.
-set.formatoptions:append('n')		-- Recognise lists
-set.clipboard:append('unnamedplus')	-- Copy paste between vim and everything else
+opt.formatoptions:remove('o')		-- Automatically insert comment leader after 'o' or 'O' in Normal mode.
+opt.formatoptions:remove('t')		-- Do not auto wrap text
+opt.formatoptions:append('r')		-- Automatically insert comment leader after <Enter> in Insert mode.
+opt.formatoptions:append('l')		-- Long lines are not broken in insert mode.
+opt.formatoptions:append('n')		-- Recognise lists
+opt.clipboard:append('unnamedplus')	-- Copy paste between vim and everything else
 -- vim.cmd[[set clipboard+=unnamedplus]]	-- Copy paste between vim and everything else
-set.autochdir = true                    -- Your working directory will always be the same as your working directory
-set.laststatus=3			-- Global statusline
-set.title = true
-set.virtualedit    = 'block'		-- allow cursor to exist where there is no character
-set.winblend       = 10
-set.lazyredraw     = true
+opt.autochdir = true                    -- Your working directory will always be the same as your working directory
+opt.laststatus=2			-- Global statusline
+opt.title = true
+opt.virtualedit    = 'block'		-- allow cursor to exist where there is no character
+opt.winblend       = 10
+opt.lazyredraw     = true
+opt.backspace = { 'eol', 'start', 'indent' } -- Without this option some times backspace did not work correctly.
 
-set.fillchars="fold: ,vert:│"
+opt.grepprg="rg --vimgrep"
+opt.grepformat = "%l:%c:%m"
+-- opt.grepformat:prepend{"%f:%l:%c:%m"}
 
-set.grepprg="rg --vimgrep"
-set.grepformat = "%l:%c:%m"
--- set.grepformat:prepend{"%f:%l:%c:%m"}
+-- vim.opt.winbar = '%#WinBarFileName#%f%* %M%='
+vim.opt.cmdheight = 0
 
-set.undofile = true
+opt.undofile = true
 local undoPath = vim.fn.stdpath('data') .. '/.UndoDir'
 if vim.fn.isdirectory(undoPath) == 0 then
   vim.fn.system {
@@ -67,22 +69,22 @@ if vim.fn.isdirectory(undoPath) == 0 then
     undoPath
   }
 end
-set.undodir=undoPath
+opt.undodir=undoPath
 
 -- Set in lua/treesitter/settings.lua
--- set.foldmethod='syntax'
--- set.foldlevelstart=99
+-- opt.foldmethod='syntax'
+-- opt.foldlevelstart=99
 
 -- We do this to prevent the loading of the system fzf.vim plugin. This is
 -- present at least on Arch/Manjaro/Void
 vim.cmd[[set rtp-=/usr/share/vim/vimfiles]]
 
-set.pastetoggle='<leader>pp'
+opt.pastetoggle='<leader>pp'
 
 vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
 -- vim.cmd[[set sessionoptions+=winpos,terminal,folds]]
 
-set.viewoptions="cursor,folds,slash,unix"
+opt.viewoptions="cursor,folds,slash,unix"
 local viewPath = vim.fn.stdpath('data') .. '/.ViewDir'
 if vim.fn.isdirectory(viewPath) == 0 then
   vim.fn.system {
@@ -91,28 +93,69 @@ if vim.fn.isdirectory(viewPath) == 0 then
     viewPath
   }
 end
-set.viewdir=viewPath
+opt.viewdir=viewPath
 
-local disable_distribution_plugins = function()
-  g.did_load_fzf = 1
-  g.did_load_gtags = 1
-  g.did_load_gzip = 1
-  g.did_load_tar = 1
-  g.did_load_tarPlugin = 1
-  g.did_load_zip = 1
-  g.did_load_zipPlugin = 1
-  g.did_load_getscript = 1
-  g.did_load_getscriptPlugin = 1
-  g.did_load_vimball = 1
-  g.did_load_vimballPlugin = 1
-  g.did_load_matchit = 1
-  g.did_load_matchparen = 1
-  g.did_load_2html_plugin = 1
-  g.did_load_logiPat = 1
-  g.did_load_rrhelper = 1
-  g.did_load_netrw = 1
-  g.did_load_netrwPlugin = 1
-  g.did_load_netrwSettings = 1
-  g.did_load_netrwFileHandlers = 1
+-- local disable_distribution_plugins = function()
+--   g.did_load_fzf = 1
+--   g.did_load_gtags = 1
+--   g.did_load_gzip = 1
+--   g.did_load_tar = 1
+--   g.did_load_tarPlugin = 1
+--   g.did_load_zip = 1
+--   g.did_load_zipPlugin = 1
+--   g.did_load_getscript = 1
+--   g.did_load_getscriptPlugin = 1
+--   g.did_load_vimball = 1
+--   g.did_load_vimballPlugin = 1
+--   g.did_load_matchit = 1
+--   g.did_load_matchparen = 1
+--   g.did_load_2html_plugin = 1
+--   g.did_load_logiPat = 1
+--   g.did_load_rrhelper = 1
+--   g.did_load_netrw = 1
+--   g.did_load_netrwPlugin = 1
+--   g.did_load_netrwSettings = 1
+--   g.did_load_netrwFileHandlers = 1
+-- end
+-- disable_distribution_plugins()
+
+local disabled_built_ins = {
+  "fzf",
+  "gzip",
+  "tar",
+  "tarPlugin",
+  "zip",
+  "zipPlugin",
+  "getscript",
+  "getscriptPlugin",
+  "vimball",
+  "vimballPlugin",
+  "matchit",
+  "matchparen",
+  "rrhelper",
+  "tohmtl",
+  "2html_plugin",
+  "logipat",
+  -- "netrw",
+  -- "netrwPlugin",
+  -- "netrwSettings",
+  -- "netrwFileHandlers",
+}
+for _, plugin in pairs(disabled_built_ins) do
+	vim.g["loaded_" .. plugin] = 1
 end
-disable_distribution_plugins()
+
+opt.listchars = {
+  nbsp = '⦸', -- CIRCLED REVERSE SOLIDUS (U+29B8, UTF-8: E2 A6 B8)
+  extends = '»', -- RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00BB, UTF-8: C2 BB)
+  precedes = '«', -- LEFT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00AB, UTF-8: C2 AB)
+  tab = '  ', -- '▷─' WHITE RIGHT-POINTING TRIANGLE (U+25B7, UTF-8: E2 96 B7) + BOX DRAWINGS HEAVY TRIPLE DASH HORIZONTAL (U+2505, UTF-8: E2 94 85)
+  trail = '•', -- BULLET (U+2022, UTF-8: E2 80 A2)
+  space = ' ',
+}
+opt.fillchars = {
+  diff = '∙', -- BULLET OPERATOR (U+2219, UTF-8: E2 88 99)
+  eob = ' ', -- NO-BREAK SPACE (U+00A0, UTF-8: C2 A0) to suppress ~ at EndOfBuffer
+  fold = '·', -- MIDDLE DOT (U+00B7, UTF-8: C2 B7)
+  vert = '│', -- window border when window splits vertically ─ ┴ ┬ ┤ ├ ┼
+}

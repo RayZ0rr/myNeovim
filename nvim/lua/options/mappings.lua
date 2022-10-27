@@ -1,31 +1,3 @@
--- local nmap = function(key,action)
---   vim.api.nvim_set_keymap('n',key,action,{noremap = false})
--- end
-
--- local bnnmap = function(key,action)
---   vim.api.nvim_buf_set_keymap(0,'n',key,action,{noremap = true})
--- end
-
--- local snnmap = function(key,action)
---   vim.api.nvim_set_keymap('n',key,action,{noremap = true, silent = true})
--- end
-
--- local nnmap = function(key,action)
---   vim.api.nvim_set_keymap('n',key,action,{noremap = true})
--- end
-
--- local inmap = function(key,action)
---   vim.api.nvim_set_keymap('i',key,action,{noremap = true})
--- end
-
--- local vnmap = function(key,action)
---   vim.api.nvim_set_keymap('v',key,action,{noremap = true})
--- end
-
--- local xnmap = function(key,action)
---   vim.api.nvim_set_keymap('x',key,action,{noremap = true})
--- end
-
 local map = require('options/utils').map
 local bmap = require('options/utils').bmap
 local nnmap = require('options/utils').nnmap

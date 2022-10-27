@@ -29,17 +29,17 @@ vim.cmd([[
 ]])
 
 packer_config = {
-	-- compile_path = vim.fn.stdpath("config") .. "/lua/plugins/options/packer_compiled.lua",
-	profile = {
-		enable = true,
-		threshold = 1 -- the amount in ms that a plugins load time must be over for it to be included in the profile
-	},
-	display = {
-		open_fn = require('packer.util').float,
-		-- open_fn = function()
-		-- 	return require('packer.util').float({ border = 'single' })
-		-- end
-	}
+  -- compile_path = vim.fn.stdpath("config") .. "/lua/plugins/options/packer_compiled.lua",
+  profile = {
+    enable = true,
+    threshold = 1 -- the amount in ms that a plugins load time must be over for it to be included in the profile
+  },
+  display = {
+    open_fn = require('packer.util').float,
+    -- open_fn = function()
+    -- 	return require('packer.util').float({ border = 'single' })
+    -- end
+  }
 }
 
 -- ########################################################
@@ -52,257 +52,257 @@ packer.init(packer_config)
 
 return packer.startup({
 
-	function(use)
+  function(use)
 
-		-- Package manager ---------------------------
-		use 'wbthomason/packer.nvim'
+    -- Package manager ---------------------------
+    use 'wbthomason/packer.nvim'
 
-		----------------------------------------------
-		-- THEMES
-		----------------------------------------------
+    ----------------------------------------------
+    -- THEMES
+    ----------------------------------------------
 
-		use 'navarasu/onedark.nvim' -- Onedark colorscheme with lsp support
-		-- use 'joshdick/onedark.vim' -- Onedark
+    use 'navarasu/onedark.nvim' -- Onedark colorscheme with lsp support
+    -- use 'joshdick/onedark.vim' -- Onedark
 
-		-- use 'RRethy/nvim-base16' -- Colorscheme list
-		-- use 'folke/lsp-colors.nvim' -- Add lsp highlights to colorscheme without it
+    -- use 'RRethy/nvim-base16' -- Colorscheme list
+    -- use 'folke/lsp-colors.nvim' -- Add lsp highlights to colorscheme without it
 
-		-- use 'morhetz/gruvbox' -- Gruvbox
+    -- use 'morhetz/gruvbox' -- Gruvbox
 
-		-- --------------------------------------------
-		-- GENERAL
-		-- --------------------------------------------
+    -- --------------------------------------------
+    -- GENERAL
+    -- --------------------------------------------
 
-		-- fzf ----------------------------------------
-		-- use '~/.fzf'
-		-- use = { 'junegunn/fzf', run = './install --bin', }
-		-- use {'junegunn/fzf.vim'}
-		use {
-			'ibhagwan/fzf-lua',
-			requires = {
-			'vijaymarupudi/nvim-fzf',
-			'kyazdani42/nvim-web-devicons'
-			}, -- optional for icons
-			config = [[ require('plugins/general/fzf-lua') ]]
-		}
+    -- fzf ----------------------------------------
+    -- use '~/.fzf'
+    -- use = { 'junegunn/fzf', run = './install --bin', }
+    -- use {'junegunn/fzf.vim'}
+    use {
+      'ibhagwan/fzf-lua',
+      requires = {
+	'vijaymarupudi/nvim-fzf',
+	'kyazdani42/nvim-web-devicons'
+      }, -- optional for icons
+      config = [[ require('plugins/general/fzf-lua') ]]
+    }
 
-		use {	-- Startup time measure
-			'dstein64/vim-startuptime',
-		}
+    use {	-- Startup time measure
+      'dstein64/vim-startuptime',
+    }
 
-		use {	-- Undo history
-			'mbbill/undotree',
-			-- config = [[ vim.cmd(source $HOME/.config/nvim/vimscript/plugins/general/undotree.vim) ]]
-		}
+    use {	-- Undo history
+      'mbbill/undotree',
+      -- config = [[ vim.cmd(source $HOME/.config/nvim/vimscript/plugins/general/undotree.vim) ]]
+    }
 
-		-- File Browser ----------------------------------------
-		use {
-			'is0n/fm-nvim',
-			config = [[ require('plugins/general/fm-nvim') ]]
-		}
-		-- use 'voldikss/vim-floaterm'
-		-- use {
-		-- 	'kyazdani42/nvim-tree.lua',
-		-- 	requires = 'kyazdani42/nvim-web-devicons',
-			-- config = function() require'nvim-tree'.setup {} end
-		-- }
+    -- File Browser ----------------------------------------
+    use {
+      'is0n/fm-nvim',
+      config = [[ require('plugins/general/fm-nvim') ]]
+    }
+    -- use 'voldikss/vim-floaterm'
+    -- use {
+    -- 	'kyazdani42/nvim-tree.lua',
+    -- 	requires = 'kyazdani42/nvim-web-devicons',
+    -- config = function() require'nvim-tree'.setup {} end
+    -- }
 
-		-- use {
-		-- 	'vifm/vifm.vim',
-		-- 	requires = 'is0n/fm-nvim'
-		-- }
-		-- Fern tree viewer
-		-- use 'lambdalisue/fern.vim'
-		-- use 'lambdalisue/nerdfont.vim'
-		-- use 'lambdalisue/fern-renderer-nerdfont.vim'
+    -- use {
+    -- 	'vifm/vifm.vim',
+    -- 	requires = 'is0n/fm-nvim'
+    -- }
+    -- Fern tree viewer
+    -- use 'lambdalisue/fern.vim'
+    -- use 'lambdalisue/nerdfont.vim'
+    -- use 'lambdalisue/fern-renderer-nerdfont.vim'
 
-		use {	-- Autocompletion plugin
-			'hrsh7th/nvim-cmp',
-			requires = {
-				'hrsh7th/cmp-cmdline',
-				'hrsh7th/cmp-nvim-lsp',
-				'saadparwaiz1/cmp_luasnip',
-				'hrsh7th/cmp-buffer',
-				-- 'hrsh7th/cmp-emoji',
-				-- 'hrsh7th/cmp-calc',
-				'hrsh7th/cmp-path',
-				"hrsh7th/cmp-nvim-lua"
-			},
-			config = [[ require('plugins/general/nvim-cmp') ]]
-		}
+    use {	-- Autocompletion plugin
+      'hrsh7th/nvim-cmp',
+      requires = {
+	'hrsh7th/cmp-cmdline',
+	'hrsh7th/cmp-nvim-lsp',
+	'saadparwaiz1/cmp_luasnip',
+	'hrsh7th/cmp-buffer',
+	-- 'hrsh7th/cmp-emoji',
+	-- 'hrsh7th/cmp-calc',
+	'hrsh7th/cmp-path',
+	"hrsh7th/cmp-nvim-lua"
+      },
+      config = [[ require('plugins/general/nvim-cmp') ]]
+    }
 
-		use{	-- Snippets plugin
-			"L3MON4D3/LuaSnip",
-			requires = { "rafamadriz/friendly-snippets" },
-			-- config = [[ require('plugins/general/luasnip') ]]
-		}
+    use{	-- Snippets plugin
+      "L3MON4D3/LuaSnip",
+      requires = { "rafamadriz/friendly-snippets" },
+      -- config = [[ require('plugins/general/luasnip') ]]
+    }
 
-		use {	-- Auto-pair completion
-			'windwp/nvim-autopairs',
-			config = [[ require('plugins/general/nvim-autopairs') ]]
-		}
+    use {	-- Auto-pair completion
+      'windwp/nvim-autopairs',
+      config = [[ require('plugins/general/nvim-autopairs') ]]
+    }
 
-		use {	-- Trailing whitspaces higlight and trim
-			'ntpeters/vim-better-whitespace',
-			config = [[ require('plugins/general/whitespace') ]]
-		}
+    use {	-- Trailing whitspaces higlight and trim
+      'ntpeters/vim-better-whitespace',
+      config = [[ require('plugins/general/whitespace') ]]
+    }
 
-		use { -- Comment and Uncomment lines
-			'b3nj5m1n/kommentary',
-			config = [[ require('plugins/general/kommentary') ]]
-		}
+    use { -- Comment and Uncomment lines
+  'b3nj5m1n/kommentary',
+      config = [[ require('plugins/general/kommentary') ]]
+}
 
-		use {	-- Auto-session maker
-  		'rmagatti/auto-session',
-			config = [[ require('plugins/general/auto-session') ]]
-		}
+    use {	-- Auto-session maker
+      'rmagatti/auto-session',
+      config = [[ require('plugins/general/auto-session') ]]
+    }
 
-		-- Better Syntax Support
-		-- use 'sheerun/vim-polyglot'
+    -- Better Syntax Support
+    -- use 'sheerun/vim-polyglot'
 
-		-- -----------------------------------------------
-		-- UI/LOOK
-		-- -----------------------------------------------
+    -- -----------------------------------------------
+    -- UI/LOOK
+    -- -----------------------------------------------
 
-		use {	-- Tab/buffers display and customize
-			'akinsho/nvim-bufferline.lua',
-			requires = 'kyazdani42/nvim-web-devicons',
-			config = [[ require('plugins/general/nvim-bufferline') ]],
-			-- config = function()
-				-- require("bufferline").setup{}
-			-- end
-		}
+    use {	-- Tab/buffers display and customize
+      'akinsho/nvim-bufferline.lua',
+      requires = 'kyazdani42/nvim-web-devicons',
+      config = [[ require('plugins/general/nvim-bufferline') ]],
+      -- config = function()
+      -- require("bufferline").setup{}
+      -- end
+    }
 
-		use {	-- Show colours around hex code
-			'norcalli/nvim-colorizer.lua',
-		}
+    use {	-- Show colours around hex code
+      'norcalli/nvim-colorizer.lua',
+    }
 
-		-- Statusline ------------------------------------
-		use {
-			'feline-nvim/feline.nvim',
-			requires = 'kyazdani42/nvim-web-devicons',
-			config = [[ require('plugins/general/feline') ]],
-			-- Enable for default status bar
-			-- config = function()
-			--     require('feline').setup()
-			-- end
-		}
-		-- use {
-		-- 	'glepnir/galaxyline.nvim',
-		-- 	branch = 'main',
-		-- }
+    -- Statusline ------------------------------------
+    use {
+      'feline-nvim/feline.nvim',
+      requires = 'kyazdani42/nvim-web-devicons',
+      config = [[ require('plugins/general/feline') ]],
+      -- Enable for default status bar
+      -- config = function()
+      --     require('feline').setup()
+      -- end
+    }
+    -- use {
+    -- 	'glepnir/galaxyline.nvim',
+    -- 	branch = 'main',
+    -- }
 
-		use {	-- highlight, navigate, and operate on sets of matching text
-			'andymass/vim-matchup',
-			config = [[ require('plugins/general/vim-matchup') ]]
-		}
+    use {	-- highlight, navigate, and operate on sets of matching text
+      'andymass/vim-matchup',
+      config = [[ require('plugins/general/vim-matchup') ]]
+    }
 
-		use {	-- Spell check helper plugin
-			'kamykn/spelunker.vim',
-			requires = {'kamykn/popup-menu.nvim'},
-			config = [[ require('plugins/general/spelunker') ]],
-		}
+    use {	-- Spell check helper plugin
+      'kamykn/spelunker.vim',
+      requires = {'kamykn/popup-menu.nvim'},
+      config = [[ require('plugins/general/spelunker') ]],
+    }
 
-		use {	-- Add indentation guides even on blank lines
-			'lukas-reineke/indent-blankline.nvim',
-			config = [[ require('plugins/general/indent-blankline') ]],
-		}
+    use {	-- Add indentation guides even on blank lines
+      'lukas-reineke/indent-blankline.nvim',
+      config = [[ require('plugins/general/indent-blankline') ]],
+    }
 
-		use {	-- Add git related info in the signs columns and popups
-			'lewis6991/gitsigns.nvim',
-			requires = { 'nvim-lua/plenary.nvim' },
-			config = function()
-				require('gitsigns').setup()
-			end
-		}
+    use {	-- Add git related info in the signs columns and popups
+      'lewis6991/gitsigns.nvim',
+      requires = { 'nvim-lua/plenary.nvim' },
+      config = function()
+	require('gitsigns').setup()
+      end
+    }
 
-		-- StartScreen -----------------------------------
-		use {
-			'goolord/alpha-nvim',
-			config = [[ require('plugins/general/alpha') ]],
-			-- config = function ()
-			-- 		require'alpha'.setup(require'alpha.themes.dashboard'.opts)
-			-- end
-		}
+    -- StartScreen -----------------------------------
+    use {
+      'goolord/alpha-nvim',
+      config = [[ require('plugins/general/alpha') ]],
+      -- config = function ()
+      -- 		require'alpha'.setup(require'alpha.themes.dashboard'.opts)
+      -- end
+    }
 
-		-- Startify
-		-- use 'mhinz/vim-startify'
+    -- Startify
+    -- use 'mhinz/vim-startify'
 
-		use {	-- Show marks and bookmarks
-			'chentau/marks.nvim',
-			config = [[ require('plugins/general/marks') ]],
-		}
+    use {	-- Show marks and bookmarks
+      'chentau/marks.nvim',
+      config = [[ require('plugins/general/marks') ]],
+    }
 
-		-- Registers in floating window and other convenience
-		use "tversteeg/registers.nvim"
+    -- Registers in floating window and other convenience
+    use "tversteeg/registers.nvim"
 
-		--------------------------------------------------
-		-- LSP
-		--------------------------------------------------
+    --------------------------------------------------
+    -- LSP
+--------------------------------------------------
 
-		use {	-- Collection of configurations for built-in LSP client
-			'neovim/nvim-lspconfig',
-			config = [[ require('plugins/LSP/settings') ]],
-		}
+    use {	-- Collection of configurations for built-in LSP client
+      'neovim/nvim-lspconfig',
+      config = [[ require('plugins/LSP/settings') ]],
+    }
 
-		use {
-			'stevearc/aerial.nvim',
-			config = [[ require('plugins/LSP/aerial') ]],
-		}
+    use {
+      'stevearc/aerial.nvim',
+      config = [[ require('plugins/LSP/aerial') ]],
+    }
 
-		-- use({
-		-- 	"jose-elias-alvarez/null-ls.nvim",
-			-- config = function()
-			-- 	require("null-ls").setup()
-			-- end,
-		-- 	requires = { "nvim-lua/plenary.nvim" },
-		-- })
+    -- use({
+    -- 	"jose-elias-alvarez/null-ls.nvim",
+    -- config = function()
+    -- 	require("null-ls").setup()
+    -- end,
+-- 	requires = { "nvim-lua/plenary.nvim" },
+-- })
 
-		use {	-- Show lightbulb for diagnostics
-			'kosayoda/nvim-lightbulb',
-			config = [[ require('plugins/LSP/nvim-lightbulb') ]],
-		}
+    use {	-- Show lightbulb for diagnostics
+      'kosayoda/nvim-lightbulb',
+      config = [[ require('plugins/LSP/nvim-lightbulb') ]],
+    }
 
-		use {	-- Signature help plug
-			'ray-x/lsp_signature.nvim',
-			config = [[ require('plugins/LSP/lsp_signature') ]],
-		}
+    use {	-- Signature help plug
+      'ray-x/lsp_signature.nvim',
+      config = [[ require('plugins/LSP/lsp_signature') ]],
+    }
 
-		-- Higlight occurances of word under cursor ------
-		use 'RRethy/vim-illuminate'
+    -- Higlight occurances of word under cursor ------
+    use 'RRethy/vim-illuminate'
 
-		-- use  {	-- Lsp better functioning.
-		-- 	'RishabhRD/nvim-lsputils',
-		-- 	requires = {'RishabhRD/popfix'}
-		-- }
+    -- use  {	-- Lsp better functioning.
+    -- 	'RishabhRD/nvim-lsputils',
+    -- 	requires = {'RishabhRD/popfix'}
+    -- }
 
-		--------------------------------------------------
-		-- Treesitter
-		--------------------------------------------------
+    --------------------------------------------------
+    -- Treesitter
+    --------------------------------------------------
 
     use {	-- Highlight, edit, and navigate code using a fast incremental parsing library
       'nvim-treesitter/nvim-treesitter',
       run = ':TSUpdate',
-			config = [[ require('plugins/treesitter') ]],
-		}
+      config = [[ require('plugins/treesitter') ]],
+    }
 
-		use {	-- Additional textobjects for treesitter
-			'nvim-treesitter/nvim-treesitter-textobjects',
-			requires = {'nvim-treesitter/nvim-treesitter'}
-		}
+    use {	-- Additional textobjects for treesitter
+      'nvim-treesitter/nvim-treesitter-textobjects',
+      requires = {'nvim-treesitter/nvim-treesitter'}
+    }
 
-		use {	-- Context aware commenting using treesitter
-			'JoosepAlviste/nvim-ts-context-commentstring',
-			requires = {'nvim-treesitter/nvim-treesitter'}
-		}
+    use {	-- Context aware commenting using treesitter
+      'JoosepAlviste/nvim-ts-context-commentstring',
+      requires = {'nvim-treesitter/nvim-treesitter'}
+    }
 
-		use {	-- Folding faster
-			'Konfekt/FastFold',
-		}
+    use {	-- Folding faster
+      'Konfekt/FastFold',
+    }
 
-		if packer_bootstrap then
-		  require('packer').sync()
-		end
+  if packer_bootstrap then
+    require('packer').sync()
+  end
 
-	end,
+  end,
 })

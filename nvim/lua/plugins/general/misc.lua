@@ -38,8 +38,8 @@ end
 -- Better Quickfix ---------------------------------------------------------------------------------------------
 -- QF editable in both content and file path.
 --##########################################################################################################
-local present, _ = pcall(require, 'replacer')
-if present then
+local ok_replacer, _ = pcall(require, 'replacer')
+if ok_replacer then
   nnmap('<Leader>qf', ':lua require("replacer").run()<cr>', { nowait = true, silent = true })
 
 -- else
@@ -58,6 +58,41 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'ferret')) == 0 then
   nnmap('<leader>gb', [[<Plug>(FerretBack)]], {remap=true})
 -- else
 --   print("wincent/ferret not installed")
+end
+
+--##########################################################################################################
+-- align.nvim ---------------------------------------------------------------------------------------------
+-- minimal plugin for NeoVim for aligning lines
+--##########################################################################################################
+local ok_align, _ = pcall(require, 'align')
+if ok_align then
+  xnmap( 'gaa', function() require'align'.align_to_char(1, true) end) -- Aligns to 1 character, looking left
+  xnmap( 'gas', function() require'align'.align_to_char(2, true, false) end) -- Aligns to 2 characters, looking left and with previews
+  xnmap( 'gaw', function() require'align'.align_to_string(false, true) end) -- Aligns to a string, looking left and with previews
+  xnmap( 'gae', function() require'align'.align_to_string(true, true)  end) -- Aligns to a Lua pattern, looking left and with previews
+
+  -- Example gawip to align a paragraph to a string, looking left and with previews
+  nnmap(
+      'gaw',
+      function()
+	  local a = require'align'
+	  a.operator(
+	      a.align_to_string,
+	      { is_pattern = false, reverse = true, preview = true }
+	  )
+      end
+  )
+  -- Example gaaip to aling a paragraph to 1 character, looking left
+  nnmap(
+      'gaa',
+      function()
+	  local a = require'align'
+	  a.operator(
+	      a.align_to_char,
+	      { reverse = true }
+	  )
+      end
+  )
 end
 
 --##########################################################################################################
@@ -87,15 +122,15 @@ end
 -- Time in milliseconds (default 0)
 -- vim.g.Illuminate_delay = 0
 -- let g:Illuminate_delay = 0
-local present, _ = pcall(require, 'illuminate')
-if present then
+local ok_illuminate, _ = pcall(require, 'illuminate')
+if ok_illuminate then
 -- else
 --   print("RRethy/vim-illuminate not installed")
   require('illuminate').configure({
     -- providers: provider used to get references in the buffer, ordered by priority
     providers = {
-        'treesitter',
         'lsp',
+        'treesitter',
         'regex',
     },
     -- delay: delay in milliseconds
@@ -133,6 +168,7 @@ if present then
     -- If nil, vim-illuminate will be disabled for large files.
     large_file_overrides = nil,
   })
+  nnmap(',ill',function() require('illuminate').toggle() print("Illuminate toggled") end)
   vim.api.nvim_set_hl(0,'IlluminatedWordText',{italic = true})
   vim.api.nvim_set_hl(0,'IlluminatedWordRead',{underline = true, italic = true})
   vim.api.nvim_set_hl(0,'IlluminatedWordWrite',{underline = true, italic = true})
@@ -168,8 +204,8 @@ end
 --##########################################################################################################
 -- nvim web devicons---------------------------------------------------------------------------------------
 --##########################################################################################################
-local present, _ = pcall(require, 'nvim-web-devicons')
-if present then
+local ok_icons, _ = pcall(require, 'nvim-web-devicons')
+if ok_icons then
   require'nvim-web-devicons'.setup {
    -- your personnal icons can go here (to override)
    -- DevIcon will be appended to `name`
@@ -191,8 +227,8 @@ end
 --##########################################################################################################
 -- Gitsigns ---------------------------------------------------------------------------------------
 --##########################################################################################################
-local present, _ = pcall(require, 'gitsigns.nvim')
-if present then
+local ok_gitsigns, _ = pcall(require, 'gitsigns.nvim')
+if ok_gitsigns then
   require('gitsigns').setup()
 -- else
 --   print("lewis6991/gitsigns.nvim not installed")
@@ -201,8 +237,8 @@ end
 --##########################################################################################################
 -- Colorizer setup-----------------------------------------------------------------------------------------
 --##########################################################################################################
-local present, _ = pcall(require, 'colorizer')
-if present then
+local ok_colorizer, _ = pcall(require, 'colorizer')
+if ok_colorizer then
   local colorizer_cfg = {
     filetypes = { "*" },
     user_default_options = {
@@ -257,8 +293,8 @@ end
 -- Specs -------------------------------------------------------------------------------------------------
 -- Highlight cursor line on jumps
 --##########################################################################################################
-local present, _ = pcall(require, 'specs')
-if present then
+local ok_specs, _ = pcall(require, 'specs')
+if ok_specs then
   vim.api.nvim_set_hl(0,"SpecsHighlightGroup",{ fg = '#C3E88D', reverse = true }) -- diff mode: Added line
   require('specs').setup{
     show_jumps  = true,

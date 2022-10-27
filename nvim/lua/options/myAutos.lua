@@ -87,7 +87,7 @@ api.nvim_create_autocmd(
     group = MyCustomSettingsGroup
   }
 )
-vim.api.nvim_create_autocmd( "BufWritePost" , {
+api.nvim_create_autocmd( "BufWritePost" , {
   group = MyCustomSettingsGroup,
   pattern = "*",
   callback = function()
@@ -99,10 +99,44 @@ vim.api.nvim_create_autocmd( "BufWritePost" , {
   end,
   once = false,
 })
--- go to last loc when opening a buffer
+
+api.nvim_create_autocmd(
+  {"BufEnter", "FileType"},
+  {
+    group = MyCustomSettingsGroup,
+    desc = "don't auto comment new line",
+    pattern = "*",
+    command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
+  }
+)
+
+api.nvim_create_autocmd(
+  "VimResized",
+  {
+    group = MyCustomSettingsGroup,
+    desc = "auto resize splited windows",
+    pattern = "*",
+    command = "tabdo wincmd =",
+  }
+)
+
+api.nvim_create_autocmd(
+  "BufWinEnter",
+  {
+    group = MyCustomSettingsGroup,
+    desc = "clear the last used search pattern",
+    pattern = "*",
+    command = "let @/ = ''",
+  }
+)
 api.nvim_create_autocmd(
   "BufReadPost",
-  { command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]], group = MyCustomSettingsGroup}
+  {
+    group = MyCustomSettingsGroup,
+    desc = "go to last loc when opening a buffer",
+    pattern = "*",
+    command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]],
+  }
 )
 -- api.nvim_create_autocmd(
 --   { "Syntax" },
