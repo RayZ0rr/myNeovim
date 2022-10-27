@@ -29,7 +29,6 @@ packer.startup(function(use)
     config = function()
       require('plugins/general/fzf-lua')
     end,
-    -- config = [[ require('plugins/general/fzf-lua') ]]
   }
   -- Better quickfix --------------------------
   use {
@@ -109,13 +108,13 @@ packer.startup(function(use)
       require('plugins/general/kommentary')
     end,
   }
-  -- Faster Folding ------------------------------
-  use {
-    'Konfekt/FastFold',
-    config = function()
-      require('plugins/general/misc')
-    end,
-  }
+  -- -- Faster Folding ------------------------------
+  -- use {
+  --   'Konfekt/FastFold',
+  --   config = function()
+  --     require('plugins/general/misc')
+  --   end,
+  -- }
   -- Auto-session maker -------------------------
   use {
     'Shatur/neovim-session-manager',
@@ -163,16 +162,30 @@ packer.startup(function(use)
     end,
   }
   -- Statusline ------------------------------------
+  -- use {
+  --   'feline-nvim/feline.nvim',
+  --   requires = 'kyazdani42/nvim-web-devicons',
+  --   config = function()
+  --     require('plugins/general/statusline/feline')
+  --   end,
+  --   -- Enable for default status bar
+  --   -- config = function()
+  --   --     require('feline').setup()
+  --   -- end
+  -- }
+  -- use {
+  --   'nvim-lualine/lualine.nvim',
+  --   requires = 'kyazdani42/nvim-web-devicons',
+  --   config = function()
+  --     require('plugins/general/statusline/lualine')
+  --   end,
+  -- }
   use {
-    'feline-nvim/feline.nvim',
+    'rebelot/heirline.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
-      require('plugins/general/feline')
+      require('plugins/general/heirline')
     end,
-    -- Enable for default status bar
-    -- config = function()
-    --     require('feline').setup()
-    -- end
   }
   -- StartScreen -----------------------------------
   use {
@@ -181,19 +194,19 @@ packer.startup(function(use)
       require('plugins/general/alpha')
     end,
   }
-  -- Tab/buffers display and customize -----------
-  use {
-    'akinsho/bufferline.nvim',
-    requires = 'kyazdani42/nvim-web-devicons',
-    config = function()
-      require('plugins/general/bufferline')
-    end,
-  }
-  -- Startup time measure --------------------------
-  use 'dstein64/vim-startuptime'
+  -- -- Tab/buffers display and customize -----------
+  -- use {
+  --   'akinsho/bufferline.nvim',
+  --   requires = 'kyazdani42/nvim-web-devicons',
+  --   config = function()
+  --     require('plugins/general/bufferline')
+  --   end,
+  -- }
+  -- -- Startup time measure --------------------------
+  -- use 'dstein64/vim-startuptime'
   -- Align code for eg, arround '=' sign ---------
   use {
-    'junegunn/vim-easy-align',
+    'Vonr/align.nvim',
     config = function()
       require('plugins/general/misc')
     end,

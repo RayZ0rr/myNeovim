@@ -5,7 +5,7 @@ end
 
 local lsp = require('feline.providers.lsp')
 local vi_mode_utils = require('feline.providers.vi_mode')
-local utils = require('plugins.general.feline.utils')
+local utils = require('plugins.general.statusline.utils')
 
 local force_inactive = {
   filetypes = {},
@@ -162,7 +162,7 @@ table.insert(components.active[1], {
     bg = 'bg',
     style = 'bold'
   },
-  enabled = utils.BufferEmpty,
+  enabled = utils.Conditions.BufferNotEmpty,
   right_sep = " ",
   left_sep = " ",
 })
@@ -295,7 +295,7 @@ table.insert(components.active[2], {
 -- Treesitter status
 table.insert(components.active[2], {
   name = 'Treesitter',
-  provider = utils.TreesitterStatus,
+  provider = utils.Functions.TreesitterStatus,
   hl = {
     name = 'Status_Treesitter',
     fg = 'skyblue',
@@ -362,7 +362,7 @@ table.insert(components.active[3], {
 -- lineInfo
 table.insert(components.active[3], {
   name = 'LinesInfo',
-  provider = utils.LinesInfo,
+  provider = utils.Functions.LinesInfo,
   truncate_hide = true,
   hl = {
     name = 'Status_LinesInfo',
@@ -413,7 +413,7 @@ table.insert(components.active[3], {
 -- fileFormat
 table.insert(components.active[3], {
   name = 'FileFormat',
-  provider = utils.OSinfo,
+  provider = utils.Functions.OSinfo,
   truncate_hide = true,
   hl = function()
     local val = {}
@@ -503,7 +503,7 @@ table.insert(components.inactive[1], {
 
 -- filetype
 table.insert(components.inactive[1], {
-  enabled = utils.BufferEmpty,
+  enabled = utils.Conditions.BufferNotEmpty,
   provider = 'file_type',
   hl = {
     fg = 'yellow',
