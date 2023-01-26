@@ -1,7 +1,7 @@
 local icons = {
-  linux = ' ',
-  macos = ' ',
-  windows = ' ',
+  linux = '  ',
+  macos = '  ',
+  windows = '   ',
 
   errs = ' ',
   warns = ' ',
@@ -133,9 +133,10 @@ M.Vars = {
     oceanblue = '#45707a',
     darkblue = '#081633',
     red      = '#ec5f67',
-    white = '#a89984',
-    black       = '#202328',
+    cream = '#a89984',
     grey       = '#bbc2cf',
+    black       = '#202328',
+    white       = '#ffffff',
   },
   mode_names = { -- change the strings if you like it vvvvverbose!
     n = "N",

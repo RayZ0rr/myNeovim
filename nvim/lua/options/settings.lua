@@ -13,6 +13,7 @@ opt.smartcase = true
 opt.hlsearch = false
 opt.inccommand='nosplit'
 opt.wrap = false                        -- Display long lines as just one line
+opt.pumblend = 10			-- Popup blend
 opt.pumheight=10                        -- Makes popup menu smaller
 opt.fileencoding='utf-8'                -- The encoding written to file
 opt.cmdheight=2                         -- More space for displaying messages
@@ -36,7 +37,7 @@ opt.showmatch = true                    -- " Highlight matching brace
 opt.showtabline=2                       -- Always show tabs
 opt.showmode = false                    -- We don't need to see things like -- INSERT -- anymore
 opt.updatetime=200			-- " Faster completion
-opt.timeoutlen=500                      -- By default timeoutlen is 1000 ms
+opt.timeoutlen=300                      -- By default timeoutlen is 1000 ms
 -- vim.cmd[[set formatoptions=jql]]	-- Stop newline continution of comments
 opt.formatoptions:remove('o')		-- Automatically insert comment leader after 'o' or 'O' in Normal mode.
 opt.formatoptions:remove('t')		-- Do not auto wrap text
@@ -46,19 +47,19 @@ opt.formatoptions:append('n')		-- Recognise lists
 opt.clipboard:append('unnamedplus')	-- Copy paste between vim and everything else
 -- vim.cmd[[set clipboard+=unnamedplus]]	-- Copy paste between vim and everything else
 opt.autochdir = true                    -- Your working directory will always be the same as your working directory
-opt.laststatus=2			-- Global statusline
+opt.laststatus=3			-- Global statusline
 opt.title = true
 opt.virtualedit    = 'block'		-- allow cursor to exist where there is no character
 opt.winblend       = 10
 opt.lazyredraw     = true
 opt.backspace = { 'eol', 'start', 'indent' } -- Without this option some times backspace did not work correctly.
 
+opt.grepformat = "%f:%l:%c:%m"
 opt.grepprg="rg --vimgrep"
-opt.grepformat = "%l:%c:%m"
 -- opt.grepformat:prepend{"%f:%l:%c:%m"}
 
 -- vim.opt.winbar = '%#WinBarFileName#%f%* %M%='
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 1
 
 opt.undofile = true
 local undoPath = vim.fn.stdpath('data') .. '/.UndoDir'

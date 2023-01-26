@@ -190,11 +190,6 @@ M.custom_on_attach = function(client, bufnr)
     illuminate.on_attach(client)
   end
 
-  local has_aerial, aerial = pcall(require, 'aerial')
-  if has_aerial then
-    aerial.on_attach(client, bufnr)
-  end
-
 end
 
 return M

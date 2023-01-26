@@ -2,10 +2,10 @@
 local actions = require "fzf-lua.actions"
 require'fzf-lua'.setup {
   -- fzf_bin         = 'sk',            -- use skim instead of fzf?
-  -- https://github.com/lotabout/skim
+					-- https://github.com/lotabout/skim
   global_resume      = true,            -- enable global `resume`?
-  -- can also be sent individually:
-  -- `<any_function>.({ gl ... })`
+					-- can also be sent individually:
+					-- `<any_function>.({ gl ... })`
   global_resume_query = true,           -- include typed query in `resume`?
   winopts_fn = function()
     -- larger width if neovim win has over 80 columns
@@ -13,10 +13,10 @@ require'fzf-lua'.setup {
   end,
   winopts = {
     -- split         = "belowright new",-- open in a split instead?
-    -- "belowright new"  : split below
-    -- "aboveleft new"   : split above
-    -- "belowright vnew" : split right
-    -- "aboveleft vnew   : split left
+					-- "belowright new"  : split below
+					-- "aboveleft new"   : split above
+					-- "belowright vnew" : split right
+					-- "aboveleft vnew   : split left
     -- Only valid when using a float window
     -- (i.e. when 'split' is not defined, default)
     height           = 0.85,            -- window height
@@ -29,22 +29,32 @@ require'fzf-lua'.setup {
     -- 'none', 'single', 'double' or 'rounded' (default)
     border           = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
     fullscreen       = false,           -- start fullscreen?
-    hl = {
+    -- highlights should optimally be set by the colorscheme using
+    -- FzfLuaXXX highlights. If your colorscheme doesn't set these
+    -- or you wish to override its defaults use these:
+    --[[ hl = {
       normal         = 'Normal',        -- window normal color (fg+bg)
-      border         = 'Normal',        -- border color (try 'FloatBorder')
-      -- Only valid with the builtin previewer:
+      border         = 'FloatBorder',   -- border color
+      help_normal    = 'Normal',        -- <F1> window normal
+      help_border    = 'FloatBorder',   -- <F1> window border
+      -- Only used with the builtin previewer:
       cursor         = 'Cursor',        -- cursor highlight (grep/LSP matches)
       cursorline     = 'CursorLine',    -- cursor line
-      search         = 'Search',        -- search matches (ctags)
-      -- title       = 'Normal',        -- preview border title (file/buffer)
-      -- scrollbar_f = 'PmenuThumb',    -- scrollbar "full" section highlight
-      -- scrollbar_e = 'PmenuSbar',     -- scrollbar "empty" section highlight
-    },
+      cursorlinenr   = 'CursorLineNr',  -- cursor line number
+      search         = 'IncSearch',     -- search matches (ctags|help)
+      title          = 'Normal',        -- preview border title (file/buffer)
+      -- Only used with 'winopts.preview.scrollbar = 'float'
+      scrollfloat_e  = 'PmenuSbar',     -- scrollbar "empty" section highlight
+      scrollfloat_f  = 'PmenuThumb',    -- scrollbar "full" section highlight
+      -- Only used with 'winopts.preview.scrollbar = 'border'
+      scrollborder_e = 'FloatBorder',   -- scrollbar "empty" section highlight
+      scrollborder_f = 'FloatBorder',   -- scrollbar "full" section highlight
+    }, ]]
     preview = {
       -- default     = 'bat',           -- override the default previewer?
-      -- default uses the 'builtin' previewer
+					-- default uses the 'builtin' previewer
       border         = 'border',        -- border|noborder, applies only to
-      -- native fzf previewers (bat/cat/git/etc)
+					-- native fzf previewers (bat/cat/git/etc)
       wrap           = 'nowrap',        -- wrap|nowrap
       hidden         = 'nohidden',      -- hidden|nohidden
       vertical       = 'down:45%',      -- up|down:size
@@ -53,8 +63,9 @@ require'fzf-lua'.setup {
       flip_columns   = 120,             -- #cols to switch to horizontal on flex
       -- Only valid with the builtin previewer:
       title          = true,            -- preview border title (file/buf)?
+      title_align    = "left",          -- left|center|right, title alignment
       scrollbar      = 'float',         -- `false` or string:'float|border'
-      -- float:  in-window floating border 
+      -- float:  in-window floating border
       -- border: in-border chars (see below)
       scrolloff      = '-2',            -- float scrollbar offset from right
       -- applies only when scrollbar = 'float'
@@ -134,6 +145,7 @@ require'fzf-lua'.setup {
       ["ctrl-v"]      = actions.file_vsplit,
       ["ctrl-t"]      = actions.file_tabedit,
       ["alt-q"]       = actions.file_sel_to_qf,
+      ["alt-l"]       = actions.file_sel_to_ll,
     },
     buffers = {
       -- providers that inherit these actions:
@@ -226,6 +238,7 @@ require'fzf-lua'.setup {
     git_icons         = true,           -- show git icons?
     file_icons        = true,           -- show file icons?
     color_icons       = true,           -- colorize file|git icons
+    -- path_shorten   = 1,              -- 'true' or number, shorten path?
     -- executed command priority is 'cmd' (if exists)
     -- otherwise auto-detect prioritizes `fd`:`rg`:`find`
     -- default options are controlled by 'fd|rg|find|_opts'
@@ -234,6 +247,12 @@ require'fzf-lua'.setup {
     find_opts         = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
     rg_opts           = "--color=never --files --hidden --follow -g '!.git'",
     fd_opts           = "--color=never --type f --hidden --follow --exclude .git",
+    -- by default, cwd appears in the header only if {opts} contain a cwd
+    -- parameter to a different folder than the current working directory
+    -- uncomment if you wish to force display of the cwd as part of the
+    -- query prompt string (fzf.vim style), header line or both
+    -- show_cwd_prompt = true,
+    -- show_cwd_header = true,
     actions = {
       -- inherits from 'actions.files', here we can override
       -- or set bind to 'false' to disable a default action
@@ -256,6 +275,8 @@ require'fzf-lua'.setup {
     },
     status = {
       prompt          = 'GitStatus❯ ',
+      -- consider using `git status -su` if you wish to see
+      -- untracked files individually under their subfolders
       cmd             = "git status -s",
       previewer       = "git_diff",
       file_icons      = true,
@@ -292,6 +313,19 @@ require'fzf-lua'.setup {
       preview         = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
       actions = {
 	["default"] = actions.git_switch,
+      },
+    },
+    stash = {
+      prompt          = 'Stash> ',
+      cmd             = "git --no-pager stash list",
+      preview         = "git --no-pager stash show --patch --color {1}",
+      actions = {
+        ["default"]   = actions.git_stash_apply,
+        ["ctrl-x"]    = { actions.git_stash_drop, actions.resume },
+      },
+      fzf_opts = {
+        ["--no-multi"]  = '',
+        ['--delimiter'] = "'[:]'",
       },
     },
     icons = {
@@ -392,6 +426,11 @@ require'fzf-lua'.setup {
       ["--tiebreak"]  = 'index',
     },
     -- actions inherit from 'actions.buffers'
+    actions = {
+      ["default"]     = actions.buf_edit_or_qf,
+      ["alt-q"]       = actions.buf_sel_to_qf,
+      ["alt-l"]       = actions.buf_sel_to_ll
+    },
   },
   blines = {
     previewer         = "builtin",    -- set to 'false' to disable
@@ -405,6 +444,11 @@ require'fzf-lua'.setup {
       ["--tiebreak"]  = 'index',
     },
     -- actions inherit from 'actions.buffers'
+    actions = {
+      ["default"]     = actions.buf_edit_or_qf,
+      ["alt-q"]       = actions.buf_sel_to_qf,
+      ["alt-l"]       = actions.buf_sel_to_ll
+    },
   },
   colorschemes = {
     prompt            = 'Colorschemes❯ ',
@@ -428,35 +472,78 @@ require'fzf-lua'.setup {
     async_or_timeout  = 5000,       -- timeout(ms) or 'true' for async calls
     file_icons        = true,
     git_icons         = false,
-    lsp_icons         = true,
-    severity          = "hint",
-    icons = {
-      ["Error"]       = { icon = "", color = "red" },       -- error
-      ["Warning"]     = { icon = "", color = "yellow" },    -- warning
-      ["Information"] = { icon = "", color = "blue" },      -- info
-      ["Hint"]        = { icon = "", color = "magenta" },   -- hint
+    -- settings for 'lsp_{document|workspace|lsp_live_workspace}_symbols'
+    symbols = {
+        async_or_timeout  = true,       -- symbols are async by default
+        symbol_style      = 1,          -- style for document/workspace symbols
+                                        -- false: disable,    1: icon+kind
+                                        --     2: icon only,  3: kind only
+                                        -- NOTE: icons are extracted from
+                                        -- vim.lsp.protocol.CompletionItemKind
+        -- colorize using nvim-cmp's CmpItemKindXXX highlights
+        -- can also be set to 'TS' for treesitter highlights ('TSProperty', etc)
+        -- or 'false' to disable highlighting
+        symbol_hl_prefix  = "CmpItemKind",
+        -- additional symbol formatting, works with or without style
+        symbol_fmt        = function(s) return "["..s.."]" end,
+    },
+    code_actions = {
+        prompt            = 'Code Actions> ',
+        ui_select         = true,       -- use 'vim.ui.select'?
+        async_or_timeout  = 5000,
+        winopts = {
+            row           = 0.40,
+            height        = 0.35,
+            width         = 0.60,
+        },
     },
   },
-  -- uncomment to disable the previewer
-  -- nvim = { marks = { previewer = { _ctor = false } } },
-  -- helptags = { previewer = { _ctor = false } },
-  -- manpages = { previewer = { _ctor = false } },
-  -- uncomment to set dummy win location (help|man bar)
-  -- "topleft"  : up
-  -- "botright" : down
-  -- helptags = { previewer = { split = "topleft" } },
+  diagnostics ={
+    prompt            = 'Diagnostics❯ ',
+    cwd_only          = false,
+    file_icons        = true,
+    git_icons         = false,
+    diag_icons        = true,
+    icon_padding      = '',     -- add padding for wide diagnostics signs
+    -- by default icons and highlights are extracted from 'DiagnosticSignXXX'
+    -- and highlighted by a highlight group of the same name (which is usually
+    -- set by your colorscheme, for more info see:
+    --   :help DiagnosticSignHint'
+    --   :help hl-DiagnosticSignHint'
+    -- only uncomment below if you wish to override the signs/highlights
+    -- define only text, texthl or both (':help sign_define()' for more info)
+    -- signs = {
+    --   ["Error"] = { text = "", texthl = "DiagnosticError" },
+    --   ["Warn"]  = { text = "", texthl = "DiagnosticWarn" },
+    --   ["Info"]  = { text = "", texthl = "DiagnosticInfo" },
+    --   ["Hint"]  = { text = "", texthl = "DiagnosticHint" },
+    -- },
+    -- limit to specific severity, use either a string or num:
+    --   1 or "hint"
+    --   2 or "information"
+    --   3 or "warning"
+    --   4 or "error"
+    -- severity_only:   keep any matching exact severity
+    -- severity_limit:  keep any equal or more severe (lower)
+    -- severity_bound:  keep any equal or less severe (higher)
+  },
+  -- uncomment to use the old help previewer which used a
+  -- minimized help window to generate the help tag preview
+  -- helptags = { previewer = "help_tags" },
   -- uncomment to use `man` command as native fzf previewer
-  -- manpages = { previewer = { _ctor = require'fzf-lua.previewer'.fzf.man_pages } },
+  -- (instead of using a neovim floating window)
+  -- manpages = { previewer = "man_native" },
+  --
   -- optional override of file extension icon colors
   -- available colors (terminal):
   --    clear, bold, black, red, green, yellow
   --    blue, magenta, cyan, grey, dark_grey, white
+  file_icon_colors = {
+    ["sh"] = "green",
+  },
   -- padding can help kitty term users with
   -- double-width icon rendering
   file_icon_padding = '',
-  file_icon_colors = {
-    ["lua"]   = "blue",
-  },
   -- uncomment if your terminal/font does not support unicode character
   -- 'EN SPACE' (U+2002), the below sets it to 'NBSP' (U+00A0) instead
   -- nbsp = '\xc2\xa0',

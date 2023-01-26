@@ -146,7 +146,7 @@ local FileName = {
     if self.lfilename == "" then self.lfilename = "[No Name]" end
   end,
   hl = { fg = 'blue' , bold =true},
-  utils.make_flexible_component(9,{
+  {flexible=9,{
     provider = function(self)
       return " "..self.lfilename.." "
     end,
@@ -154,7 +154,7 @@ local FileName = {
     provider = function(self)
       return " "..vim.fn.pathshorten(self.lfilename).." "
     end,
-  }),
+  }},
 }
 local FileFlags = {
   fallthrough = false,
@@ -240,13 +240,13 @@ local GitDetails = {
   },
 }
 local Git = {
-  utils.make_flexible_component(3,{
+  {flexible=3,{
     GitBranch, Space, GitDetails
   },{
     GitBranch
   },{
     provider = function(self) return "" end
-  }),
+  }},
 }
 local TreesitterStatus = {
   provider = myUtils.Functions.TreesitterStatus,
@@ -265,47 +265,47 @@ local LSPStatus = {
     return val
   end,
 }
-local Diagnostics = {
-  condition = conditions.has_diagnostics and myUtils.Conditions.FullBar,
-  static = {
-    error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
-    warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
-    info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
-    hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
-  },
-  init = function(self)
-    self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-    self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-    self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
-    self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
-  end,
-  update = { "DiagnosticChanged", "BufEnter" },
-  {
-    provider = function(self)
-      -- 0 is just another output, we can decide to print it or not!
-      return self.errors > 0 and (self.error_icon .. self.errors .. " ")
-    end,
-    hl = { fg = "diag_error" },
-  },
-  {
-    provider = function(self)
-      return self.warnings > 0 and (self.warn_icon .. self.warnings .. " ")
-    end,
-    hl = { fg = "diag_warn" },
-  },
-  {
-    provider = function(self)
-      return self.info > 0 and (self.info_icon .. self.info .. " ")
-    end,
-    hl = { fg = "diag_info" },
-  },
-  {
-    provider = function(self)
-	return self.hints > 0 and (self.hint_icon .. self.hints)
-    end,
-    hl = { fg = "diag_hint" },
-  },
-}
+-- local Diagnostics = {
+--   condition = conditions.has_diagnostics and myUtils.Conditions.FullBar,
+--   static = {
+--     error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
+--     warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
+--     info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
+--     hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
+--   },
+--   init = function(self)
+--     self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+--     self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+--     self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+--     self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+--   end,
+--   update = { "DiagnosticChanged", "BufEnter" },
+--   {
+--     provider = function(self)
+--       -- 0 is just another output, we can decide to print it or not!
+--       return self.errors > 0 and (self.error_icon .. self.errors .. " ")
+--     end,
+--     hl = { fg = "diag_error" },
+--   },
+--   {
+--     provider = function(self)
+--       return self.warnings > 0 and (self.warn_icon .. self.warnings .. " ")
+--     end,
+--     hl = { fg = "diag_warn" },
+--   },
+--   {
+--     provider = function(self)
+--       return self.info > 0 and (self.info_icon .. self.info .. " ")
+--     end,
+--     hl = { fg = "diag_info" },
+--   },
+--   {
+--     provider = function(self)
+-- 	return self.hints > 0 and (self.hint_icon .. self.hints)
+--     end,
+--     hl = { fg = "diag_hint" },
+--   },
+-- }
 -- We can now define some children separately and add them later
 local FileTypeIcon = {
   init = function(self)
@@ -384,11 +384,11 @@ local FileFormat = {
 -- Flexible Components
 --------------------------------------------------
 local make_flexible = function(num,component)
-  return utils.make_flexible_component(num,{
+  return {flexible =num,{
     component
   },{
     provider = function(self) return "" end
-  })
+  }}
 end
 FileEncoding = make_flexible(2,FileEncoding)
 FileFormat = make_flexible(3,FileFormat)
@@ -399,7 +399,50 @@ GitBranch = make_flexible(7,GitBranch)
 FileTypeIcon = make_flexible(8,FileTypeIcon)
 Position = make_flexible(9,Position)
 
-OSMode = utils.make_flexible_component(1,{
+local Diagnostics = {
+    condition = conditions.has_diagnostics,
+    static = {
+        error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
+        warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
+        info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
+        hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
+    },
+    init = function(self)
+        self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+        self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+        self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+        self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+    end,
+    update = { "DiagnosticChanged", "BufEnter" },
+    flexible = 10,
+    {
+        provider = function(self)
+            -- 0 is just another output, we can decide to print it or not!
+            return self.errors > 0 and (self.error_icon .. self.errors .. " ")
+        end,
+        hl = { fg = "diag_error" },
+    },
+    {
+        provider = function(self)
+            return self.warnings > 0 and (self.warn_icon .. self.warnings .. " ")
+        end,
+        hl = { fg = "diag_warn" },
+    },
+    {
+        provider = function(self)
+            return self.info > 0 and (self.info_icon .. self.info .. " ")
+        end,
+        hl = { fg = "diag_info" },
+    },
+    {
+        provider = function(self)
+            return self.hints > 0 and (self.hint_icon .. self.hints)
+        end,
+        hl = { fg = "diag_hint" },
+    },
+}
+
+OSMode = {flexible=1,{
   OSMode
   },{
     init = function(self)
@@ -412,7 +455,7 @@ OSMode = utils.make_flexible_component(1,{
     end,
   },
   SideBar
-)
+}
 
 --------------------------------------------------
 -- Inactive Components
@@ -468,7 +511,7 @@ local InactiveFilename = {
     if self.lfilename == "" then self.lfilename = "[No Name]" end
   end,
   hl = { bg = 'blue' , fg = 'black', italic = true, bold = true },
-  utils.make_flexible_component(9,{
+  {flexible=9,{
     provider = function(self)
       return " "..self.lfilename.." "
     end,
@@ -476,7 +519,7 @@ local InactiveFilename = {
     provider = function(self)
       return " "..vim.fn.pathshorten(self.lfilename).." "
     end,
-  }),
+  }},
 }
 local Align = { provider = "%=" }
 local Space = { provider = " " }

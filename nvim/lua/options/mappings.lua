@@ -6,7 +6,10 @@ local vnmap = require('options/utils').vnmap
 local xnmap = require('options/utils').xnmap
 local tnmap = require('options/utils').tnmap
 
-nnmap('<leader>kl', [[:s/chakkachakkachakka/chakka/e<CR>]])
+-- Clear search with <esc>
+map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
+-- nnmap('<leader>kl', [[:s/chakkachakkachakka/chakka/e<CR>]])
+nnmap('<leader>kl', '<cmd>nohlsearch<cr>')
 
 -----------------------------------------------------------------------------//
 -- Add Empty space above and below
@@ -75,21 +78,32 @@ nnmap('<leader>nf',[[:e <C-R>=expand("%:p:h") . "/" <CR>]])
 ------------------------------------------------------------------------------
 -- Quickfix
 ------------------------------------------------------------------------------
-local toggle_qf = function()
-  local gf_open = false
-  for _, win in pairs(vim.fn.getwininfo()) do
-    if win["quickfix"] == 1 then
-      gf_open = true
-    end
-  end
+-- local toggle_qf = function()
+--   local gf_open = false
+--   for _, win in pairs(vim.fn.getwininfo()) do
+--     if win["quickfix"] == 1 then
+--       gf_open = true
+--     end
+--   end
 
-  if gf_open then
-    vim.cmd([[cclose]])
-    return
-  end
-  vim.cmd([[copen]])
-end
-nnmap(',qt',toggle_qf)
+--   if gf_open then
+--     vim.cmd([[cclose]])
+--     return
+--   end
+--   vim.cmd([[copen]])
+-- end
+-- nnmap(',qt',toggle_qf)
+nnmap('=l', function()
+    local win = vim.api.nvim_get_current_win()
+    local qf_winid = vim.fn.getloclist(win, { winid = 0 }).winid
+    local action = qf_winid > 0 and 'lclose' or 'lopen'
+    vim.cmd(action)
+end, { desc = "Toggle locationlist window." })
+nnmap('=q', function()
+    local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
+    local action = qf_winid > 0 and 'cclose' or 'copen'
+    vim.cmd(action)
+end, { desc = "Toggle quickfix window." })
 nnmap(']q', '<cmd>cnext<CR>zz')
 nnmap('[q', '<cmd>cprev<CR>zz')
 nnmap(']l', '<cmd>lnext<cr>zz')
@@ -110,28 +124,60 @@ nnmap('<localleader>wr' , ':setlocal wrap!<cr>')
 -----------------------------------------------------------------------------//
 nnmap('k', "v:count == 0 ? 'gk' : 'k'", {expr = true})
 nnmap('j', "v:count == 0 ? 'gj' : 'j'", {expr = true})
+nnmap('<up>', "v:count == 0 ? 'gk' : '<up>'", {expr = true})
+nnmap('<down>', "v:count == 0 ? 'gj' : '<down>'", {expr = true})
 
 -----------------------------------------------------------------------------//
--- Use alt + hjkl to resize windows
+-- Use alt + arrow keys to resize windows
 -----------------------------------------------------------------------------//
-nnmap('<M-UP>' , ':resize -2<CR>')
-nnmap('<M-DOWN>' , ':resize +2<CR>')
-nnmap('<M-LEFT>' , ':vertical resize -2<CR>')
-nnmap('<M-RIGHT>' , ':vertical resize +2<CR>')
+nnmap('<M-UP>' , "<cmd>resize +2<cr>", { desc = "Increase window height" })
+nnmap('<M-DOWN>' , "<cmd>resize -2<cr>", { desc = "Decrease window height" })
+nnmap('<M-LEFT>' , "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
+nnmap('<M-RIGHT>' , "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
+
+-----------------------------------------------------------------------------//
+-- Move selected line / block of text in visual mode
+-----------------------------------------------------------------------------//
+nnmap('<S-Down>' , ":m .+1<cr>==", { desc = "Move down" })
+nnmap('<S-Up>'   , ":m .-2<cr>==", { desc = "Move up" })
+inmap('<S-Down>' , "<Esc>:m .+1<cr>==gi", { desc = "Move down" })
+inmap('<S-Up>'   , "<Esc>:m .-2<cr>==gi", { desc = "Move up" })
+vnmap('<S-Down>' , ":m '>+1<cr>gv=gv", { desc = "Move down" })
+vnmap('<S-Up>'   , ":m '<-2<cr>gv=gv", { desc = "Move up" })
+
+-----------------------------------------------------------------------------//
+-- Better window navigation
+-----------------------------------------------------------------------------//
+nnmap('<C-h>' , '<C-w>h')
+nnmap('<C-j>' , '<C-w>j')
+nnmap('<C-k>' , '<C-w>k')
+nnmap('<C-l>' , '<C-w>l')
+
+nnmap('<C-Left>' , '<C-w>h')
+nnmap('<C-Down>' , '<C-w>j')
+nnmap('<C-Up>' , '<C-w>k')
+nnmap('<C-Right>' , '<C-w>l')
+
+nnmap("<space><space>", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+nnmap("gw", "*N")
+xnmap("gw", "*N")
 
 -----------------------------------------------------------------------------//
 -- Easy CAPS toggle
 -----------------------------------------------------------------------------//
 nnmap('<Leader><c-u>' , 'viw~<Esc>')
 
+map({"n","x","o"}, "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
+map({"n","x","o"}, "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
+
 -----------------------------------------------------------------------------//
 -- Search and replace
 -----------------------------------------------------------------------------//
 
 -- Replace -------------------
-nnmap('<Leader>sr' , ':%s/<C-r><C-w>//gc<Left><Left><Left>',{silent = false})
-vnmap('<Leader>sr' , 'y:%s/<C-R>"//gc<Left><Left><Left>',{silent = false})
-vnmap('<Leader>vsr' , [[:s/\%V<C-r>"\%V//gc<Left><Left><Left>]],{silent = false})
+nnmap('<Leader>sr' , ':%s/<C-r><C-w>//gc<Left><Left><Left>',{silent = false,desc="search and replace cword"})
+vnmap('<Leader>sr' , 'y:%s/<C-R>"//gc<Left><Left><Left>',{silent = false,desc="search and replace selection"})
+vnmap('<Leader>vsr' , [[:s/\%V<C-r>"\%V//gc<Left><Left><Left>]],{silent = false,desc="search and replace range"})
 -- vnmap('<Leader>vsr' , [[:s/<C-r>"//gc<Left><Left><Left>]])
 -- nnmap('<Leader><leader>sr' , [[:%s/\%V<C-r>"//gc<Left><Left><Left>]])
 
@@ -168,10 +214,12 @@ inmap('<M-a>' , '<esc>:bprevious<CR>')
 nnmap('<C-c>' , '<Esc>')
 inmap('<C-C>' , '<ESC>')
 
+
 -----------------------------------------------------------------------------//
 -- Alternate way to save and quit
 -----------------------------------------------------------------------------//
-nnmap('<C-s>' , '<cmd>confirm w<CR>')
+map({ "i", "v", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
+-- nnmap('<C-s>' , '<cmd>confirm w<CR>')
 nnmap('<c-q>' , ':confirm q<CR>')
 
 -----------------------------------------------------------------------------//
@@ -186,29 +234,6 @@ nnmap('<Leader>bq' , ':%bd<bar>e#<bar>bd#<cr>')
 -----------------------------------------------------------------------------//
 vnmap('<' , '<gv')
 vnmap('>' , '>gv')
-
------------------------------------------------------------------------------//
--- Move selected line / block of text in visual mode
------------------------------------------------------------------------------//
-nnmap('<S-Down>', ':m .+1<CR>==')
-nnmap('<S-Up>', [[:m .-2<CR>==]])
-inmap('<S-Down>', '<Esc>:m .+1<CR>==gi')
-inmap('<S-Up>', '<Esc>:m .-2<CR>==gi')
-vnmap('<S-Down>', ':m \'>+1<CR>gv=gv')
-vnmap('<S-Up>', ':m \'<-2<CR>gv=gv')
-
------------------------------------------------------------------------------//
--- Better window navigation
------------------------------------------------------------------------------//
-nnmap('<C-h>' , '<C-w>h')
-nnmap('<C-j>' , '<C-w>j')
-nnmap('<C-k>' , '<C-w>k')
-nnmap('<C-l>' , '<C-w>l')
-
-nnmap('<C-Left>' , '<C-w>h')
-nnmap('<C-Down>' , '<C-w>j')
-nnmap('<C-Up>' , '<C-w>k')
-nnmap('<C-Right>' , '<C-w>l')
 
 -----------------------------------------------------------------------------//
 -- Mapping to show filetype, buftype and highlight

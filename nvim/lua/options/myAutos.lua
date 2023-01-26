@@ -3,6 +3,13 @@
 -- ##################################################
 
 local api = vim.api
+local map = require('options/utils').map
+local bmap = require('options/utils').bmap
+local nnmap = require('options/utils').nnmap
+local inmap = require('options/utils').inmap
+local vnmap = require('options/utils').vnmap
+local xnmap = require('options/utils').xnmap
+local tnmap = require('options/utils').tnmap
 
 local MyReloadVIMRCGroup = api.nvim_create_augroup("MyReloadVIMRCGroup", { clear = true })
 api.nvim_create_autocmd(
@@ -38,10 +45,6 @@ api.nvim_create_autocmd(
 api.nvim_create_autocmd(
   { "FileType" },
   { pattern = "apache", command = [[setlocal commentstring=#\ %s]], group = MyCommentsGroup }
-)
-api.nvim_create_autocmd(
-  { "FileType" },
-  { pattern = "qf", command = "setlocal wrap", group = MyCommentsGroup }
 )
 api.nvim_create_autocmd(
   { "BufEnter" },
@@ -129,13 +132,27 @@ api.nvim_create_autocmd(
     command = "let @/ = ''",
   }
 )
+-- api.nvim_create_autocmd(
+--   "BufReadPost",
+--   {
+--     group = MyCustomSettingsGroup,
+--     desc = "go to last loc when opening a buffer",
+--     pattern = "*",
+--     command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]],
+--   }
+-- )
 api.nvim_create_autocmd(
   "BufReadPost",
   {
     group = MyCustomSettingsGroup,
     desc = "go to last loc when opening a buffer",
-    pattern = "*",
-    command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]],
+    callback = function()
+      local mark = vim.api.nvim_buf_get_mark(0, '"')
+      local lcount = vim.api.nvim_buf_line_count(0)
+      if mark[1] > 0 and mark[1] <= lcount then
+	pcall(vim.api.nvim_win_set_cursor, 0, mark)
+      end
+    end,
   }
 )
 -- api.nvim_create_autocmd(
@@ -159,7 +176,10 @@ vim.api.nvim_create_autocmd( "FileType" , {
   group = MyQuickFixGroup,
   pattern = { "qf" },
   callback = function()
-    vim.wo.wrap = true
+    vim.opt_local.wrap = true
+    vim.keymap.set('n','<Leader>sr' , [[:cfdo %s/<C-r><C-w>//gc | update <S-Left><S-Left><Left><Left><Left><Left>]],{buffer=true,desc="qf search and replace cword"})
+    vim.keymap.set('v','<Leader>sr' , 'y:cfdo %s/<C-R>"//gc | update <S-Left><S-Left><Left><Left><Left><Left>',{buffer=true,desc="qf search and replace selection"})
+    vim.keymap.set('v','<Leader>vsr' , [[:cfdo s/\%V<C-r>"\%V//gc | update <S-Left><S-Left><Left><Left><Left><Left>]],{buffer=true,desc="qf search and replace range"})
   end,
   once = false,
 })

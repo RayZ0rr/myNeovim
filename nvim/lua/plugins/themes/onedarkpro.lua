@@ -57,4 +57,4 @@ onedarkpro.setup({
   }
 })
 vim.o.background = "dark" -- to load onedark
-vim.cmd("colorscheme onedarkpro")  -- Lua
+vim.cmd("colorscheme onedark")  -- Lua

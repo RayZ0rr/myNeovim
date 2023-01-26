@@ -1,7 +1,3 @@
--- don't throw any error on first use by packer
-local ok, packer = pcall(require, "packer")
-if not ok then return end
-
 local packer_bootstrap = require('plugins/options/bootstrap').packer_bootstrap
 -- ########################################################
 -- All the used plugins
@@ -9,16 +5,35 @@ local packer_bootstrap = require('plugins/options/bootstrap').packer_bootstrap
 
 -- return packer.startup({
 --   function(use)
-packer.startup(function(use)
+require('packer').startup(function(use)
 
   -- Package manager ---------------------------
   use 'wbthomason/packer.nvim'
 
+  use 'lewis6991/impatient.nvim'
+
+  ----------------------------------------------
+  -- THEMES
+  ----------------------------------------------
+
+  -- Onedark Theme -----------------------------
+  use {
+    'olimorris/onedarkpro.nvim',
+    config = function()
+      require('plugins/themes/onedarkpro')
+    end,
+  }
+  -- Material Theme -----------------------------
+  -- use {
+  --   'marko-cerovac/material.nvim',
+  --   config = function()
+  --     require('plugins/themes/material')
+  --   end,
+  -- }
+
   --------------------------------------------------
   -- Utilities
   --------------------------------------------------
-
-  use 'lewis6991/impatient.nvim'
 
   -- FZF ----------------------------------------
   use {
@@ -131,25 +146,6 @@ packer.startup(function(use)
     end,
   }
 
-  ----------------------------------------------
-  -- THEMES
-  ----------------------------------------------
-
-  -- Onedark Theme -----------------------------
-  use {
-    'olimorris/onedarkpro.nvim',
-    config = function()
-      require('plugins/themes/onedarkpro')
-    end,
-  }
-  -- Material Theme -----------------------------
-  -- use {
-  --   'marko-cerovac/material.nvim',
-  --   config = function()
-  --     require('plugins/themes/material')
-  --   end,
-  -- }
-
   -- -----------------------------------------------
   -- UI/LOOK
   -- -----------------------------------------------
@@ -184,7 +180,7 @@ packer.startup(function(use)
     'rebelot/heirline.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
-      require('plugins/general/heirline')
+      require('plugins/general/statusline/heirline')
     end,
   }
   -- StartScreen -----------------------------------

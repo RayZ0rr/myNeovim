@@ -43,6 +43,7 @@ _G.myLazyLoad = function(plugin, timer)
   end
 end
 
+-- don't throw any error on first use by packer
 local ok, packer = pcall(require, "packer")
 if ok then
 
