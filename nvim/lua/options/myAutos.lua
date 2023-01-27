@@ -90,18 +90,18 @@ api.nvim_create_autocmd(
     group = MyCustomSettingsGroup
   }
 )
-api.nvim_create_autocmd( "BufWritePost" , {
-  group = MyCustomSettingsGroup,
-  pattern = "*",
-  callback = function()
-    if vim.fn.getline(1) == "^#!" then
-      if vim.fn.getline(1) == "/bin/" then
-	vim.cmd([[chmod a+x <afile>]])
-      end
-    end
-  end,
-  once = false,
-})
+-- api.nvim_create_autocmd( "BufWritePost" , {
+--   group = MyCustomSettingsGroup,
+--   pattern = "*",
+--   callback = function()
+--     if vim.fn.getline(1) == "^#!" then
+--       if vim.fn.getline(1) == "/bin/" then
+-- 	vim.cmd([[chmod a+x <afile>]])
+--       end
+--     end
+--   end,
+--   once = false,
+-- })
 
 api.nvim_create_autocmd(
   {"BufEnter", "FileType"},
@@ -172,40 +172,40 @@ local MyQuickFixGroup = api.nvim_create_augroup("MyQuickFixGroup", { clear = tru
 --   "QuickFixCmdPost",
 --   { command = "lgetexpr lwindow", group = MyQuickFixGroup }
 -- )
-vim.api.nvim_create_autocmd( "FileType" , {
-  group = MyQuickFixGroup,
-  pattern = { "qf" },
-  callback = function()
-    vim.opt_local.wrap = true
-    vim.keymap.set('n','<Leader>sr' , [[:cfdo %s/<C-r><C-w>//gc | update <S-Left><S-Left><Left><Left><Left><Left>]],{buffer=true,desc="qf search and replace cword"})
-    vim.keymap.set('v','<Leader>sr' , 'y:cfdo %s/<C-R>"//gc | update <S-Left><S-Left><Left><Left><Left><Left>',{buffer=true,desc="qf search and replace selection"})
-    vim.keymap.set('v','<Leader>vsr' , [[:cfdo s/\%V<C-r>"\%V//gc | update <S-Left><S-Left><Left><Left><Left><Left>]],{buffer=true,desc="qf search and replace range"})
-  end,
-  once = false,
-})
-vim.cmd([[
-augroup myQuickfixFix
-  autocmd!
-  autocmd QuickFixCmdPost cgetexpr cwindow
-  autocmd QuickFixCmdPost lgetexpr lwindow
-augroup END
-]])
-vim.api.nvim_create_autocmd({ "QuickfixCmdPost" }, {
-  group = MyQuickFixGroup,
-  pattern = { "make", "grep", "grepadd", "vimgrep", "vimgrepadd" },
-  callback = function()
-    vim.cmd([[cwin]])
-  end,
-  once = false,
-})
-vim.api.nvim_create_autocmd({ "QuickfixCmdPost" }, {
-  group = MyQuickFixGroup,
-  pattern = { "lmake", "lgrep", "lgrepadd", "lvimgrep", "lvimgrepadd" },
-  callback = function()
-    vim.cmd([[lwin]])
-  end,
-  once = false,
-})
+-- vim.api.nvim_create_autocmd( "FileType" , {
+--   group = MyQuickFixGroup,
+--   pattern = { "qf" },
+--   callback = function()
+--     vim.opt_local.wrap = true
+--     vim.keymap.set('n','<Leader>sr' , [[:cfdo %s/<C-r><C-w>//gc | update <C-Left><C-Left><Left><Left><Left><Left>]],{buffer=true,desc="qf search and replace cword"})
+--     vim.keymap.set('v','<Leader>sr' , 'y:cfdo %s/<C-R>"//gc | update <C-Left><C-Left><Left><Left><Left><Left>',{buffer=true,desc="qf search and replace selection"})
+--     vim.keymap.set('v','<Leader>vsr' , [[:cfdo s/\%V<C-r>"\%V//gc | update <C-Left><C-Left><Left><Left><Left><Left>]],{buffer=true,desc="qf search and replace range"})
+--   end,
+--   once = false,
+-- })
+-- vim.cmd([[
+-- augroup myQuickfixFix
+--   autocmd!
+--   autocmd QuickFixCmdPost cgetexpr cwindow
+--   autocmd QuickFixCmdPost lgetexpr lwindow
+-- augroup END
+-- ]])
+-- vim.api.nvim_create_autocmd({ "QuickfixCmdPost" }, {
+--   group = MyQuickFixGroup,
+--   pattern = { "make", "grep", "grepadd", "vimgrep", "vimgrepadd" },
+--   callback = function()
+--     vim.cmd([[cwin]])
+--   end,
+--   once = false,
+-- })
+-- vim.api.nvim_create_autocmd({ "QuickfixCmdPost" }, {
+--   group = MyQuickFixGroup,
+--   pattern = { "lmake", "lgrep", "lgrepadd", "lvimgrep", "lvimgrepadd" },
+--   callback = function()
+--     vim.cmd([[lwin]])
+--   end,
+--   once = false,
+-- })
 
 local MyFiletypeDetectGroup = api.nvim_create_augroup("MyFiletypeDetectGroup", { clear = true })
 api.nvim_create_autocmd(

@@ -51,7 +51,9 @@ require('packer').startup(function(use)
     config = function()
       require('plugins/general/misc')
     end,
+    commit = "e06a955104ffabac839be7a2b00a3e10e8f59e16",
   }
+  -- use 'stefandtw/quickfix-reflector.vim'
   -- Undo history ------------------------------
   use {
     'mbbill/undotree',
@@ -287,6 +289,16 @@ require('packer').startup(function(use)
     run = ':TSUpdate',
     config = function()
       require('plugins/treesitter/settings')
+    end,
+  }
+  use {
+    'nvim-treesitter/playground',
+    config = function()
+      require "nvim-treesitter.configs".setup {
+	playground = {
+	  enable = true,
+	}
+      }
     end,
   }
   -- Additional textobjects for treesitter

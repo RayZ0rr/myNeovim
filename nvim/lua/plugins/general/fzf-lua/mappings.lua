@@ -4,7 +4,7 @@ local xnmap = require('options/utils').xnmap
 
 nnmap('<leader>ff',"<cmd>lua require('fzf-lua').files({show_cwd_header=true})<CR>")
 nnmap('<leader>fa',":FzfLua files cwd=~<CR>")
-nnmap('<leader>fn',":FzfLua files cwd=~/.config/nvim<CR>")
+nnmap('<leader>fn',function() require("fzf-lua").files({cwd = '~/.config/nvim'}) end)
 nnmap(
   '<leader>fo',
   function()

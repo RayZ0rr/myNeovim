@@ -182,20 +182,64 @@ vnmap('<Leader>vsr' , [[:s/\%V<C-r>"\%V//gc<Left><Left><Left>]],{silent = false,
 -- nnmap('<Leader><leader>sr' , [[:%s/\%V<C-r>"//gc<Left><Left><Left>]])
 
 -- Search -------------------
-vnmap('//', [[y/<C-R>"<CR>]],{silent = false})
-vnmap('<Leader>ss' , [[y/<C-R>"<CR>]],{silent = false})
+vnmap('//', '<Esc>/\\%V',{silent = false})
 -- makes * and # work on visual mode too.
 vim.api.nvim_exec(
   [[
-  function! g:VSetSearch(cmdtype)
-  let temp = @s
-  norm! gv"sy
-  let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
-  let @s = temp
+  "" function! g:VSetSearch(cmdtype)
+  "" let temp = @s
+  "" norm! gv"sy
+  "" let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
+  "" let @s = temp
+  "" endfunction
+  "" xnoremap * :<C-u>call g:VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+  "" xnoremap # :<C-u>call g:VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+
+  "" function! g:VSetSearch()
+  "" let temp = @@
+  "" norm! gvy
+  "" let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
+  "" call histadd('/', substitute(@/, '[?/]', '\="\\%d".char2nr(submatch(0))', 'g'))
+  "" let @@ = temp
+  "" endfunction
+  ""
+  "" xnoremap * :<C-u>call g:VSetSearch()<CR>/<C-R>
+  "" xnoremap # :<C-u>call g:VSetSearch()<CR>?<C-R>
+
+  "" vnoremap * y/\V<C-R>=substitute(escape(@@,"/\\"),"\n","\\\\n","ge")<CR><CR>
+  "" vnoremap # y?\V<C-R>=substitute(escape(@@,"?\\"),"\n","\\\\n","ge")<CR><CR>
+  "" vnoremap <silent> * :<C-U>
+  ""   \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  ""   \gvy/<C-R>=&ic?'\c':'\C'<CR><C-R><C-R>=substitute(
+  ""   \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  ""   \gVzv:call setreg('"', old_reg, old_regtype)<CR>
+  "" vnoremap <silent> # :<C-U>
+  ""   \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  ""   \gvy?<C-R>=&ic?'\c':'\C'<CR><C-R><C-R>=substitute(
+  ""   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  ""   \gVzv:call setreg('"', old_reg, old_regtype)<CR>
+
+  function! s:getSelectedText()
+    let l:old_reg = getreg('"')
+    let l:old_regtype = getregtype('"')
+    norm gvy
+    let l:ret = getreg('"')
+    call setreg('"', l:old_reg, l:old_regtype)
+    exe "norm \<Esc>"
+    return l:ret
   endfunction
 
-  xnoremap * :<C-u>call g:VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
-  xnoremap # :<C-u>call g:VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+  vnoremap <silent> * :call setreg("/",
+      \ substitute(<SID>getSelectedText(),
+      \ '\_s\+',
+      \ '\\_s\\+', 'g')
+      \ )<Cr>n
+
+  vnoremap <silent> # :call setreg("?",
+      \ substitute(<SID>getSelectedText(),
+      \ '\_s\+',
+      \ '\\_s\\+', 'g')
+      \ )<Cr>n
   ]],
   false
 )

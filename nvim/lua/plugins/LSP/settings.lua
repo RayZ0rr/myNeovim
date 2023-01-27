@@ -64,7 +64,7 @@ vim.diagnostic.handlers.signs = {
 
 local util = require 'vim.lsp.util'
 local formatting_callback = function(client, bufnr)
-  vim.keymap.set('n', '<leader>lf', function()
+  vim.keymap.set('n', '<leader>lF', function()
     local params = util.make_formatting_params({})
     client.request('textDocument/formatting', params, nil, bufnr)
   end, {buffer = bufnr, desc='lsp formatting'})
@@ -171,7 +171,7 @@ M.custom_on_attach = function(client, bufnr)
   buffer_map( '<leader>la', vim.lsp.buf.code_action, 'vim.lsp.buf.code_action')
   buffer_map( '<leader>lc', vim.lsp.codelens.run, 'vim.lsp.codelens.run')
   buffer_map( '<leader>lr', vim.lsp.buf.references, 'vim.lsp.buf.references')
-  buffer_map( '<leader>lf', vim.lsp.buf.formatting, 'vim.lsp.buf.formatting')
+  buffer_map( '<leader>lf', function() vim.lsp.buf.format { async = true } end, 'vim.lsp.buf.formatting')
   buffer_map( '<leader>ll', function()
     vim.diagnostic.disable(0)
   end, 'vim.diagnostic.disable(0)')
@@ -184,11 +184,6 @@ M.custom_on_attach = function(client, bufnr)
   -- if client.server_capabilities.document_range_formatting then
   --   vim.keymap.set('x', '<leader>lf', vim.lsp.buf.range_formatting, {silent = true, buffer=bufnr, desc= 'vim.lsp.buf.range_formatting'})
   -- end
-
-  local has_illuminate, illuminate = pcall(require, 'illuminate')
-  if has_illuminate then
-    illuminate.on_attach(client)
-  end
 
 end
 

@@ -40,7 +40,7 @@ end
 --##########################################################################################################
 local ok_replacer, _ = pcall(require, 'replacer')
 if ok_replacer then
-  nnmap('<Leader>qf', ':lua require("replacer").run()<cr>', { nowait = true, silent = true })
+  nnmap('<Leader>qf', require("replacer").run, { desc = "qf replacer activate", nowait = true, silent = true })
 
 -- else
 --   print("gabrielpoca/replacer.nvim not installed")
