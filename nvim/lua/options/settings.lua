@@ -10,7 +10,7 @@ opt.breakindent = true
 opt.termguicolors = true
 opt.ignorecase = true
 opt.smartcase = true
-opt.hlsearch = false
+opt.hlsearch = true
 opt.inccommand='nosplit'
 opt.wrap = false                        -- Display long lines as just one line
 opt.pumblend = 10			-- Popup blend
@@ -47,7 +47,7 @@ opt.formatoptions:append('n')		-- Recognise lists
 opt.clipboard:append('unnamedplus')	-- Copy paste between vim and everything else
 -- vim.cmd[[set clipboard+=unnamedplus]]	-- Copy paste between vim and everything else
 opt.autochdir = true                    -- Your working directory will always be the same as your working directory
-opt.laststatus=3			-- Global statusline
+opt.laststatus=2			-- Global statusline
 opt.title = true
 opt.virtualedit    = 'block'		-- allow cursor to exist where there is no character
 opt.winblend       = 10

@@ -7,9 +7,7 @@ local xnmap = require('options/utils').xnmap
 local tnmap = require('options/utils').tnmap
 
 -- Clear search with <esc>
-map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
--- nnmap('<leader>kl', [[:s/chakkachakkachakka/chakka/e<CR>]])
-nnmap('<leader>kl', '<cmd>nohlsearch<cr>')
+map({ "i", "n" }, "<esc>", "<cmd>noh<cr>", { desc = "Escape and clear hlsearch" })
 
 -----------------------------------------------------------------------------//
 -- Add Empty space above and below
@@ -50,6 +48,7 @@ tnmap( '<C-h>', [[<C-\><C-N><C-h>]] )
 tnmap( '<C-l>', [[<C-\><C-N><C-l>]] )
 tnmap( '<C-j>', [[<C-\><C-N><C-j>]] )
 tnmap( '<C-k>', [[<C-\><C-N><C-k>]] )
+tnmap( '<Esc>', [[<C-\><C-n>]], {buffer=true})
 nnmap( '<leader>ty', [[:split<bar>below<bar>resize 10<bar>term<CR>]])
 
 -----------------------------------------------------------------------------//
@@ -60,54 +59,7 @@ nnmap( "<leader>tf", ":Lex 30<cr>")
 -----------------------------------------------------------------------------//
 -- open a new file in the same directory
 -----------------------------------------------------------------------------//
--- nnmap('<leader>nf', [[:e <C-R>=expand("%:p:h") . "/" <CR>]], { silent = false })
-nnmap('<leader>nf',[[:e <C-R>=expand("%:p:h") . "/" <CR>]])
-
--- local savefunc = function()
---   -- NOTE: this uses write specifically because we need to trigger a filesystem event
---   -- even if the file isn't change so that things like hot reload work
---   vim.cmd[[ 'silent! write' ]]
---   vim.notify('Saved ' .. vim.fn.expand '%:t', nil, { timeout = 1000 })
--- end
-
------------------------------------------------------------------------------//
--- Save
------------------------------------------------------------------------------//
--- nnmap('<c-s>', [[<cmd>lua require"mappings/extra".savefunc()<cr>]])
-
-------------------------------------------------------------------------------
--- Quickfix
-------------------------------------------------------------------------------
--- local toggle_qf = function()
---   local gf_open = false
---   for _, win in pairs(vim.fn.getwininfo()) do
---     if win["quickfix"] == 1 then
---       gf_open = true
---     end
---   end
-
---   if gf_open then
---     vim.cmd([[cclose]])
---     return
---   end
---   vim.cmd([[copen]])
--- end
--- nnmap(',qt',toggle_qf)
-nnmap('=l', function()
-    local win = vim.api.nvim_get_current_win()
-    local qf_winid = vim.fn.getloclist(win, { winid = 0 }).winid
-    local action = qf_winid > 0 and 'lclose' or 'lopen'
-    vim.cmd(action)
-end, { desc = "Toggle locationlist window." })
-nnmap('=q', function()
-    local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
-    local action = qf_winid > 0 and 'cclose' or 'copen'
-    vim.cmd(action)
-end, { desc = "Toggle quickfix window." })
-nnmap(']q', '<cmd>cnext<CR>zz')
-nnmap('[q', '<cmd>cprev<CR>zz')
-nnmap(']l', '<cmd>lnext<cr>zz')
-nnmap('[l', '<cmd>lprev<cr>zz')
+nnmap('<leader>nf',[[<cmd>e <C-R>=expand("%:p:h") . "/" <CR>]])
 
 -----------------------------------------------------------------------------//
 -- Diable higlight
@@ -178,47 +130,12 @@ map({"n","x","o"}, "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev sea
 nnmap('<Leader>sr' , ':%s/<C-r><C-w>//gc<Left><Left><Left>',{silent = false,desc="search and replace cword"})
 vnmap('<Leader>sr' , 'y:%s/<C-R>"//gc<Left><Left><Left>',{silent = false,desc="search and replace selection"})
 vnmap('<Leader>vsr' , [[:s/\%V<C-r>"\%V//gc<Left><Left><Left>]],{silent = false,desc="search and replace range"})
--- vnmap('<Leader>vsr' , [[:s/<C-r>"//gc<Left><Left><Left>]])
--- nnmap('<Leader><leader>sr' , [[:%s/\%V<C-r>"//gc<Left><Left><Left>]])
 
 -- Search -------------------
 vnmap('//', '<Esc>/\\%V',{silent = false})
 -- makes * and # work on visual mode too.
 vim.api.nvim_exec(
   [[
-  "" function! g:VSetSearch(cmdtype)
-  "" let temp = @s
-  "" norm! gv"sy
-  "" let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
-  "" let @s = temp
-  "" endfunction
-  "" xnoremap * :<C-u>call g:VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
-  "" xnoremap # :<C-u>call g:VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
-
-  "" function! g:VSetSearch()
-  "" let temp = @@
-  "" norm! gvy
-  "" let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
-  "" call histadd('/', substitute(@/, '[?/]', '\="\\%d".char2nr(submatch(0))', 'g'))
-  "" let @@ = temp
-  "" endfunction
-  ""
-  "" xnoremap * :<C-u>call g:VSetSearch()<CR>/<C-R>
-  "" xnoremap # :<C-u>call g:VSetSearch()<CR>?<C-R>
-
-  "" vnoremap * y/\V<C-R>=substitute(escape(@@,"/\\"),"\n","\\\\n","ge")<CR><CR>
-  "" vnoremap # y?\V<C-R>=substitute(escape(@@,"?\\"),"\n","\\\\n","ge")<CR><CR>
-  "" vnoremap <silent> * :<C-U>
-  ""   \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  ""   \gvy/<C-R>=&ic?'\c':'\C'<CR><C-R><C-R>=substitute(
-  ""   \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-  ""   \gVzv:call setreg('"', old_reg, old_regtype)<CR>
-  "" vnoremap <silent> # :<C-U>
-  ""   \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  ""   \gvy?<C-R>=&ic?'\c':'\C'<CR><C-R><C-R>=substitute(
-  ""   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-  ""   \gVzv:call setreg('"', old_reg, old_regtype)<CR>
-
   function! s:getSelectedText()
     let l:old_reg = getreg('"')
     let l:old_regtype = getregtype('"')
@@ -247,24 +164,30 @@ vim.api.nvim_exec(
 -----------------------------------------------------------------------------//
 -- TAB/SHIFT-TAB in general mode will move to next/prev buffer
 -----------------------------------------------------------------------------//
-nnmap('<M-s>' , ':bnext<CR>')
-nnmap('<M-a>' , ':bprevious<CR>')
-inmap('<M-s>' , '<Esc>:bnext<CR>')
-inmap('<M-a>' , '<esc>:bprevious<CR>')
+map( {'n','i'}, '<M-s>' , '<cmd>bnext<CR>')
+map( {'n','i'}, '<M-a>' , '<cmd>bprevious<CR>')
 
 -----------------------------------------------------------------------------//
 -- Use control-c instead of escape
 -----------------------------------------------------------------------------//
-nnmap('<C-c>' , '<Esc>')
-inmap('<C-C>' , '<ESC>')
-
+map( {'n','i'}, '<C-c>' , '<Esc>')
 
 -----------------------------------------------------------------------------//
 -- Alternate way to save and quit
 -----------------------------------------------------------------------------//
-map({ "i", "v", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
--- nnmap('<C-s>' , '<cmd>confirm w<CR>')
+map({ "i", "v", "n", "s" }, "<C-s>", "<cmd>w<cr>", { desc = "Save file" })
 nnmap('<c-q>' , ':confirm q<CR>')
+
+-----------------------------------------------------------------------------//
+-- Save
+-----------------------------------------------------------------------------//
+-- local savefunc = function()
+--   -- NOTE: this uses write specifically because we need to trigger a filesystem event
+--   -- even if the file isn't change so that things like hot reload work
+--   vim.cmd[[ 'silent! write' ]]
+--   vim.notify('Saved ' .. vim.fn.expand '%:t', nil, { timeout = 1000 })
+-- end
+-- nnmap('<c-s>', [[<cmd>lua require"mappings/extra".savefunc()<cr>]])
 
 -----------------------------------------------------------------------------//
 -- Close buffer
@@ -283,3 +206,37 @@ vnmap('>' , '>gv')
 -- Mapping to show filetype, buftype and highlight
 -----------------------------------------------------------------------------//
 nnmap('<leader>dt',[[<cmd>lua vim.ui.select({"hi", "set buftype?", "set filetype?"}, {}, function (choice) vim.cmd(choice) end)<cr>]])
+
+------------------------------------------------------------------------------
+-- Quickfix
+------------------------------------------------------------------------------
+-- local toggle_qf = function()
+--   local gf_open = false
+--   for _, win in pairs(vim.fn.getwininfo()) do
+--     if win["quickfix"] == 1 then
+--       gf_open = true
+--     end
+--   end
+
+--   if gf_open then
+--     vim.cmd([[cclose]])
+--     return
+--   end
+--   vim.cmd([[copen]])
+-- end
+-- nnmap(',qt',toggle_qf)
+nnmap('=l', function()
+    local win = vim.api.nvim_get_current_win()
+    local qf_winid = vim.fn.getloclist(win, { winid = 0 }).winid
+    local action = qf_winid > 0 and 'lclose' or 'lopen'
+    vim.cmd(action)
+end, { desc = "Toggle locationlist window." })
+nnmap('=q', function()
+    local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
+    local action = qf_winid > 0 and 'cclose' or 'copen'
+    vim.cmd(action)
+end, { desc = "Toggle quickfix window." })
+nnmap(']q', '<cmd>cnext<CR>zz')
+nnmap('[q', '<cmd>cprev<CR>zz')
+nnmap(']l', '<cmd>lnext<cr>zz')
+nnmap('[l', '<cmd>lprev<cr>zz')

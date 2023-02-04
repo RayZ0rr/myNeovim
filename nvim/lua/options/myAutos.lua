@@ -51,6 +51,7 @@ api.nvim_create_autocmd(
   { pattern = {"vifmrc","*.vifm"}, command = [[setlocal commentstring=\"\ %s]], group = MyCommentsGroup }
 )
 
+local MyCustomSettingsGroup = api.nvim_create_augroup("MyCustomSettingsGroup", { clear = true })
 api.nvim_set_hl(0,"YankHighlightGroup",{fg='#4B4B4B' , bg="#e5c07b" })
 -- Highlight on yank
 local MyYankHighlightGroup = api.nvim_create_augroup("MyYankHighlightGroup", { clear = true })
@@ -58,25 +59,34 @@ api.nvim_create_autocmd(
   "TextYankPost",
   {
     command = "silent! lua vim.highlight.on_yank({higroup='YankHighlightGroup'})",
-    group = MyYankHighlightGroup,
+    group = MyCustomSettingsGroup,
   }
 )
 
 -- show cursor line only in active window
-local MyCursorLineGroup = api.nvim_create_augroup("MyCursorLineGroup", { clear = true })
 api.nvim_create_autocmd(
   { "InsertLeave", "WinEnter" },
-  { pattern = "*", command = "set cursorline", group = MyCursorLineGroup }
+  { pattern = "*", command = "set cursorline", group = MyCustomSettingsGroup }
 )
 api.nvim_create_autocmd(
   { "InsertEnter", "WinLeave" },
-  { pattern = "*", command = "set nocursorline", group = MyCursorLineGroup }
+  { pattern = "*", command = "set nocursorline", group = MyCustomSettingsGroup }
 )
 
-local MyCustomSettingsGroup = api.nvim_create_augroup("MyCustomSettingsGroup", { clear = true })
-api.nvim_create_autocmd(
-  { "BufNewFile","BufRead" },
-  { pattern = "*", command = "set formatoptions-=cro", group = MyCustomSettingsGroup }
+-- show statusline for floating windows and splits and everything
+vim.api.nvim_create_autocmd(
+  { "WinEnter", "WinClosed" },
+  {
+    group = MyCustomSettingsGroup,
+    callback = function()
+        local winid = vim.api.nvim_get_current_win()
+        if vim.api.nvim_win_get_config(winid).zindex then
+            vim.o.laststatus = 3
+        else
+            vim.o.laststatus = 2
+        end
+    end,
+  }
 )
 api.nvim_create_autocmd(
   { "BufNewFile","BufRead" },
@@ -90,19 +100,28 @@ api.nvim_create_autocmd(
     group = MyCustomSettingsGroup
   }
 )
--- api.nvim_create_autocmd( "BufWritePost" , {
---   group = MyCustomSettingsGroup,
---   pattern = "*",
---   callback = function()
---     if vim.fn.getline(1) == "^#!" then
---       if vim.fn.getline(1) == "/bin/" then
--- 	vim.cmd([[chmod a+x <afile>]])
---       end
---     end
---   end,
---   once = false,
--- })
+api.nvim_create_autocmd( "BufWritePost" , {
+  group = MyCustomSettingsGroup,
+  pattern = "*",
+  callback = function()
+    if vim.fn.getline(1) == "^#!" then
+      if vim.fn.getline(1) == "/bin/" then
+	vim.cmd([[chmod a+x <afile>]])
+      end
+    end
+  end,
+  once = false,
+})
 
+api.nvim_create_autocmd(
+  { "BufNewFile","BufRead" },
+  {
+    group = MyCustomSettingsGroup,
+    desc = "don't auto comment new line",
+    pattern = "*",
+    command = "set formatoptions-=cro",
+  }
+)
 api.nvim_create_autocmd(
   {"BufEnter", "FileType"},
   {
@@ -132,15 +151,6 @@ api.nvim_create_autocmd(
     command = "let @/ = ''",
   }
 )
--- api.nvim_create_autocmd(
---   "BufReadPost",
---   {
---     group = MyCustomSettingsGroup,
---     desc = "go to last loc when opening a buffer",
---     pattern = "*",
---     command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]],
---   }
--- )
 api.nvim_create_autocmd(
   "BufReadPost",
   {
@@ -155,13 +165,6 @@ api.nvim_create_autocmd(
     end,
   }
 )
--- api.nvim_create_autocmd(
---   { "Syntax" },
---   {
---     pattern = {"tmux","py","bash","zsh","sh","r","h","hh","hpp","cc","c","cpp","vim","nvim","lua","xml","html","xhtml","perl"},
---     command = [[normal zR]], group = MyCustomSettingsGroup
---   }
--- )
 
 local MyQuickFixGroup = api.nvim_create_augroup("MyQuickFixGroup", { clear = true })
 -- api.nvim_create_autocmd(
@@ -219,21 +222,16 @@ api.nvim_create_autocmd(
 
 local MyTerminalGroup = api.nvim_create_augroup("MyTerminalGroup", { clear = true })
 api.nvim_create_autocmd(
-  "TermOpen" ,
-  { command = [[tnoremap <buffer> <Esc> <c-\><c-n>]], group = MyTerminalGroup }
-)
-api.nvim_create_autocmd(
   "TermOpen",
   {
+    group = MyTerminalGroup,
     callback = function()
       vim.cmd([[
 	setlocal nonumber
 	setlocal nospell
 	setlocal norelativenumber
 	setlocal signcolumn=no
-	setlocal ft=term
       ]])
     end,
-    group = MyTerminalGroup
   }
 )

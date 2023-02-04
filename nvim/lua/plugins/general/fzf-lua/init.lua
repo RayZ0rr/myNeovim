@@ -527,6 +527,22 @@ require'fzf-lua'.setup {
     -- severity_limit:  keep any equal or more severe (lower)
     -- severity_bound:  keep any equal or less severe (higher)
   },
+  registers = {
+    actions = {
+	-- ['default'] = function(selected, _)
+	--   local register = selected[1]:match('%[(.*)%]')
+	--   local contents = vim.fn.getreg(register)
+	--   vim.api.nvim_paste(contents, true, -1)
+	-- end,
+	['ctrl-p'] = function(selected)
+	  local reg = selected[1]:match("%[(.-)%]")
+	  local ok, data = pcall(vim.fn.getreg, reg)
+	  if ok and #data > 0 then
+	    vim.fn.setreg(vim.v.register,data)
+	  end
+	end
+    }
+  },
   -- uncomment to use the old help previewer which used a
   -- minimized help window to generate the help tag preview
   -- helptags = { previewer = "help_tags" },
@@ -551,3 +567,12 @@ require'fzf-lua'.setup {
 
 -- Mappings
 require('plugins/general/fzf-lua/mappings')
+if vim.ui then
+  require("fzf-lua").register_ui_select({
+    winopts = {
+      win_height = 0.30,
+      win_width  = 0.70,
+      win_row    = 0.40,
+    }
+  })
+end

@@ -41,9 +41,6 @@ end
 local ok_replacer, _ = pcall(require, 'replacer')
 if ok_replacer then
   nnmap('<Leader>qf', require("replacer").run, { desc = "qf replacer activate", nowait = true, silent = true })
-
--- else
---   print("gabrielpoca/replacer.nvim not installed")
 end
 
 --##########################################################################################################
@@ -56,8 +53,6 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'ferret')) == 0 then
   nnmap('<leader>gg', [[:Ack <C-R><C-W><CR>:Acks /<C-R><c-w>//<left>]])
   xnmap('<leader>gf', [[y:Ack <C-R>"<CR>:Acks /<C-R>"//<left>]])
   nnmap('<leader>gb', [[<Plug>(FerretBack)]], {remap=true})
--- else
---   print("wincent/ferret not installed")
 end
 
 --##########################################################################################################
@@ -110,22 +105,13 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'vim-easy-align')) == 0 then
   vim.g.easy_align_bypass_fold = 1
   -- vim.g.easy_align_interactive_modes = {'l', 'r'}
   -- vim.g.easy_align_bang_interactive_modes = {'c', 'r'}
-
--- else
---   print("junegunn/vim-easy-align not installed")
 end
 
 --##########################################################################################################
 -- vim illuminate -----------------------------------------------------------------------------------------
 --##########################################################################################################
--- :echo synIDattr(synID(line("."), col("."), 1), "name")
--- Time in milliseconds (default 0)
--- vim.g.Illuminate_delay = 0
--- let g:Illuminate_delay = 0
 local ok_illuminate, _ = pcall(require, 'illuminate')
 if ok_illuminate then
--- else
---   print("RRethy/vim-illuminate not installed")
   require('illuminate').configure({
     -- providers: provider used to get references in the buffer, ordered by priority
     providers = {
@@ -168,7 +154,7 @@ if ok_illuminate then
     -- If nil, vim-illuminate will be disabled for large files.
     large_file_overrides = nil,
   })
-  nnmap(',ill',function() require('illuminate').toggle() print("Illuminate toggled") end)
+  nnmap(',ill',function() require('illuminate').toggle() print("Illuminate toggled") end, {desc="Toogle vim-illuminate"})
   vim.api.nvim_set_hl(0,'IlluminatedWordText',{italic = true})
   vim.api.nvim_set_hl(0,'IlluminatedWordRead',{underline = true, italic = true})
   vim.api.nvim_set_hl(0,'IlluminatedWordWrite',{underline = true, italic = true})
@@ -183,9 +169,9 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'vim-better-whitespace')) == 0 then
   nnmap( ']w', ':NextTrailingWhitespace<CR>')
   nnmap( '[w', ':PrevTrailingWhitespace<CR>')
 
-  nnmap( '<leader>wt', ':ToggleWhitespace | echo "Whitspace toggled"<CR><CR>')
-  nnmap( '<leader>wr', ':StripWhitespace<CR>')
-  nnmap( '<leader>ws', ':ToggleStripWhitespaceOnSave | echo "Whitspace strip on save toggled"<CR><CR>')
+  nnmap( '<leader>wt', ':ToggleWhitespace | echo "Whitspace toggled"<CR><CR>', {desc="Whitespace toggle function"})
+  nnmap( '<leader>wr', ':StripWhitespace<CR>', {desc="Whitespace remove function"})
+  nnmap( '<leader>ws', ':ToggleStripWhitespaceOnSave | echo "Whitspace strip on save toggled"<CR><CR>', {desc="Whitespace remove on save toggle function"})
 
   -- vim.cmd[[autocmd FileType * ToggleWhitespace]]
 
@@ -197,8 +183,6 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'vim-better-whitespace')) == 0 then
   vim.g.current_line_whitespace_disabled_hard=1
   -- vim.g.current_line_whitespace_disabled_soft=1
   vim.g.better_whitespace_filetypes_blacklist={'fzf', 'floaterm', 'toggleterm', 'term', 'fm', 'replacer', 'netrw', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive'}
--- else
---   print("ntpeters/vim-better-whitespace not installed")
 end
 
 --##########################################################################################################
@@ -220,8 +204,6 @@ if ok_icons then
    -- will get overriden by `get_icons` option
    -- default = true;
   }
--- else
---   print("kyazdani42/nvim-web-devicons not installed")
 end
 
 --##########################################################################################################
@@ -230,8 +212,6 @@ end
 local ok_gitsigns, _ = pcall(require, 'gitsigns.nvim')
 if ok_gitsigns then
   require('gitsigns').setup()
--- else
---   print("lewis6991/gitsigns.nvim not installed")
 end
 
 --##########################################################################################################
@@ -266,10 +246,7 @@ if ok_colorizer then
   require'colorizer'.setup(
     colorizer_cfg
   )
-  nnmap('<leader>clr', ':exec "ColorizerToggle" | echo "Colorizer toggled"<cr>')
-
--- else
---   print("norcalli/nvim-colorizer.lua not installed")
+  nnmap('<leader>clr', ':exec "ColorizerToggle" | echo "Colorizer toggled"<cr>', {desc="Colorizer toggle function"})
 end
 
 --##########################################################################################################
@@ -315,8 +292,8 @@ if ok_specs then
     },
   }
 
-  nnmap('<leader>spt', function() require('specs').toggle() print("Specs toggled") end, {desc="Toggle specs function"})
-  nnmap('<leader>spp', [[<cmd>lua require('specs').show_specs()<cr>]])
+  nnmap('<leader>spt', function() require('specs').toggle() print("Specs toggled") end, {desc="Specs toggle function"})
+  nnmap('<leader>spp', function() require('specs').show_specs() end, {desc="Activate specs and show cursorline location."})
 
 -- else
 --   print("edluffy/specs.nvim not installed")
@@ -350,6 +327,4 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'beacon.nvim')) == 0 then
 
   nnmap('<leader>bect',':BeaconToggle | echo "Beacon toggled"<cr>')
   nnmap('<leader>becc',':Beacon<cr>')
--- else
---   print("DanilaMihailov/beacon.nvim not installed")
 end

@@ -14,8 +14,8 @@ onedarkpro.setup({
     -- ["@function"] = { link = "Special" },
     ["@constructor"] = { link = "Special" },
     ["@type.qualifier"] = { fg="${cyan}" , style ="bold,italic"},
-    ["@string"] = { fg="#D291BC" },
-    ["@field"] = { fg="${green}" },
+    ["@field"] = { fg="#D291BC" },
+    ["@string"] = { fg="${green}" },
     ["PreProc"] = { fg="#815B5B" },
   },
   plugins = { -- Override which plugins highlight groups are loaded
