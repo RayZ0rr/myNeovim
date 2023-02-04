@@ -106,7 +106,10 @@ require('packer').startup(function(use)
   }
   -- Build, Run tasks (commands) in background asynchronously
   use{
-    'skywind3000/asyncrun.vim',
+    'skywind3000/asynctasks.vim',
+    requires = {
+      'skywind3000/asyncrun.vim',
+    },
     config = function()
       require('plugins/general/asyncRunTasks')
     end,
