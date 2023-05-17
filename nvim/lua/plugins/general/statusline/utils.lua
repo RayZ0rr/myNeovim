@@ -50,15 +50,12 @@ M.Functions = {
     return (ts and next(ts)) and " 綠TS" or ""
   end,
   LSPStatus = function()
-    local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
-    local clients = vim.lsp.get_active_clients()
-    for _, client in ipairs(clients) do
-      local filetypes = client.config.filetypes
-      if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-	return "c "..client.name
-      end
+    local names = {}
+    for i, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+	table.insert(names, server.name)
     end
-    return ""
+    return " [" .. table.concat(names, " ") .. "]"
+    -- return " [" .. table.concat(names, " ") .. "]"
   end,
   Truncate = function(trunc_width, trunc_len, hide_width, no_ellipsis)
     return function(str)
@@ -118,8 +115,7 @@ M.Conditions = {
   end,
 }
 
-M.Vars = {
-  colors = {
+M.colors = {
     bg       = '#202328',
     fg       = '#bbc2cf',
     yellow   = '#ECBE7B',
@@ -137,8 +133,33 @@ M.Vars = {
     grey       = '#bbc2cf',
     black       = '#202328',
     white       = '#ffffff',
+}
+
+M.vim_mode = {
+
+  colors = {
+    n = 'green',
+    i = 'red',
+    v = 'magenta',
+    [''] = 'blue',
+    V = 'blue',
+    c = 'magenta',
+    no = 'green',
+    s = 'orange',
+    S = 'orange',
+    [''] = 'orange',
+    ic = 'yellow',
+    R = 'violet',
+    Rv = 'violet',
+    cv = 'red',
+    ce = 'red',
+    r = 'cyan',
+    rm = 'cyan',
+    ['r?'] = 'cyan',
+    ['!'] = 'red',
+    t = 'red',
   },
-  mode_names = { -- change the strings if you like it vvvvverbose!
+  names = { -- change the strings if you like it vvvvverbose!
     n = "N",
     no = "N?",
     nov = "N?",

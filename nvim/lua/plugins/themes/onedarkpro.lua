@@ -18,15 +18,6 @@ onedarkpro.setup({
     ["@string"] = { fg="${green}" },
     ["PreProc"] = { fg="#815B5B" },
   },
-  plugins = { -- Override which plugins highlight groups are loaded
-    all = false,
-    aerial = true,
-    marks = true,
-    native_lsp = true,
-    nvim_cmp = true,
-    packer = true,
-    treesitter = true,
-  },
   styles = { -- Choose from "bold,italic,underline"
       comments = "italic", -- Style that is applied to comments
       keywords = "bold,italic", -- Style that is applied to keywords
@@ -37,6 +28,7 @@ onedarkpro.setup({
       cursorline = false, -- Use cursorline highlighting?
       transparency = false, -- Use a transparent background?
       terminal_colors = false, -- Use the colorscheme's colors for Neovim's :terminal?
+      highlight_inactive_windows = false, -- When the window is out of focus, change the normal background?
   }
 })
 vim.o.background = "dark" -- to load onedark
