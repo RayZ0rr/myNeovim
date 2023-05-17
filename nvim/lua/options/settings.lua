@@ -10,7 +10,7 @@ opt.breakindent = true
 opt.termguicolors = true
 opt.ignorecase = true
 opt.smartcase = true
-opt.hlsearch = true
+opt.hlsearch = false
 opt.inccommand='nosplit'
 opt.wrap = false                        -- Display long lines as just one line
 opt.pumblend = 10			-- Popup blend
@@ -25,9 +25,10 @@ opt.splitright = true                   -- Vertical splits will automatically be
 -- opt.t_Co=256				-- Support 256 colors
 opt.conceallevel=0                      -- So that I can see `` in markdown files
 opt.tabstop=8
-opt.shiftwidth=2                        -- number of auto-indent spaces
-opt.softtabstop=2
--- opt.expandtab = true			-- Insert 2 spaces for a tab
+opt.shiftwidth=4                        -- number of auto-indent spaces
+opt.softtabstop=4
+opt.expandtab = true			-- Insert 2 spaces for a tab
+opt.smarttab = false			-- Use shiftwidth space for start and tab elsewhere
 opt.scrolloff=4                         -- Keep 4 lines below cursor before scrolling the screen vertically
 opt.sidescrolloff=8                     -- Keep 4 lines below cursor before scrolling the screen horizontally
 opt.smartindent = true                  -- Makes indenting smart
@@ -53,6 +54,23 @@ opt.virtualedit    = 'block'		-- allow cursor to exist where there is no charact
 opt.winblend       = 10
 opt.lazyredraw     = true
 opt.backspace = { 'eol', 'start', 'indent' } -- Without this option some times backspace did not work correctly.
+
+opt.list = true
+opt.listchars = {
+  nbsp = '⦸', -- CIRCLED REVERSE SOLIDUS (U+29B8, UTF-8: E2 A6 B8)
+  extends = '»', -- RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00BB, UTF-8: C2 BB)
+  precedes = '«', -- LEFT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00AB, UTF-8: C2 AB)
+  -- tab = '▷─', -- '▷─' WHITE RIGHT-POINTING TRIANGLE (U+25B7, UTF-8: E2 96 B7) + BOX DRAWINGS HEAVY TRIPLE DASH HORIZONTAL (U+2505, UTF-8: E2 94 85)
+  tab = '▸-',
+  trail = '•', -- BULLET (U+2022, UTF-8: E2 80 A2)
+  space = ' ',
+  eol = '↴',
+}
+opt.fillchars = {
+  eob = '↴', -- NO-BREAK SPACE (U+00A0, UTF-8: C2 A0) to suppress ~ at EndOfBuffer
+  -- vert = '│', -- window border when window splits vertically ─ ┴ ┬ ┤ ├ ┼
+  vert = "\\", -- window border when window splits vertically ─ ┴ ┬ ┤ ├ ┼
+}
 
 -- opt.grepformat = "%f:%l:%c:%m"
 opt.grepprg="rg --vimgrep"
@@ -145,21 +163,6 @@ local disabled_built_ins = {
 for _, plugin in pairs(disabled_built_ins) do
 	vim.g["loaded_" .. plugin] = 1
 end
-
-opt.listchars = {
-  nbsp = '⦸', -- CIRCLED REVERSE SOLIDUS (U+29B8, UTF-8: E2 A6 B8)
-  extends = '»', -- RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00BB, UTF-8: C2 BB)
-  precedes = '«', -- LEFT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00AB, UTF-8: C2 AB)
-  tab = '  ', -- '▷─' WHITE RIGHT-POINTING TRIANGLE (U+25B7, UTF-8: E2 96 B7) + BOX DRAWINGS HEAVY TRIPLE DASH HORIZONTAL (U+2505, UTF-8: E2 94 85)
-  trail = '•', -- BULLET (U+2022, UTF-8: E2 80 A2)
-  space = ' ',
-}
-opt.fillchars = {
-  diff = '∙', -- BULLET OPERATOR (U+2219, UTF-8: E2 88 99)
-  eob = ' ', -- NO-BREAK SPACE (U+00A0, UTF-8: C2 A0) to suppress ~ at EndOfBuffer
-  fold = '·', -- MIDDLE DOT (U+00B7, UTF-8: C2 B7)
-  vert = '│', -- window border when window splits vertically ─ ┴ ┬ ┤ ├ ┼
-}
 
 -- local fn = vim.fn
 
