@@ -91,6 +91,7 @@ require('packer').startup(function(use)
     end,
   }
   -- Better quickfix --------------------------
+  use {'kevinhwang91/nvim-bqf', ft = 'qf'}
   use {
     'gabrielpoca/replacer.nvim',
     config = function()
@@ -201,6 +202,13 @@ require('packer').startup(function(use)
     end,
     after = 'onedarkpro.nvim'
   }
+  -- Add git related info in the signs columns and popups
+  use {
+    'lewis6991/gitsigns.nvim',
+    config = function()
+      require('plugins/general/misc')
+    end,
+  }
   -- StartScreen -----------------------------------
   use {
     'goolord/alpha-nvim',
@@ -211,14 +219,6 @@ require('packer').startup(function(use)
   -- Align code for eg, arround '=' sign ---------
   use {
     'Vonr/align.nvim',
-    config = function()
-      require('plugins/general/misc')
-    end,
-  }
-  -- Add git related info in the signs columns and popups
-  use {
-    'lewis6991/gitsigns.nvim',
-    requires = 'nvim-lua/plenary.nvim',
     config = function()
       require('plugins/general/misc')
     end,
