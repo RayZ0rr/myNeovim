@@ -36,7 +36,7 @@ root_dir = function(fname)
 end,
 nnmap('<leader>fp', function() require('fzf-lua').files({cwd = root_dir(vim.api.nvim_buf_get_name(0))}) end, {desc="Fzf-Lua search project"})
 
-nnmap('<leader>gw', function() require'fzf-lua'.grep_project({ fzf_opts={ ['--query']=vim.fn.expand('<cword>') }}) end, {desc="Fzf-Lua project grep"})
+nnmap('<leader>gp', function() require'fzf-lua'.grep_project({ fzf_opts={ ['--query']=vim.fn.expand('<cword>') }}) end, {desc="Fzf-Lua project grep"})
 
 map({'n', 'x',}, '<leader>fr',function() require('fzf-lua').registers() end,{desc="Fzf-Lua registers"})
 
