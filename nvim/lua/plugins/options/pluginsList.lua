@@ -10,8 +10,6 @@ require('packer').startup(function(use)
   -- Package manager ---------------------------
   use 'wbthomason/packer.nvim'
 
-  use 'lewis6991/impatient.nvim'
-
   --------------------------------------------------
   -- LSP
   --------------------------------------------------
@@ -41,16 +39,6 @@ require('packer').startup(function(use)
     run = ':TSUpdate',
     config = function()
       require('plugins/treesitter/settings')
-    end,
-  }
-  use {
-    'nvim-treesitter/playground',
-    config = function()
-      require "nvim-treesitter.configs".setup {
-	playground = {
-	  enable = true,
-	}
-      }
     end,
   }
   -- Additional textobjects for treesitter
