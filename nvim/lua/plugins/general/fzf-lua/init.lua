@@ -565,6 +565,8 @@ require'fzf-lua'.setup {
   -- nbsp = '\xc2\xa0',
 }
 
+-- Colors
+require('plugins/general/fzf-lua/colors')
 -- Mappings
 require('plugins/general/fzf-lua/mappings')
 if vim.ui then
