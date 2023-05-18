@@ -28,7 +28,7 @@ special_filetypes = {
 local Align = { provider = "%=" }
 local Space = { provider = " " }
 local function vimode_hl()
-    return mode_colors[vim.fn.mode()]
+    return my_utils.vim_mode.colors[vim.fn.mode()]
 end
 
 -- Left Part
@@ -69,7 +69,7 @@ local vim_mode = {
     init = function(self)
 	self.mode = vim.fn.mode(1)
     end,
-    flexible = 10,
+    flexible = 11,
     {
 	vim_mode_icon, vim_mode_mode
     },
@@ -187,7 +187,7 @@ os_bar = {
 	provider = my_utils.Functions.OSicon,
 	hl = function(self)
 	    local mode = self.mode:sub(1, 1)
-	    return { fg = 'bg', bg = mode_colors[mode], bold = true, }
+	    return { fg = 'bg', bg = vimode_hl(), bold = true, }
 	end,
     },
     SideBar
@@ -279,14 +279,11 @@ local Diagnostics = {
     end,
     update = { "DiagnosticChanged", "BufEnter" },
     {
-	provider = "![",
-    },
-    {
 	provider = function(self)
 	    -- 0 is just another output, we can decide to print it or not!
 	    return self.errors > 0 and (self.error_icon .. self.errors .. " ")
 	end,
-	hl = { fg = "diag_error" },
+	hl = { fg = "diag_err" },
     },
     {
 	provider = function(self)
@@ -305,9 +302,6 @@ local Diagnostics = {
 	    return self.hints > 0 and (self.hint_icon .. self.hints)
 	end,
 	hl = { fg = "diag_hint" },
-    },
-    {
-	provider = "]",
     },
 }
 
@@ -382,21 +376,19 @@ local FileFormat = {
 local make_flexible = function(num,component)
     return {
 	flexible =num,
-	{
-	    component
-	},
+	component,
 	{
 	    provider = function(self) return "" end
 	}
     }
 end
 
-FileEncoding = make_flexible(2,FileEncoding)
-FileFormat = make_flexible(3,FileFormat)
-ScrollBar = make_flexible(4,ScrollBar)
-FileSize = make_flexible(5,FileSize)
-file_type_icon = make_flexible(8, file_type_icon)
-line_info = make_flexible(9, line_info)
+FileEncoding = make_flexible(2, FileEncoding)
+FileFormat = make_flexible(3, FileFormat)
+scrollbar = make_flexible(4, scrollbar)
+FileSize = make_flexible(5, FileSize)
+file_type_icon = make_flexible(6, file_type_icon)
+line_info = make_flexible(7, line_info)
 
 --------------------------------------------------
 -- Inactive Components
