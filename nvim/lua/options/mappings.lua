@@ -7,16 +7,17 @@ local xnmap = require('options/utils').xnmap
 local tnmap = require('options/utils').tnmap
 
 -- Clear search with <esc>
-map({ "i", "n" }, "<esc>", "<cmd>noh<cr>", { desc = "Escape and clear hlsearch" })
+map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Clear hlsearch and escape" })
 
 -----------------------------------------------------------------------------//
 -- Add Empty space above and below
 -----------------------------------------------------------------------------//
-nnmap('[<space>', [[<cmd>put! =repeat(nr2char(10), v:count1)<cr>'[]])
-nnmap(']<space>', [[<cmd>put =repeat(nr2char(10), v:count1)<cr>]])
+nnmap('[<space>', [[<cmd>put! =repeat(nr2char(10), v:count1)<cr>'[]], { desc = "Add empty space above" })
+nnmap(']<space>', [[<cmd>put =repeat(nr2char(10), v:count1)<cr>]], { desc = "Add empty space below" })
 
 -----------------------------------------------------------------------------//
 -- Paste in visual mode multiple times
+-----------------------------------------------------------------------------//
 xnmap('p', 'pgvy')
 
 -----------------------------------------------------------------------------//
@@ -24,6 +25,7 @@ xnmap('p', 'pgvy')
 -----------------------------------------------------------------------------//
 nnmap('<leader>U', 'gUiw`]')
 inmap('<C-u>', '<cmd>norm!gUiw`]a<CR>')
+nnmap('<Leader><c-u>' , 'viw~<Esc>')
 
 -----------------------------------------------------------------------------//
 -- Some insert mode conveniences
@@ -59,12 +61,17 @@ nnmap( "<leader>tf", ":Lex 30<cr>")
 -----------------------------------------------------------------------------//
 -- open a new file in the same directory
 -----------------------------------------------------------------------------//
-nnmap('<leader>nf',[[<cmd>e <C-R>=expand("%:p:h") . "/" <CR>]])
+nnmap('<leader>nf',[[:e <C-R>=expand("%:p:h") . "/"<CR>]], {silent = false,desc="Open new file in current directory"})
 
 -----------------------------------------------------------------------------//
 -- Diable higlight
 -----------------------------------------------------------------------------//
 bmap('n','<localleader>hl' , ':set hlsearch!<CR>')
+nnmap(
+  "<leader>hl",
+  "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
+  { desc = "Redraw / clear hlsearch / diff update" }
+)
 
 -----------------------------------------------------------------------------//
 -- Toggle line wrap
@@ -82,33 +89,36 @@ nnmap('<down>', "v:count == 0 ? 'gj' : '<down>'", {expr = true})
 -----------------------------------------------------------------------------//
 -- Use alt + arrow keys to resize windows
 -----------------------------------------------------------------------------//
-nnmap('<M-UP>' , "<cmd>resize +2<cr>", { desc = "Increase window height" })
-nnmap('<M-DOWN>' , "<cmd>resize -2<cr>", { desc = "Decrease window height" })
-nnmap('<M-LEFT>' , "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
-nnmap('<M-RIGHT>' , "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
+nnmap('<C-UP>'   , "<cmd>resize +2<cr>", { desc = "Increase window height" })
+nnmap('<C-DOWN>' , "<cmd>resize -2<cr>", { desc = "Decrease window height" })
+nnmap('<C-LEFT>' , "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
+nnmap('<C-RIGHT>', "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
 
 -----------------------------------------------------------------------------//
 -- Move selected line / block of text in visual mode
 -----------------------------------------------------------------------------//
-nnmap('<S-Down>' , ":m .+1<cr>==", { desc = "Move down" })
-nnmap('<S-Up>'   , ":m .-2<cr>==", { desc = "Move up" })
-inmap('<S-Down>' , "<Esc>:m .+1<cr>==gi", { desc = "Move down" })
-inmap('<S-Up>'   , "<Esc>:m .-2<cr>==gi", { desc = "Move up" })
-vnmap('<S-Down>' , ":m '>+1<cr>gv=gv", { desc = "Move down" })
-vnmap('<S-Up>'   , ":m '<-2<cr>gv=gv", { desc = "Move up" })
+nnmap('<A-Down>', ":m .+1<cr>==", { desc = "Move down" })
+nnmap('<A-Up>'  , ":m .-2<cr>==", { desc = "Move up" })
+inmap('<A-Down>', "<Esc>:m .+1<cr>==gi", { desc = "Move down" })
+inmap('<A-Up>'  , "<Esc>:m .-2<cr>==gi", { desc = "Move up" })
+vnmap('<A-Down>', ":m '>+1<cr>gv=gv", { desc = "Move down" })
+vnmap('<A-Up>'  , ":m '<-2<cr>gv=gv", { desc = "Move up" })
 
 -----------------------------------------------------------------------------//
 -- Better window navigation
 -----------------------------------------------------------------------------//
-nnmap('<C-h>' , '<C-w>h')
-nnmap('<C-j>' , '<C-w>j')
-nnmap('<C-k>' , '<C-w>k')
-nnmap('<C-l>' , '<C-w>l')
+nnmap("<C-h>", "<C-w><C-h>", { desc = "Navigate windows to the left"} )
+nnmap("<C-j>", "<C-w><C-j>", { desc = "Navigate windows down"} )
+nnmap("<C-k>", "<C-w><C-k>", { desc = "Navigate windows up"} )
+nnmap("<C-l>", "<C-w><C-l>", { desc = "Navigate windows to the right"} )
 
-nnmap('<C-Left>' , '<C-w>h')
-nnmap('<C-Down>' , '<C-w>j')
-nnmap('<C-Up>' , '<C-w>k')
-nnmap('<C-Right>' , '<C-w>l')
+-----------------------------------------------------------------------------//
+-- Move windows with shift-arrows
+-----------------------------------------------------------------------------//
+nnmap("<S-Left>  ", "<C-w><S-h>", { desc = "Move window to the left"} )
+nnmap("<S-Down>  ", "<C-w><S-j>", { desc = "Move window down"} )
+nnmap("<S-Up>    ", "<C-w><S-k>", { desc = "Move window up"} )
+nnmap("<S-Right> ", "<C-w><S-l>", { desc = "Move window to the right"} )
 
 nnmap("<space><space>", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
 nnmap("gw", "*N")
@@ -117,7 +127,6 @@ xnmap("gw", "*N")
 -----------------------------------------------------------------------------//
 -- Easy CAPS toggle
 -----------------------------------------------------------------------------//
-nnmap('<Leader><c-u>' , 'viw~<Esc>')
 
 map({"n","x","o"}, "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
 map({"n","x","o"}, "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
@@ -164,8 +173,8 @@ vim.api.nvim_exec(
 -----------------------------------------------------------------------------//
 -- TAB/SHIFT-TAB in general mode will move to next/prev buffer
 -----------------------------------------------------------------------------//
-map( {'n','i'}, '<M-s>' , '<cmd>bnext<CR>')
-map( {'n','i'}, '<M-a>' , '<cmd>bprevious<CR>')
+map( {'n','i'}, '<A-s>' , '<cmd>bnext<CR>')
+map( {'n','i'}, '<A-a>' , '<cmd>bprevious<CR>')
 
 -----------------------------------------------------------------------------//
 -- Use control-c instead of escape
@@ -175,8 +184,9 @@ map( {'n','i'}, '<C-c>' , '<Esc>')
 -----------------------------------------------------------------------------//
 -- Alternate way to save and quit
 -----------------------------------------------------------------------------//
-map({ "i", "v", "n", "s" }, "<C-s>", "<cmd>w<cr>", { desc = "Save file" })
+map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr>", { desc = "Save file" })
 nnmap('<c-q>' , ':confirm q<CR>')
+nnmap("<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
 
 -----------------------------------------------------------------------------//
 -- Save

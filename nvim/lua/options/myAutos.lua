@@ -175,17 +175,17 @@ local MyQuickFixGroup = api.nvim_create_augroup("MyQuickFixGroup", { clear = tru
 --   "QuickFixCmdPost",
 --   { command = "lgetexpr lwindow", group = MyQuickFixGroup }
 -- )
--- vim.api.nvim_create_autocmd( "FileType" , {
---   group = MyQuickFixGroup,
---   pattern = { "qf" },
---   callback = function()
---     vim.opt_local.wrap = true
---     vim.keymap.set('n','<Leader>sr' , [[:cfdo %s/<C-r><C-w>//gc | update <C-Left><C-Left><Left><Left><Left><Left>]],{buffer=true,desc="qf search and replace cword"})
---     vim.keymap.set('v','<Leader>sr' , 'y:cfdo %s/<C-R>"//gc | update <C-Left><C-Left><Left><Left><Left><Left>',{buffer=true,desc="qf search and replace selection"})
---     vim.keymap.set('v','<Leader>vsr' , [[:cfdo s/\%V<C-r>"\%V//gc | update <C-Left><C-Left><Left><Left><Left><Left>]],{buffer=true,desc="qf search and replace range"})
---   end,
---   once = false,
--- })
+vim.api.nvim_create_autocmd( "FileType" , {
+  group = MyQuickFixGroup,
+  pattern = { "qf" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.keymap.set('n','<Leader>sr' , [[:cdo s/<C-r><C-w>//gc | update <C-Left><C-Left><Left><Left><Left><Left>]],{buffer=true,desc="qf search and replace cword"})
+    vim.keymap.set('v','<Leader>sr' , 'y:cdo s/<C-R>"//gc | update <C-Left><C-Left><Left><Left><Left><Left>',{buffer=true,desc="qf search and replace selection"})
+    vim.keymap.set('v','<Leader>vsr' , [[:cdo s/\%V<C-r>"\%V//gc | update <C-Left><C-Left><Left><Left><Left><Left>]],{buffer=true,desc="qf search and replace range"})
+  end,
+  once = false,
+})
 -- vim.cmd([[
 -- augroup myQuickfixFix
 --   autocmd!
