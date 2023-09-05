@@ -1,7 +1,7 @@
 local nvim_lsp = require('lspconfig')
-local executable = require("options.utils").executable
+local executable = require("config/options/utils").executable
 
-local custom_on_attach = require('plugins/LSP/settings').custom_on_attach
+local custom_on_attach = require('config/plugins/LSP/settings').custom_on_attach
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- Add additional capabilities supported by nvim-cmp

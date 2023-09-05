@@ -566,9 +566,9 @@ require'fzf-lua'.setup {
 }
 
 -- Colors
-require('plugins/general/fzf-lua/colors')
+require('config/plugins/general/fzf-lua/colors')
 -- Mappings
-require('plugins/general/fzf-lua/mappings')
+require('config/plugins/general/fzf-lua/keymaps')
 if vim.ui then
   require("fzf-lua").register_ui_select({
     winopts = {

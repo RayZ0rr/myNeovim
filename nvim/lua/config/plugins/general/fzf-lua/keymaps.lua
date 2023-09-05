@@ -1,8 +1,8 @@
 
-local map = require('options/utils').map
-local nnmap = require('options/utils').nnmap
-local inmap = require('options/utils').inmap
-local xnmap = require('options/utils').xnmap
+local map = require('config/options/utils').map
+local nnmap = require('config/options/utils').nnmap
+local inmap = require('config/options/utils').inmap
+local xnmap = require('config/options/utils').xnmap
 
 nnmap('<leader>ff', function() require("fzf-lua").files({show_cwd_header=true}) end, {desc="Fzf-Lua files search"})
 nnmap('<leader>fa', ":FzfLua files cwd=~<CR>", {desc="Fzf-Lua files search home"})

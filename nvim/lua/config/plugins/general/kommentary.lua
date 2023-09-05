@@ -1,7 +1,7 @@
 
-local nnmap = require('options/utils').nnmap
-local vnmap = require('options/utils').vnmap
-local xnmap = require('options/utils').xnmap
+local nnmap = require('config/options/utils').nnmap
+local vnmap = require('config/options/utils').vnmap
+local xnmap = require('config/options/utils').xnmap
 
 vim.g.kommentary_create_default_mappings = false
 

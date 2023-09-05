@@ -3,13 +3,13 @@
 -- ##################################################
 
 local api = vim.api
-local map = require('options/utils').map
-local bmap = require('options/utils').bmap
-local nnmap = require('options/utils').nnmap
-local inmap = require('options/utils').inmap
-local vnmap = require('options/utils').vnmap
-local xnmap = require('options/utils').xnmap
-local tnmap = require('options/utils').tnmap
+local map = require('config/options/utils').map
+local bmap = require('config/options/utils').bmap
+local nnmap = require('config/options/utils').nnmap
+local inmap = require('config/options/utils').inmap
+local vnmap = require('config/options/utils').vnmap
+local xnmap = require('config/options/utils').xnmap
+local tnmap = require('config/options/utils').tnmap
 
 local MyReloadVIMRCGroup = api.nvim_create_augroup("MyReloadVIMRCGroup", { clear = true })
 api.nvim_create_autocmd(
@@ -18,7 +18,7 @@ api.nvim_create_autocmd(
 )
 api.nvim_create_autocmd(
   { "BufWritePost" },
-  { pattern = "**/lua/options/settings.lua", command = [[source $MYVIMRC | echom "Reloaded init.vim"]], group = MyreloadVIMRCGroup }
+  { pattern = "**/lua/config/options/settings.lua", command = [[source $MYVIMRC | echom "Reloaded init.vim"]], group = MyreloadVIMRCGroup }
 )
 
 local MyCommentsGroup = api.nvim_create_augroup("MyCommentsGroup", { clear = true })

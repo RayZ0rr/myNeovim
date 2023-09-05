@@ -1,5 +1,5 @@
-local nnmap = require('options/utils').nnmap
-local tnmap = require('options/utils').tnmap
+local nnmap = require('config/options/utils').nnmap
+local tnmap = require('config/options/utils').tnmap
 
 -- vim.api.nvim_set_hl(0,"FloatermBorder",{ fg = '#C3E88D', reverse = true }) -- diff mode: Added line
 

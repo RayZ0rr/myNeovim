@@ -33,7 +33,7 @@ require('session_manager').setup({
   max_path_length = 80,  -- Shorten the display path if length exceeds this threshold. Use 0 if don't want to shorten the path at all.
 })
 
-local nnmap = require('options/utils').nnmap
+local nnmap = require('config/options/utils').nnmap
 nnmap('<leader>ss', [[<cmd>exe 'SessionManager save_current_session' | echo "session saved"<cr>]])
 nnmap('<leader>sa', [[<cmd>exe 'SessionManager load_session' | echo "session loaded"<cr>]])
 nnmap('<leader>sd', [[<cmd>exe 'SessionManager delete_session' | echo "session deleted"<cr>]])

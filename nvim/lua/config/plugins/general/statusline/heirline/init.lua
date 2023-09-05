@@ -5,8 +5,8 @@ end
 
 local utils = require("heirline.utils")
 
-local StatusLine = require("plugins/general/statusline/heirline/statusline")
-local TabLine = require("plugins/general/statusline/heirline/buffertabline")
+local StatusLine = require("config/plugins/general/statusline/heirline/statusline")
+local TabLine = require("config/plugins/general/statusline/heirline/buffertabline")
 
 local colors = {
   bg       = '#202328',

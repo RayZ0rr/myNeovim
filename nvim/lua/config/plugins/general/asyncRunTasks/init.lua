@@ -1,5 +1,5 @@
-local map = require('options/utils').map
-local nnmap = require('options/utils').nnmap
+local map = require('config/options/utils').map
+local nnmap = require('config/options/utils').nnmap
 
 nnmap( '<leader><F9>', [[<cmd>AsyncRun clang++ -std=c++17 -Wall -Wextra -pedantic -Weffc++ -Wsign-conversion "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT).exe"<cr>]], {desc="AsyncRun build"} )
 nnmap( '<leader><F10>', [[:AsyncRun -raw -cwd=$(VIM_FILEDIR) "$(VIM_FILEDIR)/$(VIM_FILENOEXT).exe" <cr>]], {desc="AsyncRun run"} )

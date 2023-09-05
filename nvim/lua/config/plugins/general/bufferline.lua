@@ -1,6 +1,6 @@
 
-local nnmap = require('options/utils').nnmap
-local inmap = require('options/utils').inmap
+local nnmap = require('config/options/utils').nnmap
+local inmap = require('config/options/utils').inmap
 
 -- snnmap('<S-x>', ':BufferClose<CR>')
 

@@ -43,8 +43,8 @@ toggleterm.setup{
 }
 
 -- nmap('n','<localleader>tt', [[<cmd>TermExec cmd="vf" dir="%:p:h"<CR>]], {noremap = true, silent = true})
-nmap = require('options/utils').nnmap
-bmap = require('options/utils').bmap
+nmap = require('config/options/utils').nnmap
+bmap = require('config/options/utils').bmap
 local executable = require("options.utils").executable
 
 local Terminal  = require('toggleterm.terminal').Terminal

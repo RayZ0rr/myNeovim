@@ -1,10 +1,10 @@
-local map = require('options/utils').map
-local bmap = require('options/utils').bmap
-local nnmap = require('options/utils').nnmap
-local inmap = require('options/utils').inmap
-local vnmap = require('options/utils').vnmap
-local xnmap = require('options/utils').xnmap
-local tnmap = require('options/utils').tnmap
+local map = require('config/options/utils').map
+local bmap = require('config/options/utils').bmap
+local nnmap = require('config/options/utils').nnmap
+local inmap = require('config/options/utils').inmap
+local vnmap = require('config/options/utils').vnmap
+local xnmap = require('config/options/utils').xnmap
+local tnmap = require('config/options/utils').tnmap
 
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Clear hlsearch and escape" })

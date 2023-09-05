@@ -1,6 +1,6 @@
 local conditions = require("heirline.conditions")
 local utils = require("heirline.utils")
-local my_utils = require('plugins.general.statusline.utils')
+local my_utils = require('config.plugins.general.statusline.utils')
 
 special_filetypes = {
     'NvimTree',

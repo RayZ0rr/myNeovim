@@ -1,5 +1,5 @@
-nmap = require('options/utils').nnmap
-bmap = require('options/utils').bmap
+nmap = require('config/options/utils').nnmap
+bmap = require('config/options/utils').bmap
 local executable = require("options.utils").executable
 
 nmap('<leader>tt', [[:execute 'Vifm' fnameescape(getcwd())<CR>]] )
