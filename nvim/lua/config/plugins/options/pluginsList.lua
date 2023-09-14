@@ -36,6 +36,30 @@ require('lazy').setup({
             require('config/plugins/themes/onedarkpro')
         end,
     },
+    -- {
+    --     "folke/tokyonight.nvim",
+    --     lazy = false,
+    --     priority = 1000,
+    --     opts = {style = "day",},
+    --     config = function()
+    --         require("tokyonight").setup({
+    --           -- use the night style
+    --           style = "day",
+    --           -- disable italic for functions
+    --           styles = {
+    --             functions = {}
+    --           },
+    --           sidebars = { "qf", "vista_kind", "terminal", "packer" },
+    --           -- Change the "hint" color to the "orange" color, and make the "error" color bright red
+    --           on_colors = function(colors)
+    --             colors.hint = colors.orange
+    --             colors.error = "#ff0000"
+    --           end
+    --         })
+    --         vim.o.background = "light"
+    --         vim.cmd[[colorscheme tokyonight]]
+    --     end,
+    -- },
 
     -- Package manager ---------------------------
     { "folke/lazy.nvim", version = "*" },
