@@ -1,13 +1,14 @@
 
 local nnmap = require('config/options/utils').nnmap
+local inmap = require('config/options/utils').inmap
 local vnmap = require('config/options/utils').vnmap
 local xnmap = require('config/options/utils').xnmap
 
 vim.g.kommentary_create_default_mappings = false
-
-nnmap("gcc", "<Plug>kommentary_line_default", {})
-nnmap("gc", "<Plug>kommentary_motion_default", {})
-vnmap("gc", "<Plug>kommentary_visual_default<C-c>", {})
+nnmap("<c-/><c-/>", "<Plug>kommentary_line_default", {})
+inmap("<c-/>", "<Esc><Plug>kommentary_line_default<Ins>", {})
+nnmap("<c-/>", "<Plug>kommentary_motion_default", {})
+vnmap("<c-/>", "<Plug>kommentary_visual_default<C-c>", {})
 
 -- require('kommentary.config').use_extended_mappings()
 

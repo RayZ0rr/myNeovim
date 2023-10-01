@@ -113,7 +113,7 @@ require('lazy').setup({
     -- FZF ----------------------------------------
     {
         'ibhagwan/fzf-lua',
-        keys = { "<leader>f" },
+        -- keys = { "<leader>f" },
         dependencies = {
             'kyazdani42/nvim-web-devicons'
         }, -- optional for icons

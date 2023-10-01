@@ -218,37 +218,37 @@ end
 --##########################################################################################################
 -- Colorizer setup-----------------------------------------------------------------------------------------
 --##########################################################################################################
--- local ok_colorizer, _ = pcall(require, 'colorizer')
--- if ok_colorizer then
---   local colorizer_cfg = {
---     filetypes = { "*" },
---     user_default_options = {
---     RGB = true, -- #RGB hex codes
---     RRGGBB = true, -- #RRGGBB hex codes
---     names = false, -- "Name" codes like Blue or blue
---     RRGGBBAA = true, -- #RRGGBBAA hex codes
---     AARRGGBB = true, -- 0xAARRGGBB hex codes
---     rgb_fn = false, -- CSS rgb() and rgba() functions
---     hsl_fn = false, -- CSS hsl() and hsla() functions
---     css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
---     css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
---     -- Available modes for `mode`: foreground, background,  virtualtext
---     mode = "background", -- Set the display mode.
---     -- Available methods are false / true / "normal" / "lsp" / "both"
---     -- True is same as normal
---     tailwind = false, -- Enable tailwind colors
---     -- parsers can contain values used in |user_default_options|
---     sass = { enable = false, parsers = { css }, }, -- Enable sass colors
---     virtualtext = "■",
---     },
---     -- all the sub-options of filetypes apply to buftypes
---     buftypes = {},
---   }
---   require'colorizer'.setup(
---     colorizer_cfg
---   )
---   nnmap('<leader>clr', ':exec "ColorizerToggle" | echo "Colorizer toggled"<cr>', {desc="Colorizer toggle function"})
--- end
+local ok_colorizer, _ = pcall(require, 'colorizer')
+if ok_colorizer then
+  local colorizer_cfg = {
+    filetypes = { "*" },
+    user_default_options = {
+    RGB = true, -- #RGB hex codes
+    RRGGBB = true, -- #RRGGBB hex codes
+    names = false, -- "Name" codes like Blue or blue
+    RRGGBBAA = true, -- #RRGGBBAA hex codes
+    AARRGGBB = true, -- 0xAARRGGBB hex codes
+    rgb_fn = false, -- CSS rgb() and rgba() functions
+    hsl_fn = false, -- CSS hsl() and hsla() functions
+    css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+    css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+    -- Available modes for `mode`: foreground, background,  virtualtext
+    mode = "background", -- Set the display mode.
+    -- Available methods are false / true / "normal" / "lsp" / "both"
+    -- True is same as normal
+    tailwind = false, -- Enable tailwind colors
+    -- parsers can contain values used in |user_default_options|
+    sass = { enable = false, parsers = { css }, }, -- Enable sass colors
+    virtualtext = "■",
+    },
+    -- all the sub-options of filetypes apply to buftypes
+    buftypes = {},
+  }
+  require'colorizer'.setup(
+    colorizer_cfg
+  )
+  nnmap('<leader>clr', ':exec "ColorizerToggle" | echo "Colorizer toggled"<cr>', {desc="Colorizer toggle function"})
+end
 
 --##########################################################################################################
 -- Fastfold create text-object ----------------------------------------------------------------------------
@@ -271,34 +271,34 @@ end
 -- Specs -------------------------------------------------------------------------------------------------
 -- Highlight cursor line on jumps
 --##########################################################################################################
--- local ok_specs, _ = pcall(require, 'specs')
--- if ok_specs then
---   vim.api.nvim_set_hl(0,"SpecsHighlightGroup",{ fg = '#C3E88D', reverse = true }) -- diff mode: Added line
---   require('specs').setup{
---     show_jumps  = true,
---     min_jump = 10,
---     popup = {
---       delay_ms = 0, -- delay before popup displays
---       inc_ms = 3, -- time increments used for fade/resize effects
---       blend = 10, -- starting blend, between 0-100 (fully transparent), see :h winblend
---       width = 80,
---       winhl = "SpecsHighlightGroup",
---       fader = require('specs').pulse_fader,
---       -- resizer = require('specs').empty_resizer
---       resizer = require('specs').shrink_resizer
---     },
---     ignore_filetypes = {},
---     ignore_buftypes = {
--- 	nofile = true,
---     },
---   }
+local ok_specs, _ = pcall(require, 'specs')
+if ok_specs then
+  vim.api.nvim_set_hl(0,"SpecsHighlightGroup",{ fg = '#C3E88D', reverse = true }) -- diff mode: Added line
+  require('specs').setup{
+    show_jumps  = true,
+    min_jump = 10,
+    popup = {
+      delay_ms = 0, -- delay before popup displays
+      inc_ms = 3, -- time increments used for fade/resize effects
+      blend = 10, -- starting blend, between 0-100 (fully transparent), see :h winblend
+      width = 80,
+      winhl = "SpecsHighlightGroup",
+      fader = require('specs').pulse_fader,
+      -- resizer = require('specs').empty_resizer
+      resizer = require('specs').shrink_resizer
+    },
+    ignore_filetypes = {},
+    ignore_buftypes = {
+	nofile = true,
+    },
+  }
 
---   nnmap('<leader>spt', function() require('specs').toggle() print("Specs toggled") end, {desc="Specs toggle function"})
---   nnmap('<leader>spp', function() require('specs').show_specs() end, {desc="Activate specs and show cursorline location."})
+  nnmap('<leader>spt', function() require('specs').toggle() print("Specs toggled") end, {desc="Specs toggle function"})
+  nnmap('<leader>spp', function() require('specs').show_specs() end, {desc="Activate specs and show cursorline location."})
 
--- -- else
--- --   print("edluffy/specs.nvim not installed")
--- end
+-- else
+--   print("edluffy/specs.nvim not installed")
+end
 
 --##########################################################################################################
 -- Beacon -------------------------------------------------------------------------------------------------
