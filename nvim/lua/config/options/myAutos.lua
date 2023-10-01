@@ -100,18 +100,6 @@ api.nvim_create_autocmd(
     group = MyCustomSettingsGroup
   }
 )
-api.nvim_create_autocmd( "BufWritePost" , {
-  group = MyCustomSettingsGroup,
-  pattern = "*",
-  callback = function()
-    if vim.fn.getline(1) == "^#!" then
-      if vim.fn.getline(1) == "/bin/" then
-	vim.cmd([[chmod a+x <afile>]])
-      end
-    end
-  end,
-  once = false,
-})
 
 api.nvim_create_autocmd(
   { "BufNewFile","BufRead" },
@@ -160,7 +148,7 @@ api.nvim_create_autocmd(
       local mark = vim.api.nvim_buf_get_mark(0, '"')
       local lcount = vim.api.nvim_buf_line_count(0)
       if mark[1] > 0 and mark[1] <= lcount then
-	pcall(vim.api.nvim_win_set_cursor, 0, mark)
+        pcall(vim.api.nvim_win_set_cursor, 0, mark)
       end
     end,
   }
@@ -227,11 +215,27 @@ api.nvim_create_autocmd(
     group = MyTerminalGroup,
     callback = function()
       vim.cmd([[
-	setlocal nonumber
-	setlocal nospell
-	setlocal norelativenumber
-	setlocal signcolumn=no
+        startinsert
+        setlocal nonumber
+        setlocal nospell
+        setlocal norelativenumber
+        setlocal signcolumn=no
       ]])
     end,
   }
 )
+
+api.nvim_create_autocmd( "BufWritePost" , {
+    group = MyCustomSettingsGroup,
+    pattern = "*",
+    callback = function()
+        local not_executable = vim.fn.getfperm(vim.fn.expand("%")):sub(3,3) ~= "x"
+        local has_shebang = string.match(vim.fn.getline(1),"^#!")
+        local has_bin = string.match(vim.fn.getline(1),"/bin/")
+        if not_executable and has_shebang and has_bin then
+            vim.notify("File made executable")
+            vim.cmd([[!chmod +x <afile>]])
+        end
+    end,
+    once = false,
+})

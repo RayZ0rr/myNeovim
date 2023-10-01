@@ -44,7 +44,7 @@ nmap <silent> <leader>sb m':set opfunc=Substitute<CR>g@
 "Quickfix alternative to :g/foo/#
 "################################################################
 
-set errorformat^=%f:%l:%c\ %m
+" set errorformat^=%f:%l:%c\ %m
 command! -bang -nargs=1 MyGlobal lgetexpr filter(map(getline(1,'$'), { key, val -> expand("%") . ":" . (key + 1) . ":1 " . (len(val) > 0 ? val : '  ') }), { idx, val -> expand('<bang>') == '!' ? val !~ '^.\{-}:1 \zs.*' . <q-args> . '.*' : val =~ '^.\{-}:1 \zs.*' . <q-args> . '.*' })
 
 "################################################################

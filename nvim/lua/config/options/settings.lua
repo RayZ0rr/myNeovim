@@ -1,9 +1,9 @@
 local opt = vim.opt
-local g = vim.g
+local vimg = vim.g
 
 -- set leader key
-g.mapleader = ","
-g.maplocalleader=" "
+vimg.mapleader = ","
+vimg.maplocalleader=" "
 
 -- opt.whichwrap:append "<>[]hl"
 opt.breakindent = true
@@ -33,7 +33,7 @@ opt.softtabstop=-1
 opt.expandtab = true			-- Insert 2 spaces for a tab
 opt.smarttab = false			-- Use shiftwidth space for start and tab elsewhere
 opt.scrolloff=4                         -- Keep 4 lines below cursor before scrolling the screen vertically
-opt.sidescrolloff=8                     -- Keep 4 lines below cursor before scrolling the screen horizontally
+opt.sidescrolloff=8                     -- Keep 8 lines below cursor before scrolling the screen horizontally
 opt.smartindent = true                  -- Makes indenting smart
 opt.number = true                       -- Line numbers
 opt.cursorline = false                   -- Enable highlighting of the current line
@@ -57,6 +57,7 @@ opt.virtualedit    = 'block'		-- allow cursor to exist where there is no charact
 opt.winblend       = 10
 opt.lazyredraw     = true
 opt.backspace = { 'eol', 'start', 'indent' } -- Without this option some times backspace did not work correctly.
+vimg.editorconfig_enable = true
 
 opt.list = true
 opt.listchars = {
@@ -75,8 +76,10 @@ opt.fillchars = {
     vert = "\\", -- window border when window splits vertically ─ ┴ ┬ ┤ ├ ┼
 }
 
--- opt.grepformat = "%f:%l:%c:%m"
-opt.grepprg="rg --vimgrep"
+if vim.fn.executable("rg") == 1 then
+  opt.grepprg = "rg --vimgrep --no-heading --smart-case --hidden"
+  opt.grepformat = "%f:%l:%c:%m"
+end
 -- opt.grepformat:prepend{"%f:%l:%c:%m"}
 
 -- vim.opt.winbar = '%#WinBarFileName#%f%* %M%='
@@ -116,45 +119,44 @@ if vim.fn.isdirectory(viewPath) == 0 then
 end
 
 local disable_distribution_plugins = function()
-    vim.g.loaded_2html_plugin = 1
-    vim.g.loaded_getscript = 1
-    vim.g.loaded_getscriptPlugin = 1
-    vim.g.loaded_gzip = 1
-    vim.g.loaded_logiPat = 1
-    -- vim.g.loaded_man = 0
-    vim.g.loaded_matchit = 1
-    vim.g.loaded_matchparen = 1
-    vim.g.loaded_remote_plugins = 1
-    vim.g.loaded_rplugin = 1
-    vim.g.loaded_rrhelper = 1
-    vim.g.loaded_shada_plugin = 1
-    vim.g.loaded_shada_plugin = 1
-    vim.g.loaded_spec = 1
-    vim.g.loaded_spellfile_plugin = 1
-    vim.g.loaded_spellfile_plugin = 1
-    vim.g.loaded_tar = 1
-    vim.g.loaded_tarPlugin = 1
-    vim.g.loaded_tutor_mode_plugin = 1
-    vim.g.loaded_vimball = 1
-    vim.g.loaded_vimballPlugin = 1
-    vim.g.loaded_zip = 1
-    vim.g.loaded_zipPlugin = 1
+    vimg.loaded_2html_plugin = 1
+    vimg.loaded_getscript = 1
+    vimg.loaded_getscriptPlugin = 1
+    vimg.loaded_gzip = 1
+    vimg.loaded_logiPat = 1
+    -- vimg.loaded_man = 0
+    vimg.loaded_matchit = 1
+    vimg.loaded_matchparen = 1
+    vimg.loaded_remote_plugins = 1
+    vimg.loaded_rplugin = 1
+    vimg.loaded_rrhelper = 1
+    vimg.loaded_shada_plugin = 1
+    vimg.loaded_spec = 1
+    vimg.loaded_spellfile_plugin = 1
+    vimg.loaded_tar = 1
+    vimg.loaded_tarPlugin = 1
+    vimg.loaded_tutor_mode_plugin = 1
+    vimg.loaded_vimball = 1
+    vimg.loaded_vimballPlugin = 1
+    vimg.loaded_zip = 1
+    vimg.loaded_zipPlugin = 1
+    vimg.loaded_sql_completion = 1
 
-    vim.g.load_black = 1
-    vim.g.loaded_fzf = 1
-    vim.g.loaded_gtags = 1
-    vim.g.loaded_gtags_cscope = 1
+    vimg.load_black = 1
+    vimg.loaded_fzf = 1
+    vimg.loaded_gtags = 1
+    vimg.loaded_gtags_cscope = 1
 
-    -- vim.g.loaded_node_provider = 0
-    -- vim.g.loaded_perl_provider = 0
-    -- vim.g.loaded_python3_provider = 0
-    -- vim.g.loaded_python_provider = 0
-    -- vim.g.loaded_pythonx_provider = 0
-    -- vim.g.loaded_ruby_provider = 0
+    vimg.loaded_python3_provider = 0
+    vimg.loaded_python_provider = 0
+    vimg.loaded_pythonx_provider = 0
+    vimg.loaded_ruby_provider = 0
+    vimg.loaded_node_provider = 0
+    vimg.loaded_perl_provider = 0
 
-    -- vim.g.loaded_netrwFileHandlers = 1
-    -- vim.g.loaded_netrwPlugin = 1
-    -- vim.g.loaded_netrwSettings = 1
+    -- vimg.loaded_netrwFileHandlers = 1
+    -- vimg.loaded_netrwPlugin = 1
+    -- vimg.loaded_netrwSettings = 1
 end
 disable_distribution_plugins()
 

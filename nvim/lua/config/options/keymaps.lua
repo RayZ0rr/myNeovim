@@ -8,6 +8,7 @@ local tnmap = require('config/options/utils').tnmap
 
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Clear hlsearch and escape" })
+map({"n"}, "<leader>cd", [[<cmd>lcd %:p:h<cr><cmd>pwd<cr>]], { desc = "change cwd" })
 
 -----------------------------------------------------------------------------//
 -- Add Empty space above and below
@@ -19,6 +20,8 @@ nnmap(']<space>', [[<cmd>put =repeat(nr2char(10), v:count1)<cr>]], { desc = "Add
 -- Paste in visual mode multiple times
 -----------------------------------------------------------------------------//
 xnmap('p', 'pgvy')
+map({"n"}, "<leader>D", [["_D]], { desc = "blackhole 'D'" })
+map({"n"}, "<leader>C", [["_C]], { desc = "blackhole 'C'" })
 
 -----------------------------------------------------------------------------//
 -- Capitalize
@@ -33,6 +36,8 @@ nnmap('<Leader><c-u>' , 'viw~<Esc>')
 -- Go to the begining and end of current line in insert mode quickly
 inmap('<C-A>', '<HOME>')
 inmap('<C-E>', '<END>')
+-- Shift tab
+inmap("<S-TAB>", "<ESC><<<Ins>")
 
 -- Delete the character to the right of the cursor
 inmap('<C-D>', '<DEL>')
@@ -50,8 +55,8 @@ tnmap( '<C-h>', [[<C-\><C-N><C-h>]] )
 tnmap( '<C-l>', [[<C-\><C-N><C-l>]] )
 tnmap( '<C-j>', [[<C-\><C-N><C-j>]] )
 tnmap( '<C-k>', [[<C-\><C-N><C-k>]] )
-tnmap( '<Esc>', [[<C-\><C-n>]], {buffer=true})
-nnmap( '<leader>ty', [[:split<bar>below<bar>resize 10<bar>term<CR>]])
+tnmap( '<Esc>', [[<C-\><C-n>]])
+nnmap( '<leader>ty', [[<cmd>split<bar>below<cr><cmd>resize 10<bar>term<CR>]])
 
 -----------------------------------------------------------------------------//
 -- Netrw Explorer  on the left (:h :Lexplore)
@@ -115,10 +120,10 @@ nnmap("<C-l>", "<C-w><C-l>", { desc = "Navigate windows to the right"} )
 -----------------------------------------------------------------------------//
 -- Move windows with shift-arrows
 -----------------------------------------------------------------------------//
-nnmap("<S-Left>  ", "<C-w><S-h>", { desc = "Move window to the left"} )
-nnmap("<S-Down>  ", "<C-w><S-j>", { desc = "Move window down"} )
-nnmap("<S-Up>    ", "<C-w><S-k>", { desc = "Move window up"} )
-nnmap("<S-Right> ", "<C-w><S-l>", { desc = "Move window to the right"} )
+nnmap("<S-Left>", "<C-w><S-h>", { desc = "Move window to the left"} )
+nnmap("<S-Down>", "<C-w><S-j>", { desc = "Move window down"} )
+nnmap("<S-Up>", "<C-w><S-k>", { desc = "Move window up"} )
+nnmap("<S-Right>", "<C-w><S-l>", { desc = "Move window to the right"} )
 
 nnmap("<space><space>", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
 nnmap("gw", "*N")
@@ -141,34 +146,34 @@ vnmap('<Leader>sr' , 'y:%s/<C-R>"//gc<Left><Left><Left>',{silent = false,desc="s
 vnmap('<Leader>vsr' , [[:s/\%V<C-r>"\%V//gc<Left><Left><Left>]],{silent = false,desc="search and replace range"})
 
 -- Search -------------------
-vnmap('//', '<Esc>/\\%V',{silent = false})
+vnmap('<Leader>/', '<Esc>/\\%V',{silent = false})
 -- makes * and # work on visual mode too.
-vim.api.nvim_exec(
-  [[
-  function! s:getSelectedText()
-    let l:old_reg = getreg('"')
-    let l:old_regtype = getregtype('"')
-    norm gvy
-    let l:ret = getreg('"')
-    call setreg('"', l:old_reg, l:old_regtype)
-    exe "norm \<Esc>"
-    return l:ret
-  endfunction
+-- vim.api.nvim_exec(
+--   [[
+--   function! s:getSelectedText()
+--     let l:old_reg = getreg('"')
+--     let l:old_regtype = getregtype('"')
+--     norm gvy
+--     let l:ret = getreg('"')
+--     call setreg('"', l:old_reg, l:old_regtype)
+--     exe "norm \<Esc>"
+--     return l:ret
+--   endfunction
 
-  vnoremap <silent> * :call setreg("/",
-      \ substitute(<SID>getSelectedText(),
-      \ '\_s\+',
-      \ '\\_s\\+', 'g')
-      \ )<Cr>n
+--   vnoremap <silent> * :call setreg("/",
+--       \ substitute(<SID>getSelectedText(),
+--       \ '\_s\+',
+--       \ '\\_s\\+', 'g')
+--       \ )<Cr>n
 
-  vnoremap <silent> # :call setreg("?",
-      \ substitute(<SID>getSelectedText(),
-      \ '\_s\+',
-      \ '\\_s\\+', 'g')
-      \ )<Cr>n
-  ]],
-  false
-)
+--   vnoremap <silent> # :call setreg("?",
+--       \ substitute(<SID>getSelectedText(),
+--       \ '\_s\+',
+--       \ '\\_s\\+', 'g')
+--       \ )<Cr>n
+--   ]],
+--   false
+-- )
 
 -----------------------------------------------------------------------------//
 -- TAB/SHIFT-TAB in general mode will move to next/prev buffer
@@ -215,7 +220,7 @@ vnmap('>' , '>gv')
 -----------------------------------------------------------------------------//
 -- Mapping to show filetype, buftype and highlight
 -----------------------------------------------------------------------------//
-nnmap('<leader>dt',[[<cmd>lua vim.ui.select({"hi", "set buftype?", "set filetype?"}, {}, function (choice) vim.cmd(choice) end)<cr>]])
+nnmap('<leader>dt',function() vim.ui.select({"hi", "set buftype?", "set filetype?"}, {}, function (choice) vim.cmd(choice) end) end)
 
 ------------------------------------------------------------------------------
 -- Quickfix
