@@ -94,20 +94,20 @@ nnmap('<down>', "v:count == 0 ? 'gj' : '<down>'", {expr = true})
 -----------------------------------------------------------------------------//
 -- Use alt + arrow keys to resize windows
 -----------------------------------------------------------------------------//
-nnmap('<C-UP>'   , "<cmd>resize +2<cr>", { desc = "Increase window height" })
-nnmap('<C-DOWN>' , "<cmd>resize -2<cr>", { desc = "Decrease window height" })
-nnmap('<C-LEFT>' , "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
-nnmap('<C-RIGHT>', "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
+nnmap('<A-UP>'   , "<cmd>resize +2<cr>", { desc = "Increase window height" })
+nnmap('<A-DOWN>' , "<cmd>resize -2<cr>", { desc = "Decrease window height" })
+nnmap('<A-LEFT>' , "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
+nnmap('<A-RIGHT>', "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
 
 -----------------------------------------------------------------------------//
 -- Move selected line / block of text in visual mode
 -----------------------------------------------------------------------------//
-nnmap('<A-Down>', ":m .+1<cr>==", { desc = "Move down" })
-nnmap('<A-Up>'  , ":m .-2<cr>==", { desc = "Move up" })
-inmap('<A-Down>', "<Esc>:m .+1<cr>==gi", { desc = "Move down" })
-inmap('<A-Up>'  , "<Esc>:m .-2<cr>==gi", { desc = "Move up" })
-vnmap('<A-Down>', ":m '>+1<cr>gv=gv", { desc = "Move down" })
-vnmap('<A-Up>'  , ":m '<-2<cr>gv=gv", { desc = "Move up" })
+nnmap('<A-j>', ":m .+1<cr>==", { desc = "Move down" })
+nnmap('<A-k>'  , ":m .-2<cr>==", { desc = "Move up" })
+inmap('<A-j>', "<Esc>:m .+1<cr>==gi", { desc = "Move down" })
+inmap('<A-k>'  , "<Esc>:m .-2<cr>==gi", { desc = "Move up" })
+vnmap('<A-j>', ":m '>+1<cr>gv=gv", { desc = "Move down" })
+vnmap('<A-k>'  , ":m '<-2<cr>gv=gv", { desc = "Move up" })
 
 -----------------------------------------------------------------------------//
 -- Better window navigation
@@ -116,6 +116,10 @@ nnmap("<C-h>", "<C-w><C-h>", { desc = "Navigate windows to the left"} )
 nnmap("<C-j>", "<C-w><C-j>", { desc = "Navigate windows down"} )
 nnmap("<C-k>", "<C-w><C-k>", { desc = "Navigate windows up"} )
 nnmap("<C-l>", "<C-w><C-l>", { desc = "Navigate windows to the right"} )
+nnmap("<C-LEFT>", "<C-w><C-h>", { desc = "Navigate windows to the left"} )
+nnmap("<C-DOWN>", "<C-w><C-j>", { desc = "Navigate windows down"} )
+nnmap("<C-UP>", "<C-w><C-k>", { desc = "Navigate windows up"} )
+nnmap("<C-RIGHT>", "<C-w><C-l>", { desc = "Navigate windows to the right"} )
 
 -----------------------------------------------------------------------------//
 -- Move windows with shift-arrows

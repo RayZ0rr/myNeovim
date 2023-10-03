@@ -49,7 +49,7 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 vim.api.nvim_create_autocmd('User', {
-  pattern = 'SessionSavePost',
+  pattern = 'SessionLoadPost',
   group = MySessionsGroup,
   callback = function()
     print("Session has been loaded")

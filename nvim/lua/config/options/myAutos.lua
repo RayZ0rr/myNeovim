@@ -225,17 +225,19 @@ api.nvim_create_autocmd(
   }
 )
 
-api.nvim_create_autocmd( "BufWritePost" , {
-    group = MyCustomSettingsGroup,
-    pattern = "*",
-    callback = function()
-        local not_executable = vim.fn.getfperm(vim.fn.expand("%")):sub(3,3) ~= "x"
-        local has_shebang = string.match(vim.fn.getline(1),"^#!")
-        local has_bin = string.match(vim.fn.getline(1),"/bin/")
-        if not_executable and has_shebang and has_bin then
-            vim.notify("File made executable")
-            vim.cmd([[!chmod +x <afile>]])
-        end
-    end,
-    once = false,
-})
+-- Make files with shebang executable if not
+-- api.nvim_create_autocmd( "BufWritePost" , {
+--     group = MyCustomSettingsGroup,
+--     pattern = "*",
+--     callback = function()
+--         local not_executable = vim.fn.getfperm(vim.fn.expand("%")):sub(3,3) ~= "x"
+--         local has_shebang = string.match(vim.fn.getline(1),"^#!")
+--         local has_bin = string.match(vim.fn.getline(1),"/bin/")
+--         if not_executable and has_shebang and has_bin then
+--             vim.notify("File made executable")
+--             vim.cmd([[!chmod +x <afile>]])
+--         end
+--     end,
+--     once = false,
+-- })
+
