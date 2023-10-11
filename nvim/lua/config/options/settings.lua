@@ -17,6 +17,7 @@ opt.wildoptions:append("pum")
 opt.wildmenu = true                   -- Enhanced command completion
 opt.wildmode = "longest,list,full"
 opt.pumblend = 10			-- Popup blend
+opt.hidden = true                       -- Don't discard hidden buffers
 opt.pumheight=10                        -- Makes popup menu smaller
 opt.fileencoding='utf-8'                -- The encoding written to file
 opt.cmdheight=2                         -- More space for displaying messages
@@ -38,7 +39,7 @@ opt.smartindent = true                  -- Makes indenting smart
 opt.number = true                       -- Line numbers
 opt.cursorline = false                   -- Enable highlighting of the current line
 opt.showmatch = true                    -- " Highlight matching brace
-opt.showtabline=2                       -- Always show tabs
+opt.showtabline=1                       -- only if there are at least two tab pages
 opt.showmode = false                    -- We don't need to see things like -- INSERT -- anymore
 opt.updatetime=200			-- " Faster completion
 opt.timeoutlen=300                      -- By default timeoutlen is 1000 ms

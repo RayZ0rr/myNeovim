@@ -5,9 +5,6 @@ end
 
 local utils = require("heirline.utils")
 
-local StatusLine = require("config/plugins/general/statusline/heirline/statusline")
-local TabLine = require("config/plugins/general/statusline/heirline/buffertabline")
-
 local colors = {
   bg       = '#202328',
   fg       = '#bbc2cf',
@@ -43,6 +40,9 @@ local colors = {
   diff_change = utils.get_highlight("DiffChange").bg,
 }
 
+local StatusLine = require("config/plugins/general/statusline/heirline/statusline")
+local TabLine = require("config/plugins/general/statusline/heirline/buffertabline")
 -- require('heirline').load_colors(setup_colors())
 require('heirline').load_colors(colors)
 require("heirline").setup({statusline = StatusLine,winbar = nil,tabline = TabLine})
+-- require("heirline").setup({statusline = StatusLine,winbar = nil,tabline = nil})

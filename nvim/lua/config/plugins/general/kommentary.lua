@@ -1,23 +1,19 @@
 
-local nnmap = require('config/options/utils').nnmap
-local inmap = require('config/options/utils').inmap
-local vnmap = require('config/options/utils').vnmap
-local xnmap = require('config/options/utils').xnmap
+local map = require('config/options/utils').map
 
 vim.g.kommentary_create_default_mappings = false
-nnmap("<c-/><c-/>", "<Plug>kommentary_line_default", {})
-inmap("<c-/>", "<Esc><Plug>kommentary_line_default<Ins>", {})
-nnmap("<c-/>", "<Plug>kommentary_motion_default", {})
-vnmap("<c-/>", "<Plug>kommentary_visual_default<C-c>", {})
+map({"n"}, "gcc", "<Plug>kommentary_line_default", {remap = true})
+map({"n"}, "gc", "<Plug>kommentary_motion_default", {remap = true})
+map({"x"}, "gc", "<Plug>kommentary_visual_default<C-c>", {remap = true})
 
 -- require('kommentary.config').use_extended_mappings()
 
-nnmap("<leader>gcic", "<Plug>kommentary_line_increase", {})
-nnmap("<leader>gci", "<Plug>kommentary_motion_increase", {})
-xnmap("<leader>gci", "<Plug>kommentary_visual_increase", {})
-nnmap("<leader>gcdc", "<Plug>kommentary_line_decrease", {})
-nnmap("<leader>gcd", "<Plug>kommentary_motion_decrease", {})
-xnmap("<leader>gcd", "<Plug>kommentary_visual_decrease", {})
+map({"n"}, "<leader>gcic", "<Plug>kommentary_line_increase", {remap = true})
+map({"n"}, "<leader>gci", "<Plug>kommentary_motion_increase", {remap = true})
+map({"x"}, "<leader>gci", "<Plug>kommentary_visual_increase", {remap = true})
+map({"n"}, "<leader>gcdc", "<Plug>kommentary_line_decrease", {remap = true})
+map({"n"}, "<leader>gcd", "<Plug>kommentary_motion_decrease", {remap = true})
+map({"x"}, "<leader>gcd", "<Plug>kommentary_visual_decrease", {remap = true})
 
 require('kommentary.config').configure_language("default", {
   prefer_single_line_comments = true,

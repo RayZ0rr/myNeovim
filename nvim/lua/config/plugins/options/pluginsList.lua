@@ -15,8 +15,8 @@ if not ok then
   vim.cmd("echom 'Error downloading lazy.nvim'")
   return
 end
-local LazyGroup = vim.api.nvim_create_augroup('LazyGroup', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | Lazy sync', group = LazyGroup, pattern = 'pluginsList.lua' })
+-- local LazyGroup = vim.api.nvim_create_augroup('LazyGroup', { clear = true })
+-- vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | Lazy sync', group = LazyGroup, pattern = 'pluginsList.lua' })
 -- ########################################################
 -- All the used plugins
 -- ########################################################
@@ -36,6 +36,12 @@ require('lazy').setup({
             require('config/plugins/themes/onedarkpro')
         end,
     },
+    -- {
+    --     'RRethy/nvim-base16',
+    --     config = function()
+    --         require('config/theme_test')
+    --     end
+    -- },
     -- {
     --     "folke/tokyonight.nvim",
     --     lazy = false,
@@ -71,6 +77,7 @@ require('lazy').setup({
     -- Collection of configurations for built-in LSP client
     {
         'neovim/nvim-lspconfig',
+        event = {"BufReadPost", "BufNewFile"},
         config = function()
             require('config/plugins/LSP')
         end,
@@ -91,6 +98,7 @@ require('lazy').setup({
     {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
+        event = {"BufReadPost", "BufNewFile"},
         config = function()
             require('config/plugins/treesitter/settings')
         end,
@@ -123,12 +131,6 @@ require('lazy').setup({
     },
     -- Better quickfix --------------------------
     {'kevinhwang91/nvim-bqf', ft = 'qf'},
-    {
-        'gabrielpoca/replacer.nvim',
-        -- config = function()
-        --     require('config/plugins/general/misc')
-        -- end,
-    },
     -- Undo history ------------------------------
     {
         'mbbill/undotree',
@@ -139,8 +141,10 @@ require('lazy').setup({
     -- Build, Run tasks (commands) in background asynchronously
     {
         'skywind3000/asynctasks.vim',
+        event = "BufWritePost",
         dependencies = {
             'skywind3000/asyncrun.vim',
+            event = "BufWritePost",
         },
         config = function()
             require('config/plugins/general/asyncRunTasks')
@@ -157,7 +161,7 @@ require('lazy').setup({
     -- Autocompletion plugin ---------------------
     {
         'hrsh7th/nvim-cmp',
-        event = "InsertEnter",
+        event = {"BufReadPost", "BufNewFile", "InsertEnter"},
         dependencies = {
             'hrsh7th/cmp-nvim-lsp',
             'saadparwaiz1/cmp_luasnip',
@@ -197,6 +201,9 @@ require('lazy').setup({
     -- Comment and Uncomment lines ----------------
     {
         'b3nj5m1n/kommentary',
+        init = function()
+            vim.g.kommentary_create_default_mappings = false
+        end,
         config = function()
             require('config/plugins/general/kommentary')
         end,
@@ -212,6 +219,7 @@ require('lazy').setup({
     -- Higlight occurances of word under cursor
     {
         'RRethy/vim-illuminate',
+        event = {"BufReadPost", "BufNewFile"},
         -- config = function()
         --     require('config/plugins/general/misc')
         -- end,
@@ -249,6 +257,7 @@ require('lazy').setup({
     -- StartScreen -----------------------------------
     {
         'goolord/alpha-nvim',
+        event = "VimEnter",
         config = function()
             require('config/plugins/general/alpha')
         end,
@@ -279,7 +288,7 @@ require('lazy').setup({
     -- Highlight cursorline during jump ---------------
     {
         'edluffy/specs.nvim',
-        event = "VimEnter",
+        event = {"BufReadPost", "BufNewFile"},
         -- config = function()
         --     require('config/plugins/general/misc')
         -- end,
@@ -287,7 +296,7 @@ require('lazy').setup({
     -- Show marks and bookmarks -------------------
     {
         'chentoast/marks.nvim',
-        event = "VimEnter",
+        event = {"BufReadPost", "BufNewFile"},
         config = function()
             require('config/plugins/general/marks')
         end,
