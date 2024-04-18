@@ -32,7 +32,7 @@ api.nvim_create_autocmd(
 )
 api.nvim_create_autocmd(
   { "BufNewFile","BufRead" },
-  { pattern = "/etc/**/*.conf", command = [[setlocal commentstring=#\ %s]], group = MyCommentsGroup }
+  { pattern = {"/etc/**/*.conf", "/etc/*.conf"}, command = [[setlocal commentstring=#\ %s]], group = MyCommentsGroup }
 )
 api.nvim_create_autocmd(
   { "BufNewFile","BufRead" },
@@ -49,6 +49,10 @@ api.nvim_create_autocmd(
 api.nvim_create_autocmd(
   { "BufEnter" },
   { pattern = {"vifmrc","*.vifm"}, command = [[setlocal commentstring=\"\ %s]], group = MyCommentsGroup }
+)
+api.nvim_create_autocmd(
+  { "FileType" },
+  { pattern = "yuck", command = [[setlocal commentstring=;\ %s]], group = MyCommentsGroup }
 )
 
 local MyCustomSettingsGroup = api.nvim_create_augroup("MyCustomSettingsGroup", { clear = true })

@@ -62,10 +62,10 @@ end
 --##########################################################################################################
 local ok_align, _ = pcall(require, 'align')
 if ok_align then
-  xnmap( 'gaa', function() require'align'.align_to_char(1, true) end) -- Aligns to 1 character, looking left
-  xnmap( 'gas', function() require'align'.align_to_char(2, true, false) end) -- Aligns to 2 characters, looking left and with previews
-  xnmap( 'gaw', function() require'align'.align_to_string(false, true) end) -- Aligns to a string, looking left and with previews
-  xnmap( 'gae', function() require'align'.align_to_string(true, true)  end) -- Aligns to a Lua pattern, looking left and with previews
+  xnmap( 'gaa', function() require'align'.align_to_char({length=1, preview=true}) end) -- Aligns to 1 character, looking left
+  xnmap( 'gas', function() require'align'.align_to_char({length=2, preview=true}) end) -- Aligns to 2 characters, looking left and with previews
+  xnmap( 'gaw', function() require'align'.align_to_string({regex=false, preview=true}) end) -- Aligns to a string, looking left and with previews
+  xnmap( 'gae', function() require'align'.align_to_string({regex=true, preview=true})  end) -- Aligns to a Lua pattern, looking left and with previews
 
   -- Example gawip to align a paragraph to a string, looking left and with previews
   nnmap(

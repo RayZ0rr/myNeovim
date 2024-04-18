@@ -153,7 +153,7 @@ require('lazy').setup({
     -- Terminal conveniences plugin (filebrowser with vifm, lazygit etc)
     {
         'voldikss/vim-floaterm',
-        keys = { "<leader>t" },
+        -- keys = { "<leader>t" },
         config = function()
             require('config/plugins/general/floaterm')
         end,
@@ -265,6 +265,7 @@ require('lazy').setup({
     -- Align code for eg, arround '=' sign ---------
     {
         'Vonr/align.nvim',
+        branch = "v2",
         -- config = function()
         --     require('config/plugins/general/misc')
         -- end,

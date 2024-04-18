@@ -23,6 +23,7 @@ local root_files = {
   '.clangd',
   '.clang-tidy',
   '.clang-format',
+  '.gitignore',
   'compile_commands.json',
   'compile_flags.txt',
   'configure.ac', -- AutoTools

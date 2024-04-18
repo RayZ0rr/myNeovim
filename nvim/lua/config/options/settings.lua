@@ -33,6 +33,7 @@ opt.shiftwidth=4                        -- number of auto-indent spaces
 opt.softtabstop=-1
 opt.expandtab = true			-- Insert 2 spaces for a tab
 opt.smarttab = false			-- Use shiftwidth space for start and tab elsewhere
+opt.colorcolumn = "80"                  -- Draw a column at 80 character width
 opt.scrolloff=4                         -- Keep 4 lines below cursor before scrolling the screen vertically
 opt.sidescrolloff=8                     -- Keep 8 lines below cursor before scrolling the screen horizontally
 opt.smartindent = true                  -- Makes indenting smart

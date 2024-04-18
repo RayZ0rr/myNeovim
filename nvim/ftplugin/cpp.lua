@@ -43,7 +43,7 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd(
     { "BufWritePre" },
     {
-        pattern = {"*.hpp","*.hh", ".h"},
+        pattern = {"*.hpp","*.hh", "*.h"},
         callback = function()
             local line1 = vim.api.nvim_buf_get_lines(0, 0, 1, true)[1]
             local has_header = line1:match("%-%*%- C%+%+ Header %-%*%-")

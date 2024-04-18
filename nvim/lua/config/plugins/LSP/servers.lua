@@ -76,8 +76,9 @@ if executable('clangd') then
       debounce_text_changes = 150,
     },
     cmd = {
-      "clangd",
-      "--background-index",
+        "clangd",
+        "--background-index",
+        "--suggest-missing-includes"
     },
     -- root_dir = require('lspconfig/util').root_pattern("compile_commands.json", "compile_flags.txt", ".ccls"),
   })
