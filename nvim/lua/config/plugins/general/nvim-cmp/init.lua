@@ -49,7 +49,7 @@ local has_words_before = function()
 end
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menu,menuone,noselect'
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 cmp.setup({
   completion = {
@@ -72,11 +72,16 @@ cmp.setup({
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ behavior = cmp.SelectBehavior.Select, select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    -- ['<CR>'] = cmp.mapping.confirm({
-    --   select = true,
-    --   behavior = cmp.ConfirmBehavior.Replace,
-    -- }),
+    ["<CR>"] = cmp.mapping({
+       i = function(fallback)
+         if cmp.visible() and cmp.get_active_entry() then
+           cmp.confirm({ behavior = cmp.ConfirmBehavior.Select, select = true })
+         else
+           fallback()
+         end
+       end,
+       s = cmp.mapping.confirm({ select = true }),
+     }),
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -89,7 +94,7 @@ cmp.setup({
     ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
+      elseif luasnip.locally_jumpable(-1) then
         luasnip.jump(-1)
       else
         fallback()
@@ -120,7 +125,8 @@ cmp.setup({
       { name = 'path' }
       }, {
         { name = 'cmdline' }
-    })
+    }),
+    matching = { disallow_symbol_nonprefix_matching = false }
   }),
 
   formatting = {
@@ -139,15 +145,24 @@ cmp.setup({
         })[entry.source.name]
         return vim_item
       else
-        return lspkind.cmp_format()
+        return lspkind.cmp_format({
+            mode = "symbol_text",
+            menu = ({
+                buffer = "[Buffer]",
+                nvim_lsp = "[LSP]",
+                luasnip = "[LuaSnip]",
+                nvim_lua = "[Lua]",
+                latex_symbols = "[Latex]",
+            })
+        })(entry, vim_item)
       end
     end
   },
 })
 
--- require("luasnip").config.set_config {
---   history = true,
--- }
+vim.api.nvim_set_hl(0, 'CmpItemAbbrMatch', { bg='NONE', fg='#ff4444' })
+vim.api.nvim_set_hl(0, 'CmpItemAbbrMatchFuzzy', { link='CmpIntemAbbrMatch' })
+
 require("luasnip.loaders.from_vscode").lazy_load()
 
 local LuasnipPrev = function()
@@ -162,4 +177,3 @@ local LuasnipNext = function()
 end
 vim.keymap.set({"i","s"},"<m-h>",LuasnipPrev,{desc="Luasnip choose previous node function"})
 vim.keymap.set({"i","s"},"<m-l>",LuasnipNext,{desc="Luasnip choose next node function"})
--- vim.keymap.set({"i","s"},"<m-l>",LuasnipNext,{desc="Luasnip choose next node function"})

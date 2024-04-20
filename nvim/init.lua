@@ -5,9 +5,9 @@
 -- ------------------------------------------
 --  Options
 -- ------------------------------------------
-require('config/options/settings') -- General options
-require('config/options/keymaps') -- General Mappings
-require('config/options/myAutos') -- General autogroups and autocommands
+require 'config/options/settings'
+require 'config/options/keymaps'
+require 'config/options/myAutos' -- Autogroups and Autocommands
 
 -- ------------------------------------------
 -- Custom Commands & Functions
@@ -19,5 +19,5 @@ source $HOME/.config/nvim/vimscript/options/myCmdsAndFns.vim
 -- ##########################################
 --  PLUGINS SETTINGS
 -- ##########################################
-
-require('config/plugins/options/pluginsList')
+require 'config/plugins/bootstrap' -- Load plugin manager
+require 'config/plugins/pluginsList' -- Install/Load plugins

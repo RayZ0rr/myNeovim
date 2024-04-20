@@ -71,10 +71,10 @@ nnmap('<leader>nf',[[:e <C-R>=expand("%:p:h") . "/"<CR>]], {silent = false,desc=
 -----------------------------------------------------------------------------//
 -- Diable higlight
 -----------------------------------------------------------------------------//
-bmap('n','<localleader>hl' , ':set hlsearch!<CR>')
+nnmap('<localleader>hl' , [[<cmd>set hlsearch!<CR>]])
 nnmap(
   "<leader>hl",
-  "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
+  [[<Cmd>set hlsearch!<Bar>diffupdate<Bar>normal! <C-L><CR>]],
   { desc = "Redraw / clear hlsearch / diff update" }
 )
 

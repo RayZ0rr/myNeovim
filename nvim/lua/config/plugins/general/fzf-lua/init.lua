@@ -1,6 +1,18 @@
 -- Settings
-local actions = require "fzf-lua.actions"
-require'fzf-lua'.setup {
+local fzf_lua = require 'fzf-lua'
+local actions = fzf_lua.actions
+
+if vim.ui then
+  fzf_lua.register_ui_select({
+    winopts = {
+      win_height = 0.30,
+      win_width  = 0.70,
+      win_row    = 0.40,
+    }
+  })
+end
+
+fzf_lua.setup {
   -- fzf_bin         = 'sk',            -- use skim instead of fzf?
 					-- https://github.com/lotabout/skim
   global_resume      = true,            -- enable global `resume`?
@@ -566,15 +578,6 @@ require'fzf-lua'.setup {
 }
 
 -- Colors
-require('config/plugins/general/fzf-lua/colors')
+require 'config/plugins/general/fzf-lua/colors'
 -- Mappings
-require('config/plugins/general/fzf-lua/keymaps')
-if vim.ui then
-  require("fzf-lua").register_ui_select({
-    winopts = {
-      win_height = 0.30,
-      win_width  = 0.70,
-      win_row    = 0.40,
-    }
-  })
-end
+require 'config/plugins/general/fzf-lua/keymaps'
