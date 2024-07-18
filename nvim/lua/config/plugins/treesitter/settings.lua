@@ -12,8 +12,7 @@ require('nvim-treesitter.configs').setup {
     "bash",
     "lua",
     "rust",
-    "html",
-    "css",
+    "go",
     "toml",
     "vim",
     -- for `nvim-treesitter/playground`
@@ -23,6 +22,13 @@ require('nvim-treesitter.configs').setup {
   sync_install = false,
   highlight = {
     enable = true, -- false will disable the whole extension
+    disable = function(lang, buf)
+        local max_filesize = 100 * 1024 * 1024 -- 100 MB
+        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        if ok and stats and stats.size > max_filesize then
+            return true
+        end
+    end,
     additional_vim_regex_highlighting = false,
   },
   incremental_selection = {
@@ -78,20 +84,20 @@ require('nvim-treesitter.configs').setup {
       enable = true,
       set_jumps = true, -- whether to set jumps in the jumplist
       goto_next_start = {
-        [']m'] = '@function.outer',
-        [']]'] = '@class.outer',
+        [']f'] = '@function.outer',
+        [']c'] = '@class.outer',
       },
       goto_next_end = {
-        [']M'] = '@function.outer',
-        [']['] = '@class.outer',
+        [']F'] = '@function.outer',
+        [']C'] = '@class.outer',
       },
       goto_previous_start = {
-        ['[m'] = '@function.outer',
-        ['[['] = '@class.outer',
+        ['[f'] = '@function.outer',
+        ['[c'] = '@class.outer',
       },
       goto_previous_end = {
-        ['[M'] = '@function.outer',
-        ['[]'] = '@class.outer',
+        ['[F'] = '@function.outer',
+        ['[C'] = '@class.outer',
       },
     },
     lsp_interop = {

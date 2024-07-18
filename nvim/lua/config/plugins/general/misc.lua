@@ -170,13 +170,13 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'vim-better-whitespace')) == 0 then
   nnmap( ']w', ':NextTrailingWhitespace<CR>')
   nnmap( '[w', ':PrevTrailingWhitespace<CR>')
 
-  nnmap( '<leader>wt', ':ToggleWhitespace | echo "Whitspace toggled"<CR><CR>', {desc="Whitespace toggle function"})
-  nnmap( '<leader>wr', ':StripWhitespace<CR>', {desc="Whitespace remove function"})
-  nnmap( '<leader>ws', ':ToggleStripWhitespaceOnSave | echo "Whitspace strip on save toggled"<CR><CR>', {desc="Whitespace remove on save toggle function"})
+  nnmap( '<leader>wst', function() vim.cmd "ToggleWhitespace" print("Whitspace toggled") end, {desc="Whitespace toggle function"})
+  nnmap( '<leader>wsr', ':StripWhitespace<CR>', {desc="Whitespace remove function"})
+  nnmap( '<leader>wss', function() vim.cmd "ToggleStripWhitespaceOnSave" print("Whitspace strip on save toggled") end, {desc="Whitespace remove on save toggle function"})
 
   -- vim.cmd[[autocmd FileType * ToggleWhitespace]]
 
-  vim.g.better_whitespace_operator=',ww'
+  vim.g.better_whitespace_operator=',wsi'
 
   vim.g.better_whitespace_enabled=1
   vim.g.strip_whitespace_on_save=0
@@ -304,28 +304,28 @@ end
 -- Beacon -------------------------------------------------------------------------------------------------
 -- Highlight cursor on jump
 --##########################################################################################################
-if vim.fn.empty(vim.fn.glob(plugins_path..'beacon.nvim')) == 0 then
-  vim.cmd [[
-  augroup MyBeaconGroup
-    autocmd!
-    au WinEnter * setlocal cursorline
-    au WinLeave * setlocal nocursorline
-  augroup end
-  ]]
+local ok_beacon, _ = pcall(require, 'beacon')
+if ok_beacon then
+    local options = {
+        -- enabled = function()
+        --     if vim.bo.ft:find 'Neogit' then
+        --         return false
+        --     end
+        --     return true
+        -- end
+        enabled = false, --- (boolean | fun():boolean) check if enabled
+        speed = 2, --- integer speed at wich animation goes
+        width = 40, --- integer width of the beacon window
+        winblend = 70, --- integer starting transparency of beacon window
+        fps = 60, --- integer how smooth the animation going to be
+        min_jump = 10, --- integer what is considered a jump. Number of lines
+        cursor_events = { 'CursorMoved' }, -- table<string> what events trigger check for cursor moves
+        window_events = { 'WinEnter', 'FocusGained' }, -- table<string> what events trigger cursor highlight
+        highlight = { fg = '#C3E88D', reverse = true }, -- vim.api.keyset.highlight table passed to vim.api.nvim_set_hl
+    }
+    require('beacon').setup(options)
 
-  -- vim.cmd[[highlight link Beacon String]]
-  -- vim.cmd[[highlight Beacon guibg=white ctermbg=15]]
-  vim.cmd[[highlight BeaconDefault guibg=yellow ctermbg=15]]
-  vim.g.beacon_enable = 1
-  vim.g.beacon_size = 40
-  vim.g.beacon_show_jumps = 1
-  vim.g.beacon_minimal_jump = 10
-  vim.g.beacon_shrink = 1
-  vim.g.beacon_fade = 1
-  -- vim.g.beacon_timeout = 500
-  -- vim.g.beacon_ignore_buffers = {\w*git*\w}
-  vim.g.beacon_ignore_filetypes = {'fzf'}
+    -- vim.api.nvim_set_hl(0, 'Beacon', { fg = '#C3E88D', reverse = true })
 
-  nnmap('<leader>bect',':BeaconToggle | echo "Beacon toggled"<cr>')
-  nnmap('<leader>becc',':Beacon<cr>')
+    nnmap('<leader>bec', require('beacon').highlight_cursor)
 end

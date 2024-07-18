@@ -103,7 +103,7 @@ end
 -- opt.foldmethod='syntax'
 -- opt.foldlevelstart=99
 
-opt.pastetoggle='<leader>pp'
+-- opt.pastetoggle='<leader>pp'
 
 vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
 -- vim.cmd[[set sessionoptions+=winpos,terminal,folds]]

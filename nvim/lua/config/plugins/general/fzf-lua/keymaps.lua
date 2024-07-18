@@ -10,35 +10,42 @@ local actions = fzf_lua.actions
 nnmap('<leader>ff', function() fzf_lua.files({show_cwd_header=true}) end, {desc="Fzf-Lua files search"})
 nnmap('<leader>fa', ":FzfLua files cwd=~<CR>", {desc="Fzf-Lua files search home"})
 nnmap('<leader>fn', "<cmd>lua require('fzf-lua').files({cwd = '~/.config/nvim'})<CR>", {desc="Fzf-Lua files search nvim"})
+nnmap('<leader>fo', function() fzf_lua.oldfiles({show_cwd_header=true}) end, {desc="Fzf-Lua old files search"})
 nnmap(
-  '<leader>fo',
+  '<leader>fO',
   function()
     fzf_lua.oldfiles({
     cwd_only = function()
       return vim.api.nvim_command('pwd') ~= vim.env.HOME
     end
     })
-  end
+  end,
+  {desc="Fzf-Lua old files search current dir"}
 )
 
 local util = require 'lspconfig.util'
 local root_files = {
-  '.clangd',
-  '.clang-tidy',
-  '.clang-format',
   '.gitignore',
+  'CMakeLists.txt',
   'compile_commands.json',
   'compile_flags.txt',
   'configure.ac', -- AutoTools
   'cmake',
   'setup.py',
   'requirements.txt',
-  'build'
+  'build',
+  '.clangd',
+  '.clang-tidy',
+  '.clang-format',
 }
-root_dir = function(fname)
-  return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname)
-end,
-nnmap('<leader>fp', function() fzf_lua.files({cwd = root_dir(vim.api.nvim_buf_get_name(0))}) end, {desc="Fzf-Lua search project"})
+local root_finder = util.root_pattern(unpack(root_files))
+local root_dir = function(fname)
+    return root_finder(fname) or util.find_git_ancestor(fname)
+end
+local fzf_project = function()
+    fzf_lua.files({cwd = root_dir(vim.api.nvim_buf_get_name(0))})
+end
+nnmap('<leader>fp', fzf_project, {desc="Fzf-Lua search project"})
 
 map({'n', 'x',}, '<leader>fr',function() fzf_lua.registers() end,{desc="Fzf-Lua registers"})
 

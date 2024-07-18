@@ -275,12 +275,16 @@ require('lazy').setup({
     },
     -- Highlight cursorline during jump ---------------
     {
-        'edluffy/specs.nvim',
+        'cxwx/specs.nvim',
+        commit = "dd82496",
         event = {"BufReadPost", "BufNewFile"},
         -- config = function()
         --     require('config/plugins/general/misc')
         -- end,
     },
+    -- {
+    --     'danilamihailov/beacon.nvim'
+    -- },
     -- Show marks and bookmarks -------------------
     {
         'chentoast/marks.nvim',

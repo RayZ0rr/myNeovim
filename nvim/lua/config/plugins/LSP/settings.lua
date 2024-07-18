@@ -83,9 +83,18 @@ end
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { remap=false, silent=true }
 vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<leader>lq', vim.diagnostic.setloclist , opts)
+local diagnostic_goto = function(next, severity)
+  local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+  severity = severity and vim.diagnostic.severity[severity] or nil
+  return function()
+    go({ severity = severity })
+  end
+end
+vim.keymap.set("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
+vim.keymap.set("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
+vim.keymap.set("n", "]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
+vim.keymap.set("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
 
 local M = {}
 
@@ -174,7 +183,7 @@ M.lsp_on_attach = function(args)
     end, 'vim.lsp.buf.list_workspace_folders')
     buffer_map( '<leader>lt', vim.lsp.buf.type_definition, 'vim.lsp.buf.type_definition')
     buffer_map( '<leader>lR', vim.lsp.buf.rename, 'vim.lsp.buf.rename')
-    vim.keymap.set({ 'n', 'v' }, '<space>la', vim.lsp.buf.code_action, {buffer=bufnr, desc='vim.lsp.buf.code_action'})
+    vim.keymap.set({ 'n', 'v' }, '<leader>la', vim.lsp.buf.code_action, {buffer=bufnr, desc='vim.lsp.buf.code_action'})
     buffer_map( '<leader>lcl', vim.lsp.codelens.run, 'vim.lsp.codelens.run')
     buffer_map( '<leader>lr', vim.lsp.buf.references, 'vim.lsp.buf.references')
     buffer_map( '<leader>lf', function() vim.lsp.buf.format { async = true } end, 'vim.lsp.buf.formatting')
