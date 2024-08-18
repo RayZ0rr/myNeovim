@@ -2,9 +2,9 @@
 local map = require('config/options/utils').map
 
 vim.g.kommentary_create_default_mappings = false
-map({"n"}, "gcc", "<Plug>kommentary_line_default", {remap = true})
-map({"n"}, "gc", "<Plug>kommentary_motion_default", {remap = true})
-map({"x"}, "gc", "<Plug>kommentary_visual_default<C-c>", {remap = true})
+map({"n"}, "<C-_>", "<Plug>kommentary_line_default", {remap = true})
+map({"n"}, "<leader><C-_>", "<Plug>kommentary_motion_default", {remap = true})
+map({"x"}, "<C-_>", "<Plug>kommentary_visual_default<C-c>", {remap = true})
 
 -- require('kommentary.config').use_extended_mappings()
 

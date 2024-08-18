@@ -54,7 +54,8 @@ nnmap('<leader>gg', function() fzf_lua.grep({ search = "", fzf_opts = { ['--nth'
 nnmap('<leader>gr', function() fzf_lua.grep({ continue_last_search = true }) end, {desc="Fzf-Lua grep continue last"})
 nnmap('<leader>gl', function() fzf_lua.live_grep({ exec_empty_query = true}) end, {desc="Fzf-Lua live grep"})
 xnmap('<leader>gv',  "<cmd>FzfLua grep_visual<CR>", {desc="Fzf-Lua grep visual"})
-nnmap('<leader>gp', function() fzf_lua.grep_project({ fzf_opts={ ['--query']=vim.fn.expand('<cword>') }}) end, {desc="Fzf-Lua project grep"})
+nnmap('<leader>gp', function() fzf_lua.grep_project({ fzf_opts={ ['--query']=vim.fn.expand('<cword>') }, cwd=root_dir(vim.api.nvim_buf_get_name(0))}) end, {desc="Fzf-Lua grep project"})
+nnmap('<leader>gP', function() fzf_lua.grep_project({ fzf_opts={ ['--query']=vim.fn.expand('<cword>') } }) end, {desc="Fzf-Lua grep project default"})
 
 nnmap('<leader>fgi', function() fzf_lua.git_files() end, {desc="Fzf-Lua git files"})
 nnmap('<leader>fbb', function() fzf_lua.buffers() end , {desc="Fzf-Lua buffers"})

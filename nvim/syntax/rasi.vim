@@ -291,3 +291,4 @@ hi def link rasiInvPropertyId   rasiError
 hi def link rasiInvPropertyVal  rasiError
 " }}}
 
+setlocal commentstring=//\ %s

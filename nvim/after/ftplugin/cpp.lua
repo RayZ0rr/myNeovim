@@ -1,3 +1,10 @@
+-- if vim.b.did_ftplugin == 1 then
+--   return
+-- end
+-- vim.b.did_ftplugin = 1
+
+vim.bo.commentstring = "// %s"
+
 local has_luasnip, luasnip = pcall(require, 'luasnip')
 if has_luasnip then
     local lss = luasnip.snippet
@@ -55,4 +62,3 @@ vim.api.nvim_create_autocmd(
         once = true,
     }
 )
-

@@ -259,3 +259,11 @@ nnmap(']q', '<cmd>cnext<CR>zz')
 nnmap('[q', '<cmd>cprev<CR>zz')
 nnmap(']l', '<cmd>lnext<cr>zz')
 nnmap('[l', '<cmd>lprev<cr>zz')
+
+------------------------------------------------------------------------------
+-- Commenting
+------------------------------------------------------------------------------
+if vim.fn.has("nvim-0.10") then
+    map("n", "<C-_>", "gcc", { remap = true })
+    map("v", "<C-_>", "gc", { remap = true })
+end

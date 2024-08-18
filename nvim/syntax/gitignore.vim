@@ -24,4 +24,4 @@ hi def link gitignoreFile Type
 
 let b:current_syntax = 'gitignore'
 
-setlocal commentstring=#%s
+setlocal commentstring=#\ %s
