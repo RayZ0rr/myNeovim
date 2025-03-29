@@ -11,7 +11,8 @@ vim.g.asyncrun_mode = 'term'
 
 nnmap( '<leader><F5>', [[<cmd>AsyncTask build<cr>]], {desc="AsyncTask build"} )
 nnmap( '<leader><F6>', [[<cmd>AsyncTask run<cr>]], {desc="AsyncTask run"} )
+nnmap( '<leader><F7>', [[<cmd>AsyncTask runAlt<cr>]], {desc="AsyncTask run alternate"} )
 
 vim.g.asynctasks_extra_config = {
     '~/.config/nvim/lua/config/plugins/general/asyncRunTasks/tasks.ini',
-    }
+}

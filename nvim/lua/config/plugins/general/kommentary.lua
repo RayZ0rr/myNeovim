@@ -3,9 +3,9 @@ local map = require('config/options/utils').map
 
 vim.g.kommentary_create_default_mappings = false
 local keyname = "<C-/>"
-if string.find(vim.env['TERM'], "tmux") then
-    keyname = "<C-_>"
-end
+-- if string.find(vim.env['TERM'], "tmux") then
+--     keyname = "<C-_>"
+-- end
 map({"n"}, keyname, "<Plug>kommentary_line_default", {remap = true})
 map({"n"}, "<leader>" .. keyname, "<Plug>kommentary_motion_default", {remap = true})
 map({"x"}, keyname, "<Plug>kommentary_visual_default<C-c>", {remap = true})

@@ -15,6 +15,7 @@ require('nvim-treesitter.configs').setup {
     "go",
     "toml",
     "vim",
+    "markdown",
     -- for `nvim-treesitter/playground`
     "query",
   },

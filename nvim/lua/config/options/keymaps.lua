@@ -265,9 +265,9 @@ nnmap('[l', '<cmd>lprev<cr>zz')
 ------------------------------------------------------------------------------
 if vim.fn.has("nvim-0.10") then
     local keyname = "<C-/>"
-    if string.find(vim.env['TERM'], "tmux") then
-        keyname = "<C-_>"
-    end
+    -- if string.find(vim.env['TERM'], "tmux") then
+    --     keyname = "<C-_>"
+    -- end
     map("n", keyname, "gcc", { remap = true })
     map("v", keyname, "gc", { remap = true })
 end
