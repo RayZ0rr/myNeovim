@@ -234,13 +234,20 @@ require('lazy').setup({
     },
     -- Statusline ------------------------------------
     {
-        'rebelot/heirline.nvim',
-        event = "VimEnter",
+        'echasnovski/mini.statusline', version = false,
         dependencies = {'kyazdani42/nvim-web-devicons', 'lewis6991/gitsigns.nvim'},
         config = function()
-            require('config/plugins/general/statusline/heirline')
+            require('config/plugins/general/statusline/miniline')
         end,
     },
+    -- {
+    --     'rebelot/heirline.nvim',
+    --     event = "VimEnter",
+    --     dependencies = {'kyazdani42/nvim-web-devicons', 'lewis6991/gitsigns.nvim'},
+    --     config = function()
+    --         require('config/plugins/general/statusline/heirline')
+    --     end,
+    -- },
     -- StartScreen -----------------------------------
     {
         'goolord/alpha-nvim',
