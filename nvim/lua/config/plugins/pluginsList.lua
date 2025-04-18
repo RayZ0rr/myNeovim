@@ -1,6 +1,6 @@
 local ok, lazy = pcall(require, "lazy")
 if not ok then
-  vim.cmd("echom '[Error] (pluginsList.lua): lazy.nvim not found. Skipping loading of plugins.'")
+  print('[Error] (pluginsList.lua): lazy.nvim not found. Skipping loading of plugins.')
   return
 end
 
@@ -8,26 +8,55 @@ end
 -- All the used plugins
 -- ########################################################
 
-require('lazy').setup({
-
+local plugins = {
     ----------------------------------------------
     -- THEMES
     ----------------------------------------------
-
-    -- Onedark Theme -----------------------------
+    -- -- Everforest Theme -----------------------------
     {
-        'olimorris/onedarkpro.nvim',
-        lazy = false,
-        priority = 1000,
-        config = function()
-            require('config/plugins/themes/onedarkpro')
-        end,
+      'sainnhe/everforest',
+      lazy = false,
+      priority = 1000,
+      config = function()
+        -- Optionally configure and load the colorscheme
+        -- directly inside the plugin declaration.
+        vim.g.everforest_background = 'hard'
+        -- vim.g.everforest_better_performance = 1
+        vim.g.everforest_enable_italic = true
+        vim.g.everforest_colors_override = {bg0 = {'#202020', '234'}}
+        vim.api.nvim_create_autocmd('ColorScheme', {
+            group = vim.api.nvim_create_augroup('custom_highlights_everforest', {}),
+            pattern = 'everforest',
+            callback = function()
+                local config = vim.fn['everforest#get_configuration']()
+                local palette = vim.fn['everforest#get_palette'](config.background, config.colors_override)
+                local set_hl = vim.fn['everforest#highlight']
+
+                -- set_hl('YankHighlightGroup', palette.black, palette.bg_visual_yellow)
+                vim.api.nvim_set_hl(0, 'YankHighlightGroup', {fg=palette.bg1[1], bg=palette.yellow[1], default=false})
+            end
+        })
+        vim.cmd.colorscheme('everforest')
+        -- vim.api.nvim_set_hl(0, 'YankHighlightGroup', {link='WarningLine'})
+      end
     },
+    -- -- -- Paradise Theme -----------------------------
     -- {
     --     'RRethy/nvim-base16',
+    --     lazy = false,
+    --     priority = 1000,
     --     config = function()
-    --         require('config/theme_test')
+    --         require('config/plugins/themes/paradise')
     --     end
+    -- },
+    -- -- Onedark Theme -----------------------------
+    -- {
+    --     'olimorris/onedarkpro.nvim',
+    --     lazy = false,
+    --     priority = 1000,
+    --     config = function()
+    --         require('config/plugins/themes/onedarkpro')
+    --     end,
     -- },
     -- {
     --     "folke/tokyonight.nvim",
@@ -72,6 +101,7 @@ require('lazy').setup({
     -- Symbol Browser ------------------------------
     {
         'stevearc/aerial.nvim',
+        event = {"BufReadPost", "BufNewFile"},
         config = function()
             require('config/plugins/LSP/utils/aerial')
         end,
@@ -108,7 +138,7 @@ require('lazy').setup({
     -- FZF ----------------------------------------
     {
         'ibhagwan/fzf-lua',
-        -- keys = { "<leader>f" },
+        -- keys = {"<C-p>", "<leader>f", "<leader>g"},
         dependencies = {
             'kyazdani42/nvim-web-devicons'
         }, -- optional for icons
@@ -163,7 +193,7 @@ require('lazy').setup({
     -- Snippets plugin ----------------------------
     {
         "L3MON4D3/LuaSnip",
-        lazy = true,
+        event = "InsertEnter",
         dependencies = { "rafamadriz/friendly-snippets" },
     },
     -- Surround with characters -------------------
@@ -234,7 +264,7 @@ require('lazy').setup({
     },
     -- Statusline ------------------------------------
     {
-        'echasnovski/mini.statusline', version = false,
+        'RayZ0rr/mini.statusline', version = false,
         dependencies = {'kyazdani42/nvim-web-devicons', 'lewis6991/gitsigns.nvim'},
         config = function()
             require('config/plugins/general/statusline/miniline')
@@ -300,14 +330,7 @@ require('lazy').setup({
             require('config/plugins/general/marks')
         end,
     },
-    -- Registers in floating window and other convenience
-    {
-        "tversteeg/registers.nvim",
-        keys = { "\"" },
-        config = function()
-            require("registers").setup()
-        end,
-    },
 
-})
+}
+require('lazy').setup(plugins)
 require('config/plugins/general/misc')

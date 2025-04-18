@@ -28,44 +28,62 @@ end
 
 vim.diagnostic.config({
     virtual_text = false,
-    float = { source = "always", },
     virtual_lines = true,
     signs = true,
     underline = false,
     update_in_insert = false,
     severity_sort = false,
+    signs = {
+        -- nvim 0.10.0 uses `nvim_buf_set_extmark`
+        text = {
+            [vim.diagnostic.severity.ERROR] = "", -- index:0
+            [vim.diagnostic.severity.WARN]  = "", -- index:1
+            [vim.diagnostic.severity.INFO]  = "", -- index:2
+            [vim.diagnostic.severity.HINT]  = "󰌵", -- index:3
+            [vim.diagnostic.severity.ERROR] = "", -- index:0
+            [vim.diagnostic.severity.WARN]  = "", -- index:1
+            [vim.diagnostic.severity.INFO]  = "", -- index:2
+            [vim.diagnostic.severity.HINT]  = "", -- index:3
+        },
+    },
+    float = {
+        show_header = false,
+        source = "if_many",
+        border = "rounded",
+    },
+    -- float = { source = "always", },
 })
 
 -- Change diagnostic symbols in the sign column (gutter)
-local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
+-- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+-- for type, icon in pairs(signs) do
+--     local hl = "DiagnosticSign" .. type
+--     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+-- end
 
-local orig_signs_handler = vim.diagnostic.handlers.signs
--- Override the built-in signs handler to aggregate signs
-vim.diagnostic.handlers.signs = {
-    show = function(ns, bufnr, _, opts)
-        local diagnostics = vim.diagnostic.get(bufnr)
+-- local orig_signs_handler = vim.diagnostic.handlers.signs
+-- -- Override the built-in signs handler to aggregate signs
+-- vim.diagnostic.handlers.signs = {
+--     show = function(ns, bufnr, _, opts)
+--         local diagnostics = vim.diagnostic.get(bufnr)
 
-        -- Find the "worst" diagnostic per line
-        local max_severity_per_line = {}
-        for _, d in pairs(diagnostics) do
-            local m = max_severity_per_line[d.lnum]
-            if not m or d.severity < m.severity then
-                max_severity_per_line[d.lnum] = d
-            end
-        end
+--         -- Find the "worst" diagnostic per line
+--         local max_severity_per_line = {}
+--         for _, d in pairs(diagnostics) do
+--             local m = max_severity_per_line[d.lnum]
+--             if not m or d.severity < m.severity then
+--                 max_severity_per_line[d.lnum] = d
+--             end
+--         end
 
-        -- Pass the filtered diagnostics (with our custom namespace) to
-        -- the original handler
-        local filtered_diagnostics = vim.tbl_values(max_severity_per_line)
-        orig_signs_handler.show(ns, bufnr, filtered_diagnostics, opts)
-    end,
+--         -- Pass the filtered diagnostics (with our custom namespace) to
+--         -- the original handler
+--         local filtered_diagnostics = vim.tbl_values(max_severity_per_line)
+--         orig_signs_handler.show(ns, bufnr, filtered_diagnostics, opts)
+--     end,
 
-    hide = orig_signs_handler.hide
-}
+--     hide = orig_signs_handler.hide
+-- }
 
 local formatting_callback = function(client, bufnr)
     vim.keymap.set('n', '<leader>lF', function()
@@ -170,6 +188,18 @@ M.lsp_on_attach = function(args)
     local function buffer_map(key, result, desc)
         vim.keymap.set('n', key, result, {buffer=bufnr, desc=desc})
     end
+    local toggle_diag = function()
+        if not vim.b._diag_is_hidden then
+            print("Diagnostic virtual text is now hidden.")
+            vim.diagnostic.hide()
+            -- vim.diagnostic.disable()
+        else
+            print("Diagnostic virtual text is now visible.")
+            vim.diagnostic.show()
+            -- vim.diagnostic.enable()
+        end
+        vim.b._diag_is_hidden = not vim.b._diag_is_hidden
+    end
 
     buffer_map( '<leader>lD', vim.lsp.buf.declaration, 'vim.lsp.buf.declaration')
     buffer_map( '<leader>ld', vim.lsp.buf.definition, 'vim.lsp.buf.definition')
@@ -187,9 +217,7 @@ M.lsp_on_attach = function(args)
     buffer_map( '<leader>lcl', vim.lsp.codelens.run, 'vim.lsp.codelens.run')
     buffer_map( '<leader>lr', vim.lsp.buf.references, 'vim.lsp.buf.references')
     buffer_map( '<leader>lf', function() vim.lsp.buf.format { async = true } end, 'vim.lsp.buf.formatting')
-    buffer_map( '<leader>ll', function()
-        vim.diagnostic.disable(0)
-    end, 'vim.diagnostic.disable(0)')
+    buffer_map( '<leader>lL', function() toggle_diag() end, 'LSP Diagnostics toggle')
 
     -- Set some key bindings conditional on server capabilities
     formatting_callback(client, bufnr)

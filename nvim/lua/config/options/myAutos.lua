@@ -56,15 +56,18 @@ api.nvim_create_autocmd(
 )
 
 local MyCustomSettingsGroup = api.nvim_create_augroup("MyCustomSettingsGroup", { clear = true })
-api.nvim_set_hl(0,"YankHighlightGroup",{fg='#4B4B4B' , bg="#e5c07b" })
+
 -- Highlight on yank
+api.nvim_set_hl(0, "YankHighlightGroup",{fg='#4B4B4B' , bg="#e5c07b"})
 local MyYankHighlightGroup = api.nvim_create_augroup("MyYankHighlightGroup", { clear = true })
 api.nvim_create_autocmd(
-  "TextYankPost",
-  {
-    command = "silent! lua vim.highlight.on_yank({higroup='YankHighlightGroup'})",
-    group = MyCustomSettingsGroup,
-  }
+    "TextYankPost",
+    {
+        group = MyCustomSettingsGroup,
+        callback = function()
+            vim.highlight.on_yank({higroup='YankHighlightGroup', macro=true})
+        end,
+    }
 )
 
 -- show cursor line only in active window

@@ -1,3 +1,5 @@
+local hlSetDefault = require('config/options/utils').hlSetDefault
+
 local M = {}
 
 M.color_suffix = "MyColors"
@@ -18,6 +20,7 @@ M.icons = {
 
 M.func = {
     strPrefixSuffix = function(str, args)
+        if str:len() == 0 then return "" end
         args = args or {}
         local suffix = args.suffix or ''
         local prefix = args.prefix or ''
@@ -50,7 +53,7 @@ M.func = {
         return M.func.strPrefixSuffix(str, args)
     end,
     lspInfo = function(args)
-        local clients = vim.lsp.get_active_clients({ bufnr = 0 }) or {}
+        local clients = vim.lsp.get_clients({bufnr=vim.api.nvim_get_current_buf()}) or {}
         local name = clients[1] and clients[1].name or ''
         for i = 2, vim.tbl_count(clients) do
             name = name .. clients[i].name
@@ -85,24 +88,26 @@ M.func = {
     fileName = function(args)
         local f = vim.api.nvim_buf_get_name(0)
         f = vim.fn.fnamemodify(f, ":.")
-        if f == "" then return "[No Name]" end
+        if f == "" then f = "[No Name]" end
         return M.func.strPrefixSuffix(f, args)
     end,
     fileNameShort = function(args)
         local f = vim.api.nvim_buf_get_name(0)
         f = vim.fn.fnamemodify(f, ":.")
         f = vim.fn.pathshorten(f)
-        if f == "" then return "[No Name]" end
+        if f == "" then f = "[No Name]" end
         return M.func.strPrefixSuffix(f, args)
     end,
-    fileStatus = function()
-        if vim.bo.modified then
-            return "[+] "
-        elseif not vim.bo.modifiable or vim.bo.readonly then
-            return " "
-        else
-            return ""
+    fileStatus = function(args)
+        -- local f = "%m %r"
+        -- local f = ""
+        -- if vim.bo.modified then
+        --     f = f .. "[+] "
+        local f = "%m"
+        if not vim.bo.modifiable or vim.bo.readonly then
+            f = " " .. f
         end
+        return M.func.strPrefixSuffix(f, args)
     end,
     fileEncoding = function(args)
         local enc = (vim.bo.fenc ~= '' and vim.bo.fenc) or vim.bo.enc -- :h 'enc'
@@ -111,6 +116,18 @@ M.func = {
     fileFormat = function(args)
         local fmt = vim.bo.fileformat
         return fmt ~= 'unix' and M.func.strPrefixSuffix(fmt, args) or ''
+    end,
+    fileSize = function(args)
+        local size = math.max(vim.fn.line2byte(vim.fn.line('$') + 1) - 1, 0)
+        local str = ""
+        if size < 1024 then
+            str = string.format('%dB', size)
+        elseif size < 1048576 then
+            str = string.format('%.2fKiB', size / 1024)
+        else
+            str = string.format('%.2fMiB', size / 1048576)
+        end
+        return M.func.strPrefixSuffix(str, args)
     end,
     gitDiffInfo = function(args)
         local s = vim.b.gitsigns_status_dict
@@ -143,8 +160,8 @@ M.Conditions = {
     local gitdir = vim.fn.finddir('.git', filepath .. ';')
     return gitdir and #gitdir > 0 and #gitdir < #filepath
   end,
-  CheckLSP = function()
-    local clients = vim.lsp.get_active_clients()
+  CheckLSP = function(buf_id)
+    local clients = vim.lsp.get_clients({bufnr=vim.api.nvim_get_current_buf()})
     return next(clients) ~= nil
   end,
   FullBar = function()
@@ -185,11 +202,28 @@ M.colors = {
     black       = '#202328',
     white       = '#ffffff',
 }
-
-local hlSetDefault = function(name, data)
-    data.default = true
-    vim.api.nvim_set_hl(0, name, data)
+if _G.theme == "paradise" then
+    M.colors = {
+        bg       = '#202328',
+        fg       = '#bbc2cf',
+        yellow   = '#D9BC8C',
+        cyan     = '#8AA6A2',
+        green    = '#8C977D',
+        orange   = '#FAC898',
+        violet   = '#a9a1e1',
+        magenta  = '#A988B0',
+        skyblue = '#bbc2cf',
+        blue     = '#8DA3B9',
+        oceanblue = '#45707a',
+        darkblue = '#081633',
+        red      = '#B66467',
+        cream = '#a89984',
+        grey       = '#bbc2cf',
+        black       = '#202328',
+        white       = '#ffffff',
+    }
 end
+
 function M.initHLcolors()
     suffix = M.color_suffix
     for name, color in pairs(M.colors) do -- Create highlight groups for all colors in M.colors

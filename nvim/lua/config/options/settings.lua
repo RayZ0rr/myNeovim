@@ -3,7 +3,7 @@ local vimg = vim.g
 
 -- set leader key
 vimg.mapleader = ","
-vimg.maplocalleader=" "
+vimg.maplocalleader="\\"
 
 -- opt.whichwrap:append "<>[]hl"
 opt.breakindent = true
