@@ -34,6 +34,7 @@ local plugins = {
 
                 -- set_hl('YankHighlightGroup', palette.black, palette.bg_visual_yellow)
                 vim.api.nvim_set_hl(0, 'YankHighlightGroup', {fg=palette.bg1[1], bg=palette.yellow[1], default=false})
+                vim.api.nvim_set_hl(0, 'StatusLine', {fg=palette.bg0[1], bg=palette.bg0[1], default=false})
             end
         })
         vim.cmd.colorscheme('everforest')
@@ -41,23 +42,23 @@ local plugins = {
       end
     },
     -- -- -- Paradise Theme -----------------------------
-    -- {
-    --     'RRethy/nvim-base16',
-    --     lazy = false,
-    --     priority = 1000,
-    --     config = function()
-    --         require('config/plugins/themes/paradise')
-    --     end
-    -- },
+    {
+        'RRethy/nvim-base16',
+        lazy = false,
+        priority = 1000,
+        -- config = function()
+        --     require('config/plugins/themes/paradise')
+        -- end
+    },
     -- -- Onedark Theme -----------------------------
-    -- {
-    --     'olimorris/onedarkpro.nvim',
-    --     lazy = false,
-    --     priority = 1000,
-    --     config = function()
-    --         require('config/plugins/themes/onedarkpro')
-    --     end,
-    -- },
+    {
+        'olimorris/onedarkpro.nvim',
+        lazy = false,
+        priority = 1000,
+        -- config = function()
+        --     require('config/plugins/themes/onedarkpro')
+        -- end,
+    },
     -- {
     --     "folke/tokyonight.nvim",
     --     lazy = false,
@@ -146,6 +147,8 @@ local plugins = {
             require('config/plugins/general/fzf-lua')
         end,
     },
+    -- Better git tools --------------------------
+    {'tpope/vim-fugitive'},
     -- Better quickfix --------------------------
     {'kevinhwang91/nvim-bqf', ft = 'qf'},
     -- Undo history ------------------------------

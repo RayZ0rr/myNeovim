@@ -55,11 +55,12 @@ nnmap("<leader>lt", function() fzf_lua.lsp_type_definitions() end, {desc = "Goto
 nnmap("<leader>ls", function() fzf_lua.lsp_document_symbols() end, {desc = "LSP Symbols (buffer)"})
 nnmap("<leader>lS", function() fzf_lua.lsp_workspace_symbols() end, {desc = "LSP Symbols (workspace)"})
 nnmap("<leader>la", function() fzf_lua.lsp_code_actions() end, {desc = "Code Actions"})
-nnmap("<leader>lwd", function() fzf_lua.diagnostics_document() end, {desc = "Buffer Diagnostics"})
-nnmap("<leader>lwD", function() fzf_lua.diagnostics_workspace() end, {desc = "Workspace Diagnostics"})
+nnmap("<leader>fe", function() fzf_lua.diagnostics_document() end, {desc = "Buffer Diagnostics"})
+nnmap("<leader>fE", function() fzf_lua.diagnostics_workspace() end, {desc = "Workspace Diagnostics"})
 
 -- Misc -------------------------------------------
 nnmap('<leader>fg', function() fzf_lua.git_files() end, {desc="Fzf-Lua git files"})
+nnmap('<leader>fd', function() fzf_lua.git_bcommits() end, {desc="Fzf-Lua git commits buffer"})
 nnmap('<leader>flb', function() fzf_lua.blines() end, {desc="Fzf-Lua buffer lines"})
 nnmap('<leader>fll', function() fzf_lua.lines() end, {desc="Fzf-Lua lines"})
 nnmap('<F1>', function() fzf_lua.help_tags() end, {desc="Fzf-Lua help tags"})
@@ -70,7 +71,7 @@ nnmap('<leader>f:', function() fzf_lua.command_history() end, {desc="Fzf-Lua com
 nnmap('<leader>f/', function() fzf_lua.search_history() end, {desc="Fzf-Lua search history"})
 nnmap("<leader>ft", function() fzf_lua.treesitter() end, {desc = "Fzf-Lua Treesitter"})
 nnmap('<leader>fq', function() fzf_lua.quickfix() end, {desc="Fzf-Lua quickfix"})
-nnmap('<leader>fq', function() fzf_lua.quickfix_stack() end, {desc="Fzf-Lua quickfix stack"})
+nnmap('<leader>fQ', function() fzf_lua.quickfix_stack() end, {desc="Fzf-Lua quickfix stack"})
 nnmap(
     -- This is the default nvim binding, which I am overriding here.
     'z=',

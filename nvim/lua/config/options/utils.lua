@@ -61,6 +61,7 @@ function M.executable(name)
 end
 
 M.root_markers = {
+  '.git',
   '.gitignore',
   'CMakeLists.txt',
   'compile_commands.json',

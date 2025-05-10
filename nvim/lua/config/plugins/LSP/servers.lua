@@ -8,18 +8,20 @@ vim.api.nvim_create_autocmd('LspAttach', {
     callback = lsp_on_attach
 })
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
--- Add additional capabilities supported by nvim-cmp
-local has_cmp, cmp_lsp = pcall(require, 'cmp_nvim_lsp')
-if has_cmp then
-    capabilities = cmp_lsp.default_capabilities()
-end
--- local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+-- Add additional capabilities supported by nvim-cmp or blink
+local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+local has_blink, blink = pcall(require, "blink.cmp")
+local capabilities = vim.tbl_deep_extend(
+    "force",
+    {},
+    vim.lsp.protocol.make_client_capabilities(),
+    has_cmp and cmp_nvim_lsp.default_capabilities() or {},
+    has_blink and blink.get_lsp_capabilities() or {}
+)
 
 --##########################################################################################################
 -- General lang server setup -----------------------------------------
 --###################################################################################################################
-
 local server_config = {
     capabilities = capabilities;
     flags = {
@@ -32,48 +34,35 @@ local server_config = {
 local servers_executables = { cmake = 'cmake', vimls = ''}
 for server, exec in pairs(servers_executables) do
     if executable(exec) then
-        nvim_lsp[server].setup(server_config)
+        vim.lsp.config(server, server_config)
+        vim.lsp.enable(server)
     end
 end
 
 -- set up LSP for python
-if executable('pylsp') then
-    nvim_lsp.pylsp.setup({
+if executable('pyright-langserver') then
+    vim.lsp.config('pyright', {
         capabilities = capabilities,
-        settings = {
-            pylsp = {
-                plugins = {
-                    pylint = { enabled = true, executable = "pylint" },
-                    pyflakes = { enabled = false },
-                    pycodestyle = { enabled = false },
-                    jedi_completion = { fuzzy = true },
-                    pyls_isort = { enabled = true },
-                    pylsp_mypy = { enabled = true },
-                },
-            },
-        },
-        flags = {
-            debounce_text_changes = 200,
-        },
     })
+    vim.lsp.enable('pyright')
 else
-    vim.notify("pylsp not found!", 'warn', {title = 'LSP-config'})
+    vim.notify("pyright-langserver not found!", 'warn', {title = 'LSP-config'})
 end
 
 -- set up bash-language-server
 if executable('bash-language-server') then
-    nvim_lsp.bashls.setup({
+    vim.lsp.config('bashls', {
         capabilities = capabilities,
         filetypes = { "sh", "bash", "zsh" },
     })
+    vim.lsp.enable('bashls')
 end
 
 --##########################################################################################################
 -- C/C++ config------------------------------------------
 --###################################################################################################################
-
 if executable('clangd') then
-    nvim_lsp.clangd.setup({
+    vim.lsp.config('clangd', {
         capabilities = capabilities,
         flags = {
             debounce_text_changes = 150,
@@ -84,12 +73,16 @@ if executable('clangd') then
             "--suggest-missing-includes"
         },
     })
+    vim.lsp.enable('clangd')
 else
     vim.notify("clangd not found!", 'warn', {title = 'LSP-config'})
 end
 
+--##########################################################################################################
+-- Golang config------------------------------------------
+--###################################################################################################################
 if executable('gopls') then
-    nvim_lsp.gopls.setup({
+    vim.lsp.config('gopls', {
         capabilities = capabilities,
         -- capabilities = vim.tbl_deep_extend(
         --     "force", {}, capabilities, server.capabilities or {}
@@ -171,4 +164,5 @@ if executable('gopls') then
             usePlaceholders = true,
         },
     })
+    vim.lsp.enable('gopls')
 end
