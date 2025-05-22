@@ -334,6 +334,17 @@ local plugins = {
         end,
     },
 
+    {
+        "olimorris/codecompanion.nvim",
+        config = function()
+            require('config/plugins/general/codecompanion')
+        end,
+        dependencies = {
+            "ravitemer/codecompanion-history.nvim",
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+    },
 }
 require('lazy').setup(plugins)
 require('config/plugins/general/misc')
