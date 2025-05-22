@@ -93,18 +93,18 @@ fzf_lua.setup {
         follow                    = true,
         no_ignore                 = false,
     },
-    -- files = {
-    --     actions = {
-    --         -- inherits from 'actions.files', here we can override
-    --         -- or set bind to 'false' to disable a default action
-    --         -- action to toggle `--no-ignore`, requires fd or rg installed
-    --         ["ctrl-g"]         = { actions.toggle_ignore },
-    --         -- uncomment to override `actions.file_edit_or_qf`
-    --         ["default"]   = actions.file_edit,
-    --         -- custom actions are available too
-    --         ["ctrl-y"]    = function(selected) print(selected[1]) end,
-    --     }
-    -- },
+    files = {
+        actions = {
+            -- inherits from 'actions.files', here we can override
+            -- or set bind to 'false' to disable a default action
+            -- action to toggle `--no-ignore`, requires fd or rg installed
+            ["ctrl-g"]         = { actions.toggle_ignore },
+            -- uncomment to override `actions.file_edit_or_qf`
+            ["default"]   = actions.file_edit,
+            -- custom actions are available too
+            ["ctrl-y"]    = function(selected) print(selected[1]) end,
+        }
+    },
     oldfiles = {
         include_current_session = true,
     },
@@ -139,7 +139,7 @@ fzf_lua.setup {
             --   local contents = vim.fn.getreg(register)
             --   vim.api.nvim_paste(contents, true, -1)
             -- end,
-            ['ctrl-p'] = function(selected)
+            ['ctrl-y'] = function(selected)
                 local reg = selected[1]:match("%[(.-)%]")
                 local ok, data = pcall(vim.fn.getreg, reg)
                 if ok and #data > 0 then
