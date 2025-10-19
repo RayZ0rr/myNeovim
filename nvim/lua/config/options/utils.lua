@@ -74,6 +74,8 @@ M.root_markers = {
   '.clangd',
   '.clang-tidy',
   '.clang-format',
+  '.env',
+  '.envrc',
 }
 
 M.root_dir = function(fname, rm)

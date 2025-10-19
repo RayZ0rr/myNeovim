@@ -34,7 +34,7 @@ nnmap('<leader>fO', function() fzf_lua.oldfiles({cwd = vim.uv.cwd(), cwd_only = 
 -- Grep -------------------------------------------
 local fzf_project_grep = fzf_lua.grep_project
 nnmap('<leader>gg', function() fzf_lua.live_grep({exec_empty_query = true}) end, {desc="Fzf-Lua live grep"})
-nnmap('<leader>g/', function() fzf_lua.lgrep_curbuf() end, {desc="Fzf-Lua live grep buffer"})
+nnmap('<leader>g/', function() fzf_lua.grep_curbuf({search=""}) end, {desc="Fzf-Lua live grep buffer"})
 nnmap('<leader>gw', function() fzf_project_grep({search = utils.input('Grep For❯ ')}) end, {desc="Fzf-Lua grep"})
 nnmap('<leader>gW', function() fzf_project_grep({search = utils.input('Grep For❯ '), no_ignore = true}) end, {desc="Fzf-Lua grep all"})
 nnmap('<leader>gr', function() fzf_project_grep({continue_last_search = true}) end, {desc="Fzf-Lua grep continue last"})
