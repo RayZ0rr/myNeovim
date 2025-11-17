@@ -40,14 +40,48 @@ for server, exec in pairs(servers_executables) do
 end
 
 -- set up LSP for python
+local settings_pyright = {}
+if executable('ruff') then
+    vim.lsp.enable('ruff')
+    settings_pyright = {
+        pyright = {
+            -- Using Ruff's import organizer
+            disableOrganizeImports = true,
+        },
+        -- python = {
+        --     analysis = {
+        --         -- Ignore all files for analysis to exclusively use Ruff for linting
+        --         ignore = { '*' },
+        --     },
+        -- },
+    }
+else
+    vim.notify("ruff not found!", 'warn', {title = 'LSP-config'})
+end
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup('lsp_attach_disable_ruff_hover', { clear = true }),
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client == nil then
+            return
+        end
+        if client.name == 'ruff' then
+            -- Disable hover in favor of Pyright
+            client.server_capabilities.hoverProvider = false
+        end
+    end,
+    desc = 'LSP: Disable hover capability from Ruff',
+})
 if executable('pyright-langserver') then
     vim.lsp.config('pyright', {
         capabilities = capabilities,
+        settings = settings_pyright,
     })
     vim.lsp.enable('pyright')
 else
     vim.notify("pyright-langserver not found!", 'warn', {title = 'LSP-config'})
 end
+
 
 -- set up bash-language-server
 if executable('bash-language-server') then

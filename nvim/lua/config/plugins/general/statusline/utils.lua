@@ -56,7 +56,7 @@ M.func = {
         local clients = vim.lsp.get_clients({bufnr=vim.api.nvim_get_current_buf()}) or {}
         local name = clients[1] and clients[1].name or ''
         for i = 2, vim.tbl_count(clients) do
-            name = name .. clients[i].name
+            name = name .. ', ' .. clients[i].name
         end
         if name:len() == 0 then return "" end
         local str = " [" .. name .. "]"
