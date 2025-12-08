@@ -36,26 +36,28 @@ end
 
 local opts = {
     adapters = {
-        copilot = function()
-            return require("codecompanion.adapters").extend("copilot", {
-                schema = {
-                    model = {
-                        default = "chatgpt-4.5",
+        http = {
+            copilot = function()
+                return require("codecompanion.adapters").extend("copilot", {
+                    schema = {
+                        model = {
+                            default = "chatgpt-4.5",
+                        },
                     },
-                },
-            })
-        end,
-        gemini = function()
-            return require("codecompanion.adapters").extend("gemini", {
-                schema = {
-                    model = {
-                        -- default = "gemini-2.5-pro-exp-03-25",
-                        default = "gemini-2.5-flash-preview-04-17",
+                })
+            end,
+            gemini = function()
+                return require("codecompanion.adapters").extend("gemini", {
+                    schema = {
+                        model = {
+                            -- default = "gemini-2.5-pro-exp-03-25",
+                            default = "gemini-2.5-flash-preview-04-17",
+                        },
                     },
-                },
-            })
-        end,
-        openrouter = adpater_openrouter,
+                })
+            end,
+            openrouter = adpater_openrouter,
+        }
     },
     strategies = {
         chat = {
