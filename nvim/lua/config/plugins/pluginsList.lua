@@ -12,34 +12,121 @@ local plugins = {
     ----------------------------------------------
     -- THEMES
     ----------------------------------------------
+
     -- -- Everforest Theme -----------------------------
     {
-      'sainnhe/everforest',
-      lazy = false,
-      priority = 1000,
-      config = function()
-        -- Optionally configure and load the colorscheme
-        -- directly inside the plugin declaration.
-        vim.g.everforest_background = 'hard'
-        -- vim.g.everforest_better_performance = 1
-        vim.g.everforest_enable_italic = true
-        vim.g.everforest_colors_override = {bg0 = {'#202020', '234'}}
-        vim.api.nvim_create_autocmd('ColorScheme', {
-            group = vim.api.nvim_create_augroup('custom_highlights_everforest', {}),
-            pattern = 'everforest',
-            callback = function()
-                local config = vim.fn['everforest#get_configuration']()
-                local palette = vim.fn['everforest#get_palette'](config.background, config.colors_override)
-                local set_hl = vim.fn['everforest#highlight']
+        'sainnhe/everforest',
+        lazy = false,
+        priority = 1000,
+        config = function()
+            vim.g.everforest_enable_italic = true
+            -- vim.g.everforest_better_performance = 1
+            vim.g.everforest_background = 'hard'
+            vim.g.everforest_colors_override = {bg0 = {'#202020', '234'}}
+            vim.g.everforest_diagnostic_virtual_text = "colored"
+            -- vim.g.everforest_diagnostic_text_highlight = 1
+            -- vim.g.everforest_inlay_hints_background = 1
+            vim.api.nvim_create_autocmd('ColorScheme', {
+                group = vim.api.nvim_create_augroup('custom_highlights_everforest', {}),
+                pattern = 'everforest',
+                callback = function()
+                    local config = vim.fn['everforest#get_configuration']()
+                    local palette0 = vim.fn['everforest#get_palette'](config.background, config.colors_override)
+                    local palette1 = vim.fn['everforest#get_palette'](config.foreground, config.colors_override)
+                    local set_hl = vim.fn['everforest#highlight']
 
-                -- set_hl('YankHighlightGroup', palette.black, palette.bg_visual_yellow)
-                vim.api.nvim_set_hl(0, 'YankHighlightGroup', {fg=palette.bg1[1], bg=palette.yellow[1], default=false})
-                vim.api.nvim_set_hl(0, 'StatusLine', {fg=palette.bg0[1], bg=palette.bg0[1], default=false})
-            end
-        })
-        vim.cmd.colorscheme('everforest')
-        -- vim.api.nvim_set_hl(0, 'YankHighlightGroup', {link='WarningLine'})
-      end
+                    -- set_hl('YankHighlightGroup', palette.black, palette.bg_visual_yellow)
+                    vim.api.nvim_set_hl(0, 'YankHighlightGroup', {fg=palette0.bg1[1], bg=palette0.yellow[1], default=false})
+                    vim.api.nvim_set_hl(0, 'StatusLine', {fg=palette0.bg0[1], bg=palette0.bg0[1], default=false})
+                    vim.api.nvim_set_hl(0, 'MatchParen', {fg=palette1.orange[1]})
+                    vim.api.nvim_set_hl(0, 'MatchWord', {fg=palette1.orange[1], italic=true})
+                    vim.api.nvim_set_hl(0, 'MatchWordCur', {fg=palette1.orange[1], italic=true})
+                end
+            })
+            -- vim.cmd.colorscheme('everforest')
+            -- vim.api.nvim_set_hl(0, 'YankHighlightGroup', {link='WarningLine'})
+        end
+    },
+    {
+        'everviolet/nvim', name = 'evergarden',
+        priority = 1000, -- Colorscheme plugin is loaded first before any other plugins
+        config = function()
+            require('evergarden').setup({
+                theme = {
+                    variant = 'fall', -- 'winter'|'fall'|'spring'|'summer'
+                },
+                -- editor = {
+                --     transparent_background = false,
+                --     sign = { color = 'none' },
+                --     float = {
+                --         color = 'mantle',
+                --         solid_border = false,
+                --     },
+                --     completion = {
+                --         color = 'surface0',
+                --     },
+                -- },
+                color_overrides = {
+                    -- base = '#2D353B',
+                    -- text = '#D3C6AA',
+                    green = '#a7c080',
+                    lime = '#83C092',
+                    skye = '#7FBBB3',
+                },
+                overrides = function(colors)
+                    return {
+                        DiagnosticVirtualTextError = {
+                            link = 'DiagnosticError',
+                        },
+                        DiagnosticHint = {
+                            link = 'DiagnosticSignOk',
+                        },
+                        IncSearch = {
+                            fg = colors.orange,
+                            bg = colors.surface0,
+                        },
+                        Statusline = {
+                            fg = colors.surface1,
+                            bg = colors.bg1,
+                        },
+                        ['@delimiter'] = {
+                            fg = '#9FAFAF',
+                        },
+                    }
+                end,
+            })
+            vim.cmd.colorscheme('evergarden')
+        end,
+    },
+    {
+        "rebelot/kanagawa.nvim",
+        config = function()
+            require('kanagawa').setup({
+                colors = {
+                    theme = {
+                        wave = {
+                            ui = {
+                                bg = '#202020',
+                                float = {
+                                    bg = "none",
+                                },
+                            },
+                        },
+                        dragon = {
+                            syn = {
+                                parameter = "yellow",
+                            },
+                        },
+                        all = {
+                            ui = {
+                                bg_gutter = "none"
+                            }
+                        }
+                    }
+                },
+            })
+            -- vim.cmd("colorscheme kanagawa-wave")
+        end
     },
     -- -- -- Paradise Theme -----------------------------
     {
@@ -108,15 +195,18 @@ local plugins = {
         end,
     },
 
-    --------------------------------------------------
-    -- Treesitter
-    --------------------------------------------------
+    -- --------------------------------------------------
+    -- -- Treesitter
+    -- --------------------------------------------------
 
     -- Highlight, edit, and navigate code using a fast incremental parsing library
     {
         'nvim-treesitter/nvim-treesitter',
+        lazy = false,
+        branch = 'main',
         build = ':TSUpdate',
-        event = {"BufReadPost", "BufNewFile"},
+        -- event = {"VimEnter"},
+        -- event = {"BufReadPost", "BufNewFile"},
         config = function()
             require('config/plugins/treesitter/settings')
         end,
@@ -124,11 +214,7 @@ local plugins = {
     -- Additional textobjects for treesitter
     {
         'nvim-treesitter/nvim-treesitter-textobjects',
-        dependencies = {'nvim-treesitter/nvim-treesitter'}
-    },
-    -- Context aware commenting using treesitter
-    {
-        'JoosepAlviste/nvim-ts-context-commentstring',
+        branch = 'main',
         dependencies = {'nvim-treesitter/nvim-treesitter'}
     },
 
@@ -139,7 +225,7 @@ local plugins = {
     -- FZF ----------------------------------------
     {
         'ibhagwan/fzf-lua',
-        -- keys = {"<C-p>", "<leader>f", "<leader>g"},
+        keys = {"<C-p>", "<leader>f", "<leader>g"},
         dependencies = {
             'kyazdani42/nvim-web-devicons'
         }, -- optional for icons
@@ -147,35 +233,19 @@ local plugins = {
             require('config/plugins/general/fzf-lua')
         end,
     },
-    -- Better git tools --------------------------
-    {'tpope/vim-fugitive'},
-    -- Better quickfix --------------------------
-    {'kevinhwang91/nvim-bqf', ft = 'qf'},
     -- Undo history ------------------------------
     {
         'mbbill/undotree',
-        -- config = function()
-        --     require('config/plugins/general/misc')
-        -- end,
     },
-    -- Build, Run tasks (commands) in background asynchronously
+    -- Better Yank (Cycle paste, more history, etc) ---------------------------
     {
-        'skywind3000/asynctasks.vim',
-        event = "BufWritePost",
+        'gbprod/yanky.nvim',
+        event = "VimEnter",
         dependencies = {
-            'skywind3000/asyncrun.vim',
-            event = "BufWritePost",
+            { "kkharji/sqlite.lua" }
         },
         config = function()
-            require('config/plugins/general/asyncRunTasks')
-        end,
-    },
-    -- Terminal conveniences plugin (filebrowser with vifm, lazygit etc)
-    {
-        'voldikss/vim-floaterm',
-        -- keys = { "<leader>t" },
-        config = function()
-            require('config/plugins/general/floaterm')
+            require('config/plugins/general/yanky')
         end,
     },
     -- Autocompletion plugin ---------------------
@@ -202,6 +272,7 @@ local plugins = {
     -- Surround with characters -------------------
     {
         "tpope/vim-surround",
+        event = "InsertEnter",
     },
     -- Auto-pair completion -----------------------
     {
@@ -214,9 +285,6 @@ local plugins = {
     -- Trailing whitspaces higlight and trim ------
     {
         'ntpeters/vim-better-whitespace',
-        -- config = function()
-        --     require('config/plugins/general/misc')
-        -- end,
     },
     -- Comment and Uncomment lines ----------------
     {
@@ -226,6 +294,30 @@ local plugins = {
         end,
         config = function()
             require('config/plugins/general/kommentary')
+        end,
+    },
+    -- Better git tools --------------------------
+    {'tpope/vim-fugitive'},
+    -- Better quickfix --------------------------
+    {'kevinhwang91/nvim-bqf', ft = 'qf'},
+    -- Build, Run tasks (commands) in background asynchronously
+    {
+        'skywind3000/asynctasks.vim',
+        event = "BufWritePost",
+        dependencies = {
+            'skywind3000/asyncrun.vim',
+            event = "BufWritePost",
+        },
+        config = function()
+            require('config/plugins/general/asyncRunTasks')
+        end,
+    },
+    -- Terminal conveniences plugin (filebrowser with vifm, lazygit etc)
+    {
+        'voldikss/vim-floaterm',
+        keys = { "<leader>t" },
+        config = function()
+            require('config/plugins/general/floaterm')
         end,
     },
     -- Auto-session maker -------------------------
@@ -240,31 +332,12 @@ local plugins = {
     {
         'RRethy/vim-illuminate',
         event = {"BufReadPost", "BufNewFile"},
-        -- config = function()
-        --     require('config/plugins/general/misc')
-        -- end,
     },
 
     -- -----------------------------------------------
     -- UI/LOOK
     -- -----------------------------------------------
 
-    -- Icon set ---------------------------------
-    {
-        'kyazdani42/nvim-web-devicons',
-        lazy = true,
-        -- config = function()
-        --     require('config/plugins/general/misc')
-        -- end,
-    },
-    -- Add git related info in the signs columns and popups
-    {
-        'lewis6991/gitsigns.nvim',
-        lazy = true,
-        -- config = function()
-        --     require('config/plugins/general/misc')
-        -- end,
-    },
     -- Statusline ------------------------------------
     {
         'RayZ0rr/mini.statusline', version = false,
@@ -273,14 +346,16 @@ local plugins = {
             require('config/plugins/general/statusline/miniline')
         end,
     },
-    -- {
-    --     'rebelot/heirline.nvim',
-    --     event = "VimEnter",
-    --     dependencies = {'kyazdani42/nvim-web-devicons', 'lewis6991/gitsigns.nvim'},
-    --     config = function()
-    --         require('config/plugins/general/statusline/heirline')
-    --     end,
-    -- },
+    -- Icon set ---------------------------------
+    {
+        'kyazdani42/nvim-web-devicons',
+        lazy = true,
+    },
+    -- Add git related info in the signs columns and popups
+    {
+        'lewis6991/gitsigns.nvim',
+        lazy = true,
+    },
     -- StartScreen -----------------------------------
     {
         'goolord/alpha-nvim',
@@ -293,14 +368,10 @@ local plugins = {
     {
         'Vonr/align.nvim',
         branch = "v2",
-        -- config = function()
-        --     require('config/plugins/general/misc')
-        -- end,
     },
     -- Highlight, navigate, and operate on sets of matching text
     {
         'andymass/vim-matchup',
-        event = "VimEnter",
         config = function()
             require('config/plugins/general/vim-matchup')
         end,
@@ -309,22 +380,13 @@ local plugins = {
     {
         'NvChad/nvim-colorizer.lua',
         lazy = true,
-        -- config = function()
-        --     require('config/plugins/general/misc')
-        -- end,
     },
     -- Highlight cursorline during jump ---------------
     {
         'cxwx/specs.nvim',
         commit = "dd82496",
         event = {"BufReadPost", "BufNewFile"},
-        -- config = function()
-        --     require('config/plugins/general/misc')
-        -- end,
     },
-    -- {
-    --     'danilamihailov/beacon.nvim'
-    -- },
     -- Show marks and bookmarks -------------------
     {
         'chentoast/marks.nvim',
@@ -344,6 +406,7 @@ local plugins = {
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
         },
+        tag = "v17.33.0",
     },
 }
 require('lazy').setup(plugins)
