@@ -100,4 +100,14 @@ function M.hlSetDefault(name, data)
     vim.api.nvim_set_hl(0, name, data)
 end
 
+function M.hlGet(name)
+    local highlight_values = vim.api.nvim_get_hl(0, {name=name})
+    return highlight_values
+end
+
+function M.hlUpdate(name, data)
+    local highlight_values = M.hlGet(name)
+    vim.api.nvim_set_hl(0, name, vim.tbl_extend('force', highlight_values, data))
+end
+
 return M

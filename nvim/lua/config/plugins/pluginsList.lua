@@ -4,6 +4,9 @@ if not ok then
   return
 end
 
+local hl_update = require('config/options/utils').hlUpdate
+local hl_set = require('config/options/utils').hlSet
+
 -- ########################################################
 -- All the used plugins
 -- ########################################################
@@ -22,10 +25,11 @@ local plugins = {
             vim.g.everforest_enable_italic = true
             -- vim.g.everforest_better_performance = 1
             vim.g.everforest_background = 'hard'
-            vim.g.everforest_colors_override = {bg0 = {'#202020', '234'}}
             vim.g.everforest_diagnostic_virtual_text = "colored"
-            -- vim.g.everforest_diagnostic_text_highlight = 1
-            -- vim.g.everforest_inlay_hints_background = 1
+            vim.g.everforest_diagnostic_text_highlight = 0
+            vim.g.everforest_inlay_hints_background = 1
+            vim.g.everforest_ui_contrast = 'high'
+            vim.g.everforest_colors_override = {fg = {'#dddddd', '000'}}
             vim.api.nvim_create_autocmd('ColorScheme', {
                 group = vim.api.nvim_create_augroup('custom_highlights_everforest', {}),
                 pattern = 'everforest',
@@ -33,17 +37,17 @@ local plugins = {
                     local config = vim.fn['everforest#get_configuration']()
                     local palette0 = vim.fn['everforest#get_palette'](config.background, config.colors_override)
                     local palette1 = vim.fn['everforest#get_palette'](config.foreground, config.colors_override)
-                    local set_hl = vim.fn['everforest#highlight']
 
-                    -- set_hl('YankHighlightGroup', palette.black, palette.bg_visual_yellow)
-                    vim.api.nvim_set_hl(0, 'YankHighlightGroup', {fg=palette0.bg1[1], bg=palette0.yellow[1], default=false})
-                    vim.api.nvim_set_hl(0, 'StatusLine', {fg=palette0.bg0[1], bg=palette0.bg0[1], default=false})
-                    vim.api.nvim_set_hl(0, 'MatchParen', {fg=palette1.orange[1]})
-                    vim.api.nvim_set_hl(0, 'MatchWord', {fg=palette1.orange[1], italic=true})
-                    vim.api.nvim_set_hl(0, 'MatchWordCur', {fg=palette1.orange[1], italic=true})
+                    hl_set('YankHighlightGroup', {fg=palette0.bg1[1], bg=palette0.yellow[1], default=false})
+                    hl_update('MatchParen', {fg=palette1.orange[1], bg=palette0.bg0[1]})
+                    hl_update('MatchWord', {fg=palette1.orange[1], italic=true})
+                    hl_update('MatchWordCur', {fg=palette1.orange[1], italic=true})
+                    hl_update('MatchWordCur', {fg=palette1.orange[1], italic=true})
+                    hl_update('Statusline', {bg=palette0.bg0[1]})
+                    -- hl_update('StatuslineNC', {bg=palette0.bg0[1]})
                 end
             })
-            -- vim.cmd.colorscheme('everforest')
+            vim.cmd.colorscheme('everforest')
             -- vim.api.nvim_set_hl(0, 'YankHighlightGroup', {link='WarningLine'})
         end
     },
@@ -95,7 +99,7 @@ local plugins = {
                     }
                 end,
             })
-            vim.cmd.colorscheme('evergarden')
+            -- vim.cmd.colorscheme('evergarden')
         end,
     },
     {
