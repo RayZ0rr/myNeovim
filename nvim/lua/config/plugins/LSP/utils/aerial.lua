@@ -1,9 +1,8 @@
 local aerial = require'aerial'
 
 aerial_on_attach = function(bufnr)
-    -- Toggle the aerial window with <leader>ar
-    vim.keymap.set("n", "<leader>ar", "<cmd>AerialToggle!<CR>")
-    -- Jump forwards/backwards with '{' and '}'
+    vim.keymap.set("n", "<leader>arr", "<cmd>AerialToggle<CR>")
+    vim.keymap.set("n", "<leader>ara", function() require("aerial").fzf_lua_picker() end)
     vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
     vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
 end
@@ -23,6 +22,9 @@ require("aerial").setup({
         width = nil,
         min_width = 30,
 
+        -- key-value pairs of window-local options for aerial window (e.g. winhl)
+        win_opts = {},
+
         -- Determines the default direction to open the aerial window. The 'prefer'
         -- options will open the window in the other direction *if* there is a
         -- different buffer in the way of the preferred direction
@@ -33,6 +35,12 @@ require("aerial").setup({
         --   edge   - open aerial at the far right/left of the editor
         --   window - open aerial to the right/left of the current window
         placement = "window",
+
+        -- When the symbols change, resize the aerial window (within min/max constraints) to fit
+        resize_to_content = true,
+
+        -- Preserve window size equality with (:help CTRL-W_=)
+        preserve_equality = false,
     },
 
     -- Determines how the aerial window decides which buffer to display symbols for
@@ -44,10 +52,43 @@ require("aerial").setup({
     --   unfocus       - close aerial when you leave the original source window
     --   switch_buffer - close aerial when you change buffers in the source window
     --   unsupported   - close aerial when attaching to a buffer that has no symbol source
-    close_automatic_events = {},
+    close_automatic_events = {"switch_buffer"},
 
     -- Set to false to remove the default keybindings for the aerial buffer
-    default_bindings = true,
+    keymaps = {
+        ["?"] = "actions.show_help",
+        ["g?"] = "actions.show_help",
+        ["<CR>"] = "actions.jump",
+        ["<2-LeftMouse>"] = "actions.jump",
+        ["<C-v>"] = "actions.jump_vsplit",
+        ["<C-s>"] = "actions.jump_split",
+        ["p"] = "actions.scroll",
+        ["<C-j>"] = "actions.down_and_scroll",
+        ["<C-k>"] = "actions.up_and_scroll",
+        ["{"] = "actions.prev",
+        ["}"] = "actions.next",
+        ["[["] = "actions.prev_up",
+        ["]]"] = "actions.next_up",
+        ["q"] = "actions.close",
+        ["o"] = "actions.tree_toggle",
+        ["za"] = "actions.tree_toggle",
+        ["O"] = "actions.tree_toggle_recursive",
+        ["zA"] = "actions.tree_toggle_recursive",
+        ["l"] = "actions.tree_open",
+        ["zo"] = "actions.tree_open",
+        ["L"] = "actions.tree_open_recursive",
+        ["zO"] = "actions.tree_open_recursive",
+        ["h"] = "actions.tree_close",
+        ["zc"] = "actions.tree_close",
+        ["H"] = "actions.tree_close_recursive",
+        ["zC"] = "actions.tree_close_recursive",
+        ["zr"] = "actions.tree_increase_fold_level",
+        ["zR"] = "actions.tree_open_all",
+        ["zm"] = "actions.tree_decrease_fold_level",
+        ["zM"] = "actions.tree_close_all",
+        ["zx"] = "actions.tree_sync_folds",
+        ["zX"] = "actions.tree_sync_folds",
+    },
 
     -- Disable aerial on files with this many lines
     disable_max_lines = 10000,
@@ -91,6 +132,9 @@ require("aerial").setup({
     -- Set to false to disable
     highlight_on_jump = 300,
 
+    -- Jump to symbol in source window when the cursor moves
+    autojump = false,
+
     -- Define symbol icons. You can also specify "<Symbol>Collapsed" to change the
     -- icon when the tree is collapsed at that symbol, or "Collapsed" to specify a
     -- default collapsed icon. The default icon set is determined by the
@@ -110,6 +154,9 @@ require("aerial").setup({
     ignore = {
         -- Ignore unlisted buffers. See :help buflisted
         unlisted_buffers = true,
+
+        -- Ignore diff windows (setting to false will allow aerial in diff windows)
+        diff_windows = true,
 
         -- List of filetypes to ignore.
         filetypes = {},
