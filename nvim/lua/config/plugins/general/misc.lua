@@ -154,8 +154,11 @@ if ok_illuminate then
     -- Supports the same keys passed to .configure
     -- If nil, vim-illuminate will be disabled for large files.
     large_file_overrides = nil,
+    disable_keymaps = true
   })
-  nnmap(',ill',function() require('illuminate').toggle() print("Illuminate toggled") end, {desc="Toogle vim-illuminate"})
+  nnmap(',ill', function() require('illuminate').toggle() print("Illuminate toggled") end, {desc="Toogle vim-illuminate"})
+  nnmap('<M-h>', function() require('illuminate').goto_prev_reference() end, {desc="Goto prev vim-illuminate"})
+  nnmap('<M-l>', function() require('illuminate').goto_next_reference() end, {desc="Goto next vim-illuminate"})
   vim.api.nvim_set_hl(0,'IlluminatedWordText',{italic = true})
   vim.api.nvim_set_hl(0,'IlluminatedWordRead',{underline = true, italic = true})
   vim.api.nvim_set_hl(0,'IlluminatedWordWrite',{underline = true, italic = true})
@@ -171,18 +174,17 @@ if vim.fn.empty(vim.fn.glob(plugins_path..'vim-better-whitespace')) == 0 then
   nnmap( '[w', ':PrevTrailingWhitespace<CR>')
 
   nnmap( '<leader>wst', function() vim.cmd "ToggleWhitespace" print("Whitspace toggled") end, {desc="Whitespace toggle function"})
-  nnmap( '<leader>wsr', ':StripWhitespace<CR>', {desc="Whitespace remove function"})
+  nnmap( '<leader>wsr', '<cmd>StripWhitespace<CR>', {desc="Whitespace remove function"})
   nnmap( '<leader>wss', function() vim.cmd "ToggleStripWhitespaceOnSave" print("Whitspace strip on save toggled") end, {desc="Whitespace remove on save toggle function"})
 
   -- vim.cmd[[autocmd FileType * ToggleWhitespace]]
 
-  vim.g.better_whitespace_operator=',wsi'
+  vim.g.better_whitespace_operator=',ws'
 
   vim.g.better_whitespace_enabled=1
   vim.g.strip_whitespace_on_save=0
   -- vimg.g.strip_whitespace_confirm=1
-  vim.g.current_line_whitespace_disabled_hard=1
-  -- vim.g.current_line_whitespace_disabled_soft=1
+  vim.g.current_line_whitespace_disabled_soft=1
   vim.g.better_whitespace_filetypes_blacklist={'fzf', 'floaterm', 'toggleterm', 'term', 'fm', 'replacer', 'netrw', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive'}
 end
 
