@@ -8,7 +8,7 @@ require("yanky").setup({
         storage = "sqlite",
         storage_path = vim.fn.stdpath("data") .. "/databases/yanky.db", -- Only for sqlite storage
         sync_with_numbered_registers = true,
-        cancel_event = "move",
+        cancel_event = "update",
         ignore_registers = { "_" },
         update_register_on_cycle = false,
         permanent_wrapper = nil,
@@ -44,16 +44,14 @@ map({"n","x"}, "p", "<Plug>(YankyPutAfter)")
 map({"n","x"}, "P", "<Plug>(YankyPutBefore)")
 map({"n","x"}, "gp", "<Plug>(YankyGPutAfter)")
 map({"n","x"}, "gP", "<Plug>(YankyGPutBefore)")
-nnmap("<a-p>", "<Plug>(YankyPreviousEntry)")
-nnmap("<a-n>", "<Plug>(YankyNextEntry)")
+nnmap("<a-j>", "<Plug>(YankyPreviousEntry)")
+nnmap("<a-k>", "<Plug>(YankyNextEntry)")
 nnmap("=p", "<Plug>(YankyPutAfterFilter)")
 nnmap("=P", "<Plug>(YankyPutBeforeFilter)")
 nnmap("]p", "<Plug>(YankyPutIndentAfterLinewise)")
 nnmap("[p", "<Plug>(YankyPutIndentBeforeLinewise)")
 nnmap("]P", "<Plug>(YankyPutAfterLinewise)")
 nnmap("[P", "<Plug>(YankyPutBeforeLinewise)")
-xnmap('p', 'pgvy')
-
 
 vim.api.nvim_set_hl(0, "YankyPut",{link="YankHighlightGroup"})
 vim.api.nvim_set_hl(0, "YankyYanked",{link="YankHighlightGroup"})
