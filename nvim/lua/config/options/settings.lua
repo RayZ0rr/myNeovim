@@ -10,7 +10,7 @@ opt.breakindent = true
 opt.termguicolors = true
 opt.ignorecase = true
 opt.smartcase = true
-opt.hlsearch = false
+opt.hlsearch = true
 opt.inccommand='nosplit'
 opt.wrap = false                        -- Display long lines as just one line
 opt.wildoptions:append("pum")
@@ -69,8 +69,8 @@ opt.listchars = {
     -- tab = '▷─', -- '▷─' WHITE RIGHT-POINTING TRIANGLE (U+25B7, UTF-8: E2 96 B7) + BOX DRAWINGS HEAVY TRIPLE DASH HORIZONTAL (U+2505, UTF-8: E2 94 85)
     tab = '▸-',
     trail = '•', -- BULLET (U+2022, UTF-8: E2 80 A2)
-    space = ' ',
-    eol = '↴',
+    -- space = ' ',
+    -- eol = '↴',
 }
 opt.fillchars = {
     eob = '↴', -- NO-BREAK SPACE (U+00A0, UTF-8: C2 A0) to suppress ~ at EndOfBuffer

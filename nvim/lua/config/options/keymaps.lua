@@ -7,28 +7,28 @@ local xnmap = require('config/options/utils').xnmap
 local tnmap = require('config/options/utils').tnmap
 
 -- Clear search with <esc>
-map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Clear hlsearch and escape" })
-map({"n"}, "<leader>cd", [[<cmd>lcd %:p:h<cr><cmd>pwd<cr>]], { desc = "change cwd" })
+map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", {desc = "Clear hlsearch and escape"})
+nnmap("<leader>cd", [[<cmd>lcd %:p:h<cr><cmd>pwd<cr>]], {desc = "change cwd"})
 
 -----------------------------------------------------------------------------//
 -- Add Empty space above and below
 -----------------------------------------------------------------------------//
-nnmap('[<space>', [[<cmd>put! =repeat(nr2char(10), v:count1)<cr>'[]], { desc = "Add empty space above" })
-nnmap(']<space>', [[<cmd>put =repeat(nr2char(10), v:count1)<cr>]], { desc = "Add empty space below" })
+nnmap('[<space>', [[<cmd>put! =repeat(nr2char(10), v:count1)<cr>'[]],
+    {desc = "Add empty space above"})
+nnmap(']<space>', [[<cmd>put =repeat(nr2char(10), v:count1)<cr>]],
+    {desc = "Add empty space below"})
 
 -----------------------------------------------------------------------------//
 -- Paste in visual mode multiple times
 -----------------------------------------------------------------------------//
-xnmap('p', 'pgvy')
-map({"n"}, "<leader>D", [["_D]], { desc = "blackhole 'D'" })
-map({"n"}, "<leader>C", [["_C]], { desc = "blackhole 'C'" })
+nnmap("<leader>D", [["_D]], {desc = "blackhole 'D'"})
+nnmap("<leader>C", [["_C]], {desc = "blackhole 'C'"})
 
 -----------------------------------------------------------------------------//
--- Capitalize
+-- Change cases (upper/lower case toggle)
 -----------------------------------------------------------------------------//
-nnmap('<leader>U', 'gUiw`]')
-inmap('<C-u>', '<cmd>norm!gUiw`]a<CR>')
-nnmap('<Leader><c-u>' , 'viw~<Esc>')
+nnmap('<leader><c-u>', 'g~iw`]')
+inmap('<C-u>', '<cmd>norm!g~iw`]a<CR>')
 
 -----------------------------------------------------------------------------//
 -- Some insert mode conveniences
@@ -66,7 +66,8 @@ nnmap( "<leader>tf", ":Lex 30<cr>")
 -----------------------------------------------------------------------------//
 -- open a new file in the same directory
 -----------------------------------------------------------------------------//
-nnmap('<leader>nf',[[:e <C-R>=expand("%:p:h") . "/"<CR>]], {silent = false,desc="Open new file in current directory"})
+nnmap('<leader>nf',[[:e <C-R>=expand("%:p:h") . "/"<CR>]],
+    {silent = false, desc="Open new file in current directory"})
 
 -----------------------------------------------------------------------------//
 -- Diable higlight
@@ -94,28 +95,24 @@ nnmap('<down>', "v:count == 0 ? 'gj' : '<down>'", {expr = true})
 -----------------------------------------------------------------------------//
 -- Use alt + arrow keys to resize windows
 -----------------------------------------------------------------------------//
-nnmap('<A-UP>'   , "<cmd>resize +2<cr>", { desc = "Increase window height" })
-nnmap('<A-DOWN>' , "<cmd>resize -2<cr>", { desc = "Decrease window height" })
-nnmap('<A-LEFT>' , "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
-nnmap('<A-RIGHT>', "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
+nnmap('<S-UP>', "<cmd>resize +2<cr>", { desc = "Increase window height" })
+nnmap('<S-DOWN>', "<cmd>resize -2<cr>", { desc = "Decrease window height" })
+nnmap('<S-LEFT>', "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
+nnmap('<S-RIGHT>', "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
 
 -----------------------------------------------------------------------------//
 -- Move selected line / block of text in visual mode
 -----------------------------------------------------------------------------//
-nnmap('<A-j>', ":m .+1<cr>==", { desc = "Move down" })
-nnmap('<A-k>'  , ":m .-2<cr>==", { desc = "Move up" })
-inmap('<A-j>', "<Esc>:m .+1<cr>==gi", { desc = "Move down" })
-inmap('<A-k>'  , "<Esc>:m .-2<cr>==gi", { desc = "Move up" })
-vnmap('<A-j>', ":m '>+1<cr>gv=gv", { desc = "Move down" })
-vnmap('<A-k>'  , ":m '<-2<cr>gv=gv", { desc = "Move up" })
+nnmap('<A-DOWN>', ":m .+1<cr>==", { desc = "Move down" })
+nnmap('<A-UP>', ":m .-2<cr>==", { desc = "Move up" })
+inmap('<A-DOWN>', "<Esc>:m .+1<cr>==gi", { desc = "Move down" })
+inmap('<A-UP>', "<Esc>:m .-2<cr>==gi", { desc = "Move up" })
+vnmap('<A-DOWN>', ":m '>+1<cr>gv=gv", { desc = "Move down" })
+vnmap('<A-UP>', ":m '<-2<cr>gv=gv", { desc = "Move up" })
 
 -----------------------------------------------------------------------------//
 -- Better window navigation
 -----------------------------------------------------------------------------//
-nnmap("<C-h>", "<C-w><C-h>", { desc = "Navigate windows to the left"} )
-nnmap("<C-j>", "<C-w><C-j>", { desc = "Navigate windows down"} )
-nnmap("<C-k>", "<C-w><C-k>", { desc = "Navigate windows up"} )
-nnmap("<C-l>", "<C-w><C-l>", { desc = "Navigate windows to the right"} )
 nnmap("<C-LEFT>", "<C-w><C-h>", { desc = "Navigate windows to the left"} )
 nnmap("<C-DOWN>", "<C-w><C-j>", { desc = "Navigate windows down"} )
 nnmap("<C-UP>", "<C-w><C-k>", { desc = "Navigate windows up"} )
@@ -124,32 +121,28 @@ nnmap("<C-RIGHT>", "<C-w><C-l>", { desc = "Navigate windows to the right"} )
 -----------------------------------------------------------------------------//
 -- Move windows with shift-arrows
 -----------------------------------------------------------------------------//
-nnmap("<S-Left>", "<C-w><S-h>", { desc = "Move window to the left"} )
-nnmap("<S-Down>", "<C-w><S-j>", { desc = "Move window down"} )
-nnmap("<S-Up>", "<C-w><S-k>", { desc = "Move window up"} )
-nnmap("<S-Right>", "<C-w><S-l>", { desc = "Move window to the right"} )
+nnmap("<leader><S-Left>", "<C-w><S-h>", { desc = "Move window to the left"} )
+nnmap("<leader><S-Down>", "<C-w><S-j>", { desc = "Move window down"} )
+nnmap("<leader><S-Up>", "<C-w><S-k>", { desc = "Move window up"} )
+nnmap("<leader><S-Right>", "<C-w><S-l>", { desc = "Move window to the right"} )
 
 nnmap("<space><space>", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
-nnmap("gw", "*N")
-xnmap("gw", "*N")
-
------------------------------------------------------------------------------//
--- Easy CAPS toggle
------------------------------------------------------------------------------//
-
-map({"n","x","o"}, "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
-map({"n","x","o"}, "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
 
 -----------------------------------------------------------------------------//
 -- Search and replace
 -----------------------------------------------------------------------------//
-
 -- Replace -------------------
-nnmap('<Leader>sr' , ':%s/<C-r><C-w>//gc<Left><Left><Left>',{silent = false,desc="search and replace cword"})
-vnmap('<Leader>sr' , 'y:%s/<C-R>"//gc<Left><Left><Left>',{silent = false,desc="search and replace selection"})
-vnmap('<Leader>vsr' , [[:s/\%V<C-r>"\%V//gc<Left><Left><Left>]],{silent = false,desc="search and replace range"})
+nnmap('<Leader>sr' , ':%s/<C-r><C-w>//gc<Left><Left><Left>', {silent = false, desc="search and replace cword"})
+vnmap('<Leader>sr' , 'y:%s/<C-R>"//gc<Left><Left><Left>', {silent = false, desc="search and replace selection"})
+vnmap('<Leader>vsr' , [[:s/\%V<C-r>"\%V//gc<Left><Left><Left>]], {silent = false, desc="search and replace range"})
 
 -- Search -------------------
+nnmap("gw", "*N")
+xnmap("gw", "*N")
+
+map({"n","x","o"}, "n", "'Nn'[v:searchforward]", {expr = true, desc = "Next search result"})
+map({"n","x","o"}, "N", "'nN'[v:searchforward]", {expr = true, desc = "Prev search result"})
+
 vnmap('<Leader>/', '<Esc>/\\%V',{silent = false})
 -- makes * and # work on visual mode too.
 -- vim.api.nvim_exec(
@@ -224,7 +217,14 @@ vnmap('>' , '>gv')
 -----------------------------------------------------------------------------//
 -- Mapping to show filetype, buftype and highlight
 -----------------------------------------------------------------------------//
-nnmap('<leader>dt',function() vim.ui.select({"hi", "set buftype?", "set filetype?"}, {}, function (choice) vim.cmd(choice) end) end)
+nnmap('<leader>dt',
+    function()
+        vim.ui.select({"hi", "set buftype?", "set filetype?"},
+            {},
+            function (choice) vim.cmd("ERedir " .. choice) end
+        )
+    end
+)
 
 ------------------------------------------------------------------------------
 -- Quickfix
