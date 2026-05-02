@@ -34,7 +34,8 @@ nnmap('<leader>fO', function() fzf_lua.oldfiles({cwd = vim.uv.cwd(), cwd_only = 
 -- Grep -------------------------------------------
 local fzf_project_grep = fzf_lua.grep_project
 nnmap('<leader>gg', function() fzf_lua.live_grep({exec_empty_query = true}) end, {desc="Fzf-Lua live grep"})
-nnmap('<leader>g/', function() fzf_lua.grep_curbuf({search=""}) end, {desc="Fzf-Lua live grep buffer"})
+nnmap('<c-g>', function() fzf_lua.blines() end, {desc="Fzf-Lua buffer lines"})
+nnmap('<leader>/', function() fzf_lua.grep_curbuf({search=""}) end, {desc="Fzf-Lua live grep buffer"})
 nnmap('<leader>gw', function() fzf_project_grep({search = utils.input('Grep For❯ ')}) end, {desc="Fzf-Lua grep"})
 nnmap('<leader>gW', function() fzf_project_grep({search = utils.input('Grep For❯ '), no_ignore = true}) end, {desc="Fzf-Lua grep all"})
 nnmap('<leader>gr', function() fzf_project_grep({continue_last_search = true}) end, {desc="Fzf-Lua grep continue last"})
@@ -61,7 +62,6 @@ nnmap("<leader>fE", function() fzf_lua.diagnostics_workspace() end, {desc = "Wor
 -- Misc -------------------------------------------
 nnmap('<leader>fg', function() fzf_lua.git_files() end, {desc="Fzf-Lua git files"})
 nnmap('<leader>fd', function() fzf_lua.git_bcommits() end, {desc="Fzf-Lua git commits buffer"})
-nnmap('<leader>flb', function() fzf_lua.blines() end, {desc="Fzf-Lua buffer lines"})
 nnmap('<leader>fll', function() fzf_lua.lines() end, {desc="Fzf-Lua lines"})
 nnmap('<F1>', function() fzf_lua.help_tags() end, {desc="Fzf-Lua help tags"})
 nnmap('<leader>fh', function() fzf_lua.man_pages() end, {desc="Fzf-Lua man pages"})
