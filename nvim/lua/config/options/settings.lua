@@ -59,6 +59,7 @@ opt.virtualedit    = 'block'		-- allow cursor to exist where there is no charact
 opt.winblend       = 10
 opt.lazyredraw     = true
 opt.backspace = { 'eol', 'start', 'indent' } -- Without this option some times backspace did not work correctly.
+opt.winborder = "rounded"
 vimg.editorconfig_enable = true
 
 opt.list = true

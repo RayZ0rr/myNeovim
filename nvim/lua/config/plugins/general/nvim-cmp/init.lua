@@ -84,9 +84,12 @@ cmp.setup({
         keyword_length  = 3,
     },
     window = {
-        completion = {
-            winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
-        }
+        completion = vim.tbl_extend("force", cmp.config.window.bordered(), {
+            winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+        }),
+        documentation = vim.tbl_extend("force", cmp.config.window.bordered(), {
+            winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+        }),
     },
     view = {
         entries = "custom" -- can be "custom", "wildmenu" or "native"
