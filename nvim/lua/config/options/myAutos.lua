@@ -58,14 +58,18 @@ api.nvim_create_autocmd(
 local MyCustomSettingsGroup = api.nvim_create_augroup("MyCustomSettingsGroup", { clear = true })
 
 -- Highlight on yank
-api.nvim_set_hl(0, "YankHighlightGroup", {fg='#4B4B4B', bg="#e5c07b"})
-local MyYankHighlightGroup = api.nvim_create_augroup("MyYankHighlightGroup", { clear = true })
+vim.api.nvim_create_autocmd("ColorScheme", {
+    group = MyCustomSettingsGroup,
+    callback = function()
+        api.nvim_set_hl(0, "YankHighlightGroup", {fg='#4B4B4B', bg="#e5c07b"})
+    end,
+})
 api.nvim_create_autocmd(
     "TextYankPost",
     {
         group = MyCustomSettingsGroup,
         callback = function()
-            vim.highlight.on_yank({higroup='YankHighlightGroup', macro=true})
+            vim.hl.on_yank({higroup='YankHighlightGroup', macro=true})
         end,
     }
 )
